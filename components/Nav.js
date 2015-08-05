@@ -30,20 +30,18 @@ class Nav extends React.Component {
                 userMenu = <div className="ui right item"> <a className="ui mini circular teal button" href="/login">Sign-in</a> &nbsp;  <a href="/register" className="ui mini circular yellow button">Register</a> </div>;
             }
         }
+        let logoStyle = {
+            maxHeight: 19
+        };
         return (
-            <nav ref="defaultNavbar" className="ui blue menu inverted navbar page grid">
-                    <NavLink routeName="home" className="brand item" activeClass="active"><img style={{height: '20', width: '20'}} className="ui mini image" src="/assets/img/ld-reactor.gif" alt="ld-reactor" /></NavLink>
-                    <NavLink routeName="about" className="item" activeClass="active">About {appShortTitle} </NavLink>
-                    <NavLink routeName="datasets" className="item" activeClass="active" href="/datasets"> Datasets</NavLink>
-                    <div className="right menu">
-                        <div className="item link" onClick={this.showHelpModal}>
-                                <i className="small help circle icon"></i>
-                        </div>
-                        <a href="http://github.com/ali1k/ld-r" className="ui item link">
-                                <i className="github circle icon"></i> Github
-                        </a>
-                        {userMenu}
-                    </div>
+            <nav ref="defaultNavbar" className="ui black menu inverted navbar page grid">
+                <NavLink routeName="home" className="brand item" activeClass="activeN"><img className="ui image" src="http://risis.eu/wp-content/uploads/2014/08/RISIS-Logo-invert-small.jpg" alt={appShortTitle}/></NavLink>
+                <NavLink routeName="about" className="item" activeClass="active"><img style={logoStyle} src="/assets/img/sms_logo_t.png" alt="{{appShortTitle}}" /></NavLink>
+                <NavLink routeName="dataset" className="item" activeClass="active" href="/datasets">RISIS Datasets</NavLink>
+                <div className="right menu">
+                    {user ? <div className="item link" onClick={this.showHelpModal}><i className="small help circle icon"></i></div> : <a href="http://github.com/risis-eu/sms-platform" className="ui item link"><i className="github icon"></i></a>}
+                    {userMenu}
+                </div>
             </nav>
         );
     }

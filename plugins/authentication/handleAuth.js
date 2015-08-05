@@ -24,8 +24,25 @@ httpOptions = {
 };
 var appShortTitle = generalConfig.appShortTitle;
 var appFullTitle = generalConfig.appFullTitle;
-
 var outputFormat = 'application/sparql-results+json';
+var getDatasetsListQuery = function(){
+    //get the list of datasets
+    /*jshint multistr: true */
+    var query = '\
+    PREFIX dcterms: <http://purl.org/dc/terms/> \
+    PREFIX void: <http://rdfs.org/ns/void#> \
+    PREFIX risisVoid: <http://rdf.risis.eu/dataset/risis/1.0/void.ttl#> \
+    SELECT DISTINCT ?dataset ?subject ?title WHERE { \
+      { \
+        GRAPH risisVoid:  { \
+          risisVoid:risis_rdf_dataset void:subset ?dataset . \
+        } \
+        GRAPH ?dataset {?subject a void:Dataset. ?subject dcterms:title ?title .} \
+      } \
+    } ORDER BY ASC(?title) \
+    ';
+    return query;
+}
 module.exports = function handleAuthentication(server) {
     server.use(passport.initialize());
     server.use(passport.session());
@@ -69,12 +86,32 @@ module.exports = function handleAuthentication(server) {
      });
     server.get('/register', function(req, res) {
         if(!req.isAuthenticated()){
-            res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle});
+            var endpoint = helper.getEndpointParameters('generic');
+            var rpPath = helper.getHTTPQuery('read', getDatasetsListQuery(), endpoint, outputFormat);
+            rp.get({uri: rpPath}).then(function(resq){
+                var parsed = JSON.parse(resq);
+                var output=[];
+                if(parsed.results.bindings.length){
+                  parsed.results.bindings.forEach(function(el) {
+                    var tmp=el.subject.value;
+                    var tmp2=tmp.split('#');
+                    tmp=tmp2[1];
+                    tmp2=tmp.split('_rdf_dataset');
+                    var name=tmp2[0];
+                    output.push({title:el.title.value, v: el.subject.value, g: 'http://rdf.risis.eu/dataset/'+name+'/1.0/void.ttl#'});
+                  });
+                }
+                res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, datasets: output});
+            }).catch(function (err2) {
+                console.log(err2);
+                return res.redirect('/');
+            });
         }else{
             return res.redirect('/');
         }
      });
      server.post('/register', function(req, res, next) {
+         var endpoint = helper.getEndpointParameters('generic');
          let error= '';
          if(req.body.password !== req.body.cpassword){
              error = 'Error! password mismatch...';
@@ -86,8 +123,25 @@ module.exports = function handleAuthentication(server) {
              }
          }
          if(error){
-             console.log(error);
-             res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, data: req.body, errorMsg: 'Error... '+error});
+             var rpPath = helper.getHTTPQuery('read', getDatasetsListQuery(), endpoint, outputFormat);
+             rp.get({uri: rpPath}).then(function(resq){
+                  var parsed = JSON.parse(resq);
+                  var output=[];
+                  if(parsed.results.bindings.length){
+                    parsed.results.bindings.forEach(function(el) {
+                      var tmp=el.subject.value;
+                      var tmp2=tmp.split('#');
+                      tmp=tmp2[1];
+                      tmp2=tmp.split('_rdf_dataset');
+                      var name=tmp2[0];
+                      output.push({title:el.title.value, v: el.subject.value, g: 'http://rdf.risis.eu/dataset/'+name+'/1.0/void.ttl#'});
+                    });
+                  }
+                  res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, datasets: output, data: req.body, errorMsg: 'Error... '+error});
+              }).catch(function (err2) {
+                  console.log(err2);
+                  return res.redirect('/');
+              });
          }else{
              //successfull
              //first check if user already exists
@@ -101,7 +155,6 @@ module.exports = function handleAuthentication(server) {
                } \
              } \
              ';
-             var endpoint = helper.getEndpointParameters([generalConfig.authGraphName[0]]);
              var rpPath = helper.getHTTPQuery('read', query, endpoint, outputFormat);
              //send request
              rp.get({uri: rpPath}).then(function(resq){
@@ -115,7 +168,22 @@ module.exports = function handleAuthentication(server) {
                          var dresourceURI = generalConfig.baseResourceDomain + '/resource/' + rnd;
                          var dgraphURI = generalConfig.baseResourceDomain + '/graph/' + rnd;
                          var blanknode = generalConfig.baseResourceDomain + '/editorship/' + rnd;
+                         var editorofgraph='';
                          var tmpE= [];
+                         if(Array.isArray(req.body.editorofgraph)){
+                            req.body.editorofgraph.forEach(function(el) {
+                                if(el!=='0'){
+                                    tmpE.push('<'+el+'>');
+                                }
+                            });
+                            editorofgraph = tmpE.join(',');
+                        }else{
+                            if(req.body.editorofgraph!=='0'){
+                                editorofgraph = '<'+req.body.editorofgraph+'>';
+                            }else{
+                                editorofgraph = '<'+dgraphURI+'>';
+                            }
+                        }
                          var isActive = generalConfig.enableUserConfirmation? 0 : 1;
                          var date = new Date();
                          var currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
@@ -123,28 +191,32 @@ module.exports = function handleAuthentication(server) {
                              /*jshint multistr: true */
                              query = '\
                              PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
+                             PREFIX vCard: <http://www.w3.org/2001/vcard-rdf/3.0#> \
                              PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
                              PREFIX dcterms: <http://purl.org/dc/terms/> \
                              INSERT DATA { GRAPH <'+ generalConfig.authGraphName[0] +'> { \
-                             <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; foaf:mbox <mailto:'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfGraph <'+dgraphURI+'>; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1>;ldr:editorOfProperty <'+blanknode+'2>; ldr:editorOfProperty <'+blanknode+'3>; ldr:editorOfProperty <'+blanknode+'4> . \
+                             <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; vCard:ROLE """'+req.body.position+'""";foaf:mbox <mailto:'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfGraph '+editorofgraph+'; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1>;ldr:editorOfProperty <'+blanknode+'2>; ldr:editorOfProperty <'+blanknode+'3>; ldr:editorOfProperty <'+blanknode+'4>; ldr:editorOfProperty <'+blanknode+'5> . \
                              <'+blanknode+'1> ldr:resource <'+resourceURI+'> ; ldr:property foaf:firstName . \
                              <'+blanknode+'2> ldr:resource <'+resourceURI+'> ; ldr:property foaf:lastName . \
                              <'+blanknode+'3> ldr:resource <'+resourceURI+'> ; ldr:property foaf:organization . \
                              <'+blanknode+'4> ldr:resource <'+resourceURI+'> ; ldr:property ldr:password . \
+                             <'+blanknode+'5> ldr:resource <'+resourceURI+'> ; ldr:property vCard:ROLE . \
                             }} \
                              ';
                          }else {
                              /*jshint multistr: true */
                              query = '\
                              PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
+                             PREFIX vCard: <http://www.w3.org/2001/vcard-rdf/3.0#> \
                              PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
                              PREFIX dcterms: <http://purl.org/dc/terms/> \
                              INSERT DATA INTO <'+ generalConfig.authGraphName[0] +'> { \
-                             <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; foaf:mbox <mailto:'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfGraph <'+dgraphURI+'>; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1>;ldr:editorOfProperty <'+blanknode+'2>; ldr:editorOfProperty <'+blanknode+'3>; ldr:editorOfProperty <'+blanknode+'4> . \
+                             <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; vCard:ROLE """'+req.body.position+'"""; foaf:mbox <mailto:'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfGraph '+editorofgraph+'; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1>;ldr:editorOfProperty <'+blanknode+'2>; ldr:editorOfProperty <'+blanknode+'3>; ldr:editorOfProperty <'+blanknode+'4>; ldr:editorOfProperty <'+blanknode+'5> . \
                              <'+blanknode+'1> ldr:resource <'+resourceURI+'> ; ldr:property foaf:firstName . \
                              <'+blanknode+'2> ldr:resource <'+resourceURI+'> ; ldr:property foaf:lastName . \
                              <'+blanknode+'3> ldr:resource <'+resourceURI+'> ; ldr:property foaf:organization . \
                              <'+blanknode+'4> ldr:resource <'+resourceURI+'> ; ldr:property ldr:password . \
+                             <'+blanknode+'5> ldr:resource <'+resourceURI+'> ; ldr:property vCard:ROLE . \
                              } \
                              ';
                          }
@@ -160,10 +232,27 @@ module.exports = function handleAuthentication(server) {
                              console.log(err2);
                          });
                      }else{
-                         res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, data: req.body, errorMsg: 'Error... User already exists!'});
-                         console.log('User already exists!');
+                         var rpPath = helper.getHTTPQuery('read', getDatasetsListQuery(), endpoint, outputFormat);
+                         console.log(rpPath);
+                         rp.get({uri: rpPath}).then(function(resq){
+                              var parsed = JSON.parse(resq);
+                              var output=[];
+                              if(parsed.results.bindings.length){
+                                parsed.results.bindings.forEach(function(el) {
+                                  var tmp=el.subject.value;
+                                  var tmp2=tmp.split('#');
+                                  tmp=tmp2[1];
+                                  tmp2=tmp.split('_rdf_dataset');
+                                  var name=tmp2[0];
+                                  output.push({title:el.title.value, v: el.subject.value, g: 'http://rdf.risis.eu/dataset/'+name+'/1.0/void.ttl#'});
+                                });
+                              }
+                              res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, datasets: output, data: req.body, errorMsg: 'Error... User already exists!'});
+                          }).catch(function (err2) {
+                              console.log(err2);
+                              return res.redirect('/');
+                          });
                      }
-
                  }else{
                      res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, data: req.body, errorMsg: 'Error... Unknown Error!'});
                  }

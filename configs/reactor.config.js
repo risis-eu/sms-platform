@@ -35,8 +35,7 @@ export default {
                 objectIViewer: ['BasicIndividualView'],
                 objectIEditor: ['BasicIndividualInput'],
                 extendedOEditor: ['BasicIndividualDetailEdit'],
-                extendedOViewer: ['BasicIndividualDetailView'],
-                shortenURI: 1
+                extendedOViewer: ['BasicIndividualDetailView']
             }
         },
         //property value = object

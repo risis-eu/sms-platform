@@ -8,16 +8,15 @@ class Home extends React.Component {
               <div className="ui row">
                 <div className="column">
                     <div className="ui segment content">
-                        <h2 className="ui header">Linked Data Reactor</h2>
-                            <p>
-                                <img className="ui left floated image" src="/assets/img/ld-reactor.gif" alt="ld-reactor" />
-                                Linked Data Reactor (LD-Reactor or LD-R) is a framework to develop <b>reactive</b> and <b>reusable</b> User Interface components for <b>Linked Data applications</b>. LD-Reactor utilizes Facebook's <a href="https://facebook.github.io/react/">ReactJS</a> components, <a href="https://facebook.github.io/flux">Flux</a> architecture and Yahoo!'s <a href="http://fluxible.io/">Fluxible</a> framework for isomorphic Web applications.
-                                It also exploits <a href="http://semantic-ui.com/"> Semantic-UI </a> framework for flexible UI themes.
-                                LD-Reactor aims to apply the idea of component-based application development into <a href="http://www.w3.org/RDF/">RDF</a> data model hence enhancing current user interfaces to view, browse and edit <a href="http://linkeddata.org/">Linked Data</a>.<br/> More information is available at <a href="http://ld-r.org">ld-r.org</a>.
-                            </p>
+                        <h2 className="ui header">SMS Platform</h2>
+                        <p>Welcome to SMS Platform!</p>
+                        <p>
+                        The Semantically Mapping Science (SMS) platform supports access to heterogeneous data on science and innovation, and it supports combining, integrating and analyzing those Data. SMS is one of the facilities in the <a target="_blank" href="http://risis.eu">RISIS project</a>, a distributed data infrastructure for research and innovation dynamics and policy studies.
+                        </p>
+                        <img className="ui bordered centered image" src="/assets/img/architecture.png" />
                     </div>
                 </div>
-              </div>
+                </div>
             </div>
         );
     }

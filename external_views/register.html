@@ -3,20 +3,16 @@
 		<meta charSet="utf-8" />
 		<meta name="viewport" content="width=device-width, user-scalable=no" />
 		<link href="/bower_components/semantic-ui/dist/semantic.min.css" rel="stylesheet" type="text/css" />
-		<title>{{appFullTitle}}| User Registration Page</title>
+		<title>RISIS | User Registration Page</title>
 	</head>
 	<body>
 		<div>
-			<nav  class="ui blue menu inverted navbar page grid">
+			<nav  class="ui black menu inverted navbar page grid">
 				<div class="ui item brand">
-					<a href="/"><img class="ui mini image" style="height:20px; width:20px" src="/assets/img/ld-reactor.gif" alt="ld-reactor" /></a>
+					<a href="/"><img  src="http://risis.eu/wp-content/uploads/2014/08/RISIS-Logo-invert-small.jpg" alt="{{appShortTitle}}" /></a>
 				</div>
-				<div class="ui item active brand">
-					<a href="/">{{appShortTitle}}</a>
-				</div>
-				<div class="ui item">
-					<a href="http://ld-r.org">Documentation</a>
-				</div>
+				<a class="ui small orange label item" href="http://risis.eu/risis-code-of-conduct/">RISIS Code of Conduct</a>
+				<a class="ui small item teal label" href="http://risis.eu/risis-registration/">Rules for Visits and Reimbursement</a>
 			</nav>
 		</div>
 		<div class="ui page grid">
@@ -44,9 +40,15 @@
 								</div>
 							</div>
 							<div class="twelve wide field required">
-								<label>Organization</label>
+								<label>Institution Name</label>
 								<div class="ui icon input">
-									<input type="text" placeholder="Organization" name="organization" value="{{data.organization}}"/>
+									<input type="text" placeholder="Institution Name" name="organization" value="{{data.organization}}"/>
+								</div>
+							</div>
+							<div class="twelve wide field required">
+								<label>Position</label>
+								<div class="ui icon input">
+									<input type="text" placeholder="Position (professor, lecturer, phd student, post doc, researcher, other)" name="position" value="{{data.position}}"/>
 								</div>
 							</div>
 							<div class="twelve wide field required">
@@ -55,6 +57,15 @@
 									<input type="text" placeholder="Email" name="email" value="{{data.email}}"/>
 									<i class="at icon"></i>
 								</div>
+							</div>
+							<div class="twelve wide field required">
+								<label> Your Dataset(s)</label>
+								<select class="ui" name="editorofgraph" size="4" multiple>
+									{{#datasets}}
+									<option value="{{g}}">{{title}}</option>
+									{{/datasets}}
+									<option value="0">Other...</option>
+								</select>
 							</div>
 							<div class="twelve wide field required">
 								<label>Username</label>
@@ -75,6 +86,12 @@
 								<div class="ui icon input">
 									<input type="password" name="cpassword">
 									<i class="lock icon"></i>
+								</div>
+							</div>
+							<div class="twelve wide field required">
+								<div class="ui checkbox">
+									<input type="checkbox" name="hot-deals" readonly="readonly" checked>
+									<label>I agree to the <a target="_blank" href="http://risis.eu/risis-code-of-conduct/">RISIS code of conduct</a>.</label>
 								</div>
 							</div>
 							<div class="field">

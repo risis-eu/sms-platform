@@ -1,0 +1,42 @@
+@prefix : <http://rdf.risis.eu/dataset/risis/1.0/void.ttl#> .
+@prefix risis: <http://risis.eu/> .
+@prefix risisEx: <http://risis.eu/> .
+@prefix risisV: <http://rdf.risis.eu/metadata/> .
+@prefix risisDs: <http://rdf.risis.eu/dataset/risis/1.0/void.ttl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix wv: <http://vocab.org/waiver/terms/> .
+@prefix sd: <http://www.w3.org/ns/sparql-service-description#> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix disco: <http://rdf-vocabulary.ddialliance.org/discovery#> .
+@prefix exampleVoid: <http://rdf.risis.eu/dataset/example/1.0/void.ttl#> .
+@prefix cibVoid: <http://rdf.risis.eu/dataset/cib/1.0/void.ttl#> .
+@prefix siperVoid: <http://rdf.risis.eu/dataset/siper/1.0/void.ttl#> .
+@prefix vicoVoid: <http://rdf.risis.eu/dataset/vico/1.0/void.ttl#> .
+@prefix profileVoid: <http://rdf.risis.eu/dataset/profile/1.0/void.ttl#> .
+@prefix more1Void: <http://rdf.risis.eu/dataset/more1/1.0/void.ttl#> .
+@prefix nanoVoid: <http://rdf.risis.eu/dataset/nano/1.0/void.ttl#> .
+@prefix leidenRankingVoid: <http://rdf.risis.eu/dataset/leiden_ranking/1.0/void.ttl#> .
+@prefix jorepVoid: <http://rdf.risis.eu/dataset/jorep/1.0/void.ttl#> .
+@prefix euproVoid: <http://rdf.risis.eu/dataset/eupro/1.0/void.ttl#> .
+@prefix eterVoid: <http://rdf.risis.eu/dataset/eter/1.0/void.ttl#> .
+
+:risis_rdf_dataset a void:Dataset ;
+            dcterms:title "RISIS Dataset"@en ;
+            dcterms:description """RISIS (research infrastructure for research and innovation policy studies) is a distributed infrastructure on data relevant for research and innovation dynamics and policies."""@en ;
+            dcterms:publisher <http://risis.eu> ;
+            pav:version "1.0" ;
+            void:sparqlEndpoint <http://sparql.risis.eu> ;
+            foaf:page <http://risis.eu/dataset/risis/> ;
+            void:subset  cibVoid: , exampleVoid:, eterVoid:, euproVoid:, jorepVoid:, leidenRankingVoid:, nanoVoid:, more1Void:, profileVoid:, vicoVoid:, siperVoid: .

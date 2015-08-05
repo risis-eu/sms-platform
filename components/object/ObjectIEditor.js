@@ -6,6 +6,8 @@ import BasicOptionInput from './editor/individual/BasicOptionInput';
 import DBpediaInput from './editor/individual/DBpediaInput';
 import PasswordInput from './editor/individual/PasswordInput';
 import {LanguageInput} from 'void-components';
+import {FileSizeInput} from 'void-components';
+import {MediaTypeInput} from 'void-components';
 
 class ObjectIEditor extends React.Component {
     handleDataEdit(value){
@@ -53,6 +55,15 @@ class ObjectIEditor extends React.Component {
             break;
             case 'LanguageInput':
                 editor = <LanguageInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
+            break;
+            case 'MediaTypeInput':
+                editor = <MediaTypeInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
+            break;
+            case 'FileSizeInput':
+                editor = <FileSizeInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
+            break;
+            case 'BasicCalendarInput':
+                editor = <BasicCalendarInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
             break;
             case 'BasicOptionInput':
                 editor = <BasicOptionInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;

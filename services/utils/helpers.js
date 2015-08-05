@@ -58,6 +58,15 @@ export default {
         let newValue, dtype;
         switch (valueType) {
             case 'uri':
+            // RISIS case to allow literal values on URI fields
+             if(validUrl.is_web_uri(objectValue.toString())){
+                 newValue='<'+objectValue+'>';
+                 dtype = 'uri';
+             }else{
+                 newValue='"""'+objectValue+'"""';
+                 dtype = 'str';
+             }
+             break;
             case 'bnode':
               newValue='<'+objectValue+'>';
               dtype = 'uri';

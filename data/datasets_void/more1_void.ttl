@@ -1,0 +1,137 @@
+@prefix : <http://rdf.risis.eu/dataset/more1/1.0/void.ttl#> .
+@prefix risis: <http://risis.eu/> .
+@prefix risisEx: <http://risis.eu/> .
+@prefix risisV: <http://rdf.risis.eu/metadata/> .
+@prefix risisDs: <http://rdf.risis.eu/dataset/risis/1.0/void.ttl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix wv: <http://vocab.org/waiver/terms/> .
+@prefix sd: <http://www.w3.org/ns/sparql-service-description#> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix disco: <http://rdf-vocabulary.ddialliance.org/discovery#> .
+
+:more1_rdf_dataset a void:Dataset ;
+      pav:version "1.0" ;
+      dcat:byteSize "12582912"^^xsd:decimal;
+      void:dataDump <http://data.nytimes.com/organizations.rdf> ;
+      dcat:accessURL <http://risis.eu/> ;
+      foaf:page <http://risis.eu/access/> ;
+      dcterms:title "The MORE1 Dataset"@en ;
+      dcterms:description """The Mobility Survey of the Higher Education Sector (MORE I) dataset targets researchers working in different fields at higher education institutes in all EU27 countries. The study provides measures of flows of international (and sector) mobility, of factors that influence mobility, and of effects that can be linked to researcher mobility."""@en ;
+      dcterms:subject dbr:Patent;
+      foaf:homepage <http://risis.eu/dataset/cib/> ;
+      dcterms:language <http://id.loc.gov/vocabulary/iso639-1/en> ;
+      dcterms:spatial <http://dbpedia.org/resource/France> ;
+      dcterms:temporal :temporal .
+
+:temporal disco:startDate "2000-10-22"^^xsd:date ;
+      disco:endDate "2015-12-22"^^xsd:date .
+
+:more1_rdf_dataset dcterms:creator <http://orcid.org/0000-0000-0000-0000> ;
+      dcterms:publisher risis: ;
+      dcterms:contributor <http://dbpedia.org/resource/VU_University_Amsterdam> .
+
+<http://orcid.org/0000-0000-0000-0000> a foaf:Person ;
+      rdfs:label "Al Koudous"@en ;
+      foaf:mbox <o.a.k.idrissou@vu.nl> .
+
+risis: a foaf:Organization ;
+      rdfs:label "Research Infrastructure for Science and Innovation Studies"@en ;
+      foaf:mbox <p.a.a.vanden.besselaar@vu.nl> .
+
+<http://dbpedia.org/resource/VU_University_Amsterdam>  a foaf:Organization ;
+      rdfs:label "VU University Amsterdam"@en ;
+      foaf:mbox <p.a.a.vanden.besselaar@vu.nl> .
+
+:more1_rdf_dataset dcterms:source <http://risis.eu/data/eter-dataset/>;
+      dcterms:created "2015.01.15"^^xsd:date ;
+      dcterms:issued "2015.01.15"^^xsd:date ;
+      dcterms:modified "2015.01.15"^^xsd:date ;
+      dcterms:license <http://www.opendatacommons.org/licenses/pddl/> ;
+      dcterms:rights risis:rights ;
+      wv:norms <http://www.opendatacommons.org/norms/odc-by-sa/> ;
+      wv:waiver """To the extent possible under law, The Example Organisation has waived all opyright and related or neighboring rights to The Example Dataset."""@en ;
+      dcterms:format  "text/csv"@en .
+
+## File format reference: <http://www.iana.org/assignments/media-types/media-types.xhtml>
+
+##########################################################################################################################
+#                                                                                                                        #
+#   3. Access metadata	 [1]		 									         										 #
+#                                                                                                                        #
+##########################################################################################################################
+
+#	void:dataDump <http://downloadedFromAddress.com> ;
+
+##########################################################################################################################
+#                                                                                                                        #
+#   4. Structural metadata [5]		 									         										 #
+#                                                                                                                        #
+##########################################################################################################################
+
+:more1_rdf_dataset a void:Dataset ;
+                        risisV:dataModel "Relational Model" ;
+                        risisV:classification <http://rdf.risis.eu/classifications/WoS/1.0/> ;
+                        risisV:tables "2"^^xsd:Integer ;
+                        risisV:table :person_table ;
+                        risisV:table :organization_table ;
+                        void:classes "2"^^xsd:Integer ;
+                        void:class :class_person ;
+                        void:class :class_organization .
+:person_table a risisV:Table ;
+              foaf:name "Person"@en ;
+              dcterms:description "Documents all employees of the VU."@en ;
+              risisV:attributes "9"^^xsd:Integer ;
+              risisV:attribute "age" ;
+              risisV:attribute "firstName" ;
+              risisV:attribute "lastName" ;
+              risisV:records "10000"^^xsd:Integer .
+
+:organization_table a risisV:Table ;
+                    foaf:name "Organisation"@en ;
+                    dcterms:description "Documents the universities in the Netherlands, France and Italy"@en ;
+                    risisV:attributes "3"^^xsd:Integer ;
+                    risisV:attribute "name" ;
+                    risisV:attribute "country" ;
+                    risisV:records "500"^^xsd:Integer .
+
+:class_person a foaf:Person ;
+              dcterms:description "The Person class represents people"@en ;
+              dcterms:spatial <http://dbpedia.org/resource/France>  ;
+              void:property <http://example.com/myDataset/name> ;
+              void:property <http://example.com/myDataset/address> ;
+              dcterms:temporal :class_person_temproral .
+
+:class_person_temproral disco:startDate "2000-10-22"^^xsd:date ;
+                    disco:endDate "2015-12-22"^^xsd:date .
+
+:class_organization 	a foaf:Organization ;
+                    dcterms:description "The Organization class represents Universtities"@en ;
+                    dcterms:spatial <http://dbpedia.org/resource/France>  ;
+                    dcterms:spatial <http://dbpedia.org/resource/Netherlands>  ;
+                    dcterms:spatial <http://dbpedia.org/resource/Italy>  ;
+                    void:property <http://example.com/myDataset/name> ;
+                    void:property <http://example.com/myDataset/address> ;
+                    dcterms:temporal :class_organization_temproral .
+
+:class_organization_temproral disco:startDate "2010-10-22"^^xsd:date ;
+                              disco:endDate "2015-12-22"^^xsd:date .
+
+risis:al a foaf:Person ;
+  rdfs:label "Al Koudous"@en ;
+  foaf:mbox <o.a.k.idrissou@vu.nl> .
+
+risis: a foaf:Organization;
+  rdfs:label "Research Infrastructure for Science and Innovation Studies"@en ;
+  foaf:mbox <p.a.a.vanden.besselaar@vu.nl> .
