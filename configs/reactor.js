@@ -150,7 +150,8 @@ export default {
                         config: {
                             label: ['Description'],
                             objectIEditor: ['BasicTextareaInput'],
-                            category: ['structuralAspects']
+                            category: ['structuralAspects'],
+                            allowNewValue: 1
                         }
                     },
                     {

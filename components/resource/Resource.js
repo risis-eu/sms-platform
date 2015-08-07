@@ -153,6 +153,9 @@ class Resource extends React.Component {
             mainDIV = <div className="ui segment">
                             <div className="ui grid">
                                 <div className="column ui list">
+                                    {titleDIV}
+                                    {descDIV}
+                                    {keywordDIV}
                                     {list}
                                 </div>
                             </div>
