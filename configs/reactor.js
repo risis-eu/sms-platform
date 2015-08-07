@@ -32,6 +32,10 @@ export default {
             'http://xmlns.com/foaf/0.1/Person': {
                 treatAsResourceType: 1,
                 usePropertyCategories: 0
+            },
+            'http://rdf.risis.eu/metadata/Table': {
+                treatAsResourceType: 1,
+                usePropertyCategories: 0
             }
         },
         property: {
