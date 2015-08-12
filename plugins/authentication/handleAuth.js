@@ -179,7 +179,11 @@ module.exports = function handleAuthentication(server) {
                             editorofgraph = tmpE.join(',');
                         }else{
                             if(req.body.editorofgraph!=='0'){
-                                editorofgraph = '<'+req.body.editorofgraph+'>';
+                                if(req.body.editorofgraph){
+                                    editorofgraph = '<'+req.body.editorofgraph+'>';
+                                }else{
+                                    editorofgraph = '<'+dgraphURI+'>';
+                                }
                             }else{
                                 editorofgraph = '<'+dgraphURI+'>';
                             }
