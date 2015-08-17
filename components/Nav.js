@@ -35,9 +35,9 @@ class Nav extends React.Component {
         };
         return (
             <nav ref="defaultNavbar" className="ui black menu inverted navbar page grid">
-                <NavLink routeName="home" className="brand item" activeClass="activeN"><img style={logoStyle} src="/assets/img/sms_logo_t.png" alt={appShortTitle} /></NavLink>
-                <NavLink routeName="about" className="item" activeClass="active">About Us</NavLink>
-                <NavLink routeName="dataset" className="item" activeClass="active" href="/datasets">Datasets Metadata</NavLink>
+                <NavLink routeName="home" className="brand item ui blue label" activeClass="active"><img src="/assets/img/sms_logo_t.png" alt={appShortTitle} /></NavLink>
+                <NavLink routeName="about" className="item ui label" activeClass="active">About Us</NavLink>
+                <NavLink routeName="dataset" className="item ui label" activeClass="active" href="/datasets">Datasets Metadata</NavLink>
                 <div className="right menu">
                     {user ? <div className="item link" onClick={this.showHelpModal}><i className="small help circle icon"></i></div> : <a href="http://github.com/risis-eu/sms-platform" className="ui item link"><i className="github icon"></i></a>}
                     {userMenu}
