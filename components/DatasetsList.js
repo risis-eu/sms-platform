@@ -76,7 +76,7 @@ class DatasetsList extends React.Component {
         }
         //force login
         if(!user){
-            list = <div className="ui warning message"><div className="header"> Please <a href="/register">Register</a> or <a href="/login">Login</a> to see the datasets.</div></div>;
+            list = <div className="ui warning message"><div className="header"> Please <a href="http://datasets.risis.eu/register">Register</a> or <a href="/login">Login</a> to see the datasets.</div></div>;
         }
         return (
           <div className="ui page grid">
