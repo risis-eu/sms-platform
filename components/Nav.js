@@ -27,7 +27,7 @@ class Nav extends React.Component {
                                 </div>
                             </div>;
             }else{
-                userMenu = <div className="ui right item"> <a className="ui mini circular teal button" href="/login">Sign-in</a> &nbsp;  <a href="/register" className="ui mini circular yellow button">Register</a> </div>;
+                userMenu = <div className="ui right item"> <a className="ui mini circular teal button" href="/login">Sign-in</a> &nbsp;  <a href="http://datasets.risis.eu/register" className="ui mini circular yellow button">Register</a> </div>;
             }
         }
         let logoStyle = {
@@ -35,9 +35,9 @@ class Nav extends React.Component {
         };
         return (
             <nav ref="defaultNavbar" className="ui black menu inverted navbar page grid">
-                <NavLink routeName="home" className="brand item" activeClass="activeN"><img className="ui image" src="http://risis.eu/wp-content/uploads/2014/08/RISIS-Logo-invert-small.jpg" alt={appShortTitle}/></NavLink>
-                <NavLink routeName="about" className="item" activeClass="active"><img style={logoStyle} src="/assets/img/sms_logo_t.png" alt="{{appShortTitle}}" /></NavLink>
-                <NavLink routeName="dataset" className="item" activeClass="active" href="/datasets">RISIS Datasets</NavLink>
+                <NavLink routeName="home" className="brand item" activeClass="activeN"><img style={logoStyle} src="/assets/img/sms_logo_t.png" alt={appShortTitle} /></NavLink>
+                <NavLink routeName="about" className="item" activeClass="active">About Us</NavLink>
+                <NavLink routeName="dataset" className="item" activeClass="active" href="/datasets">Datasets Metadata</NavLink>
                 <div className="right menu">
                     {user ? <div className="item link" onClick={this.showHelpModal}><i className="small help circle icon"></i></div> : <a href="http://github.com/risis-eu/sms-platform" className="ui item link"><i className="github icon"></i></a>}
                     {userMenu}
