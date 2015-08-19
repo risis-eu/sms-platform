@@ -125,6 +125,7 @@ export default {
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {graphName: graphName, total: 0});
+                    return 0;
                 }else{
                     user = req.user;
                 }
