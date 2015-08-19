@@ -23,6 +23,10 @@
 
 :vico_rdf_dataset a void:Dataset ;
       pav:version "1.0" ;
+      risisV:accessType "Access and Visit" ;
+      risisV:openingStatus "Opening Soon" ;
+      risisV:accessRequestForm <http://risis.eu/wp-content/uploads/2015/07/ETER_RISIS_call_and_application_template.docx>;
+      risisV:visitRequestForm <http://risis.eu/wp-content/uploads/2015/07/ETER_RISIS_call_and_application_template.docx>;
       dcat:byteSize "12582912"^^xsd:decimal;
       void:dataDump <http://data.nytimes.com/organizations.rdf> ;
       dcat:accessURL <http://risis.eu/> ;
