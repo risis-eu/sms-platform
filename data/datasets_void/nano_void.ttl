@@ -24,6 +24,7 @@
 :nano_rdf_dataset a void:Dataset ;
       pav:version "1.0" ;
       risisV:accessType "Access and Visit" ;
+      risisV:nonDisclosureAgreement "not applicable" ;
       risisV:openingStatus "Opening Soon" ;
       risisV:accessRequestForm <http://risis.eu/wp-content/uploads/2015/07/ETER_RISIS_call_and_application_template.docx>;
       risisV:visitRequestForm <http://risis.eu/wp-content/uploads/2015/07/ETER_RISIS_call_and_application_template.docx>;
