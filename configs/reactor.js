@@ -87,7 +87,12 @@ export default {
                  label: ['Visit Request Form'],
                  hint: ['Link to the form that provides information for end users to visit the dataset.']
              },
-             'http://rdf.risis.eu/metadata/dataModel': {
+            'http://rdf.risis.eu/metadata/nonDisclosureAgreement': {
+                  category: ['overview'],
+                  label: ['Non-disclosure Agreement Form'],
+                  hint: ['In order to access confidential data, users have to sign a non-disclosure agreement with the holders of the dataset. The link to this form should be set here.']
+            },
+            'http://rdf.risis.eu/metadata/dataModel': {
                  category: ['structuralAspects'],
                  label: ['Data Model'],
                  hint: ['The underlying data model. Whether it is RDF, Relational, etc. Add your own model if not exists in the option list.'],
