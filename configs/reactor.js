@@ -78,15 +78,15 @@ export default {
                  ]
              },
             'http://rdf.risis.eu/metadata/accessRequestForm': {
-                 category: ['overview'],
-                 label: ['Access Request Form'],
-                 hint: ['Link to the form that provides information for end users to access the dataset.']
-             },
+                  category: ['overview'],
+                  label: ['Access Request Conditions and Details'],
+                  hint: ['Link to the form that provides information for end users to access the dataset.']
+            },
             'http://rdf.risis.eu/metadata/visitRequestForm': {
-                 category: ['overview'],
-                 label: ['Visit Request Form'],
-                 hint: ['Link to the form that provides information for end users to visit the dataset.']
-             },
+                  category: ['overview'],
+                  label: ['Visit Request Conditions and Details'],
+                  hint: ['Link to the form that provides information for end users to visit the dataset.']
+            },
             'http://rdf.risis.eu/metadata/nonDisclosureAgreement': {
                   category: ['overview'],
                   label: ['Non-disclosure Agreement Form'],
