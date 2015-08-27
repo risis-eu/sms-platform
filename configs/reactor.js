@@ -19,7 +19,7 @@ export default {
             'generic': {
                 //if enabled, will categorize properties in different tabs based on property categories
                 usePropertyCategories: 1,
-                propertyCategories: ['overview', 'people', 'date', 'legalAspects', 'technicalAspects', 'structuralAspects'],
+                propertyCategories: ['overview', 'people', 'date', 'legalAspects', 'access', 'technicalAspects', 'structuralAspects'],
                 //used when creating random resources
                 dynamicResourceDomain: ['http://risis.eu'],
                 resourceReactor: ['Resource']
@@ -57,7 +57,7 @@ export default {
                  hint: ['Type of the entity.']
              },
             'http://rdf.risis.eu/metadata/accessType': {
-                 category: ['overview'],
+                 category: ['access'],
                  label: ['Access Type'],
                  hint: ['It can be visit only, request only or both request and visit.'],
                  objectIEditor: ['BasicOptionInput'],
@@ -68,7 +68,7 @@ export default {
                  ]
              },
             'http://rdf.risis.eu/metadata/openingStatus': {
-                 category: ['overview'],
+                 category: ['access'],
                  label: ['Opening Status'],
                  hint: ['Wheter the dataset is already open or will be open soon.'],
                  objectIEditor: ['BasicOptionInput'],
@@ -78,17 +78,17 @@ export default {
                  ]
              },
             'http://rdf.risis.eu/metadata/accessRequestForm': {
-                  category: ['overview'],
+                  category: ['access'],
                   label: ['Access Request Conditions and Details'],
                   hint: ['Link to the form that provides information for end users to access the dataset.']
             },
             'http://rdf.risis.eu/metadata/visitRequestForm': {
-                  category: ['overview'],
+                  category: ['access'],
                   label: ['Visit Request Conditions and Details'],
                   hint: ['Link to the form that provides information for end users to visit the dataset.']
             },
             'http://rdf.risis.eu/metadata/nonDisclosureAgreement': {
-                  category: ['overview'],
+                  category: ['access'],
                   label: ['Non-disclosure Agreement Form'],
                   hint: ['In order to access confidential data, users have to sign a non-disclosure agreement with the holders of the dataset. The link to this form should be set here.']
             },
@@ -654,7 +654,7 @@ export default {
             },
             'http://www.w3.org/ns/dcat#accessURL': {
                 label: ['Access URL'],
-                category: ['technicalAspects'],
+                category: ['access'],
                 hint: ['A landing page, feed, SPARQL endpoint or other type of resource that gives access to the distribution of the dataset'],
                 allowNewValue: 1
             },
