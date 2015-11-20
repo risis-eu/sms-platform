@@ -41,7 +41,7 @@ export default {
         //property value = object
         object: {
             'generic': {
-
+                truncateURI: 1
             }
         },
         //---------depth 2------------

@@ -4,7 +4,8 @@ The Semantically Mapping Science (SMS) platform supports access to heterogeneous
 ## Quick Start
 
 ###Installation
-You should have installed [NodeJS](https://nodejs.org/), [npm](https://github.com/npm/npm), [bower](http://bower.io/) and [GruntJS](http://gruntjs.com/) on your system as prerequisite, then:
+
+You should have installed [NodeJS](https://nodejs.org/), [npm](https://github.com/npm/npm), [bower](http://bower.io/) and [Webpack](https://webpack.github.io/) on your system as prerequisite, then:
 
 Clone the repository: `git clone https://github.com/risis-eu/sms.git`
 
@@ -27,7 +28,9 @@ check server at `localhost:4000`
 
 ###Development Mode
 
-`npm run dev` or `grunt` or `PORT=4000 DEBUG=* grunt`
+`npm run dev`
+
+check server at `localhost:3000`
 
 ## Documentation
 
