@@ -55,7 +55,7 @@ class Resource extends React.Component {
         let readOnly = 1;
         let user = this.context.getUser();
         let self = this;
-        let titleDIV, descDIV, keywordDIV, pageDIV, accessLevel, isWriteable, configReadOnly;
+        let titleDIV, descDIV, keywordDIV, pageDIV, useCaseDIV, accessLevel, isWriteable, configReadOnly;
         if(self.props.readOnly !== 'undefined'){
             readOnly = self.props.readOnly;
         }else{
