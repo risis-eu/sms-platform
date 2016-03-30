@@ -22,7 +22,7 @@ export default {
             query = queryObject.getPointToNUTS(params.lat, params.long);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
-                console.log(res);
+                //console.log(res);
                 callback(null, {
                     resources: utilObject.parsePointToNUTS(res),
                 });
