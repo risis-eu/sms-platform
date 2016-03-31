@@ -139,7 +139,7 @@ paths:
               $ref: '#/definitions/NameToMunicipality'
   /geo.Municipality;code={code}:
     get:
-      summary: given a municipality name, returns the related details.
+      summary: given a municipality code, returns the related details.
       parameters:
         - name: code
           in: path
