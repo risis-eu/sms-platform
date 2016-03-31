@@ -24,8 +24,8 @@ export default {
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 //console.log(res);
                 callback(null, {
-                    latitude: params.lat,
-                    longitude: params.long,
+                    latitude: parseFloat(params.lat),
+                    longitude: parseFloat(params.long),
                     resources: utilObject.parsePointToNUTS(res),
                 });
             }).catch(function (err) {

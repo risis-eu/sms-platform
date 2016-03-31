@@ -25,12 +25,14 @@ paths:
           required: true
           type: number
           format: double
+          default: 45.0804
         - name: longitude
           in: path
           description: Longitude of the given point.
           required: true
           type: number
           format: double
+          default: 4.899431
       tags:
         - Geo-Services
       responses:
@@ -49,6 +51,7 @@ paths:
           description: code for NUTS region
           required: true
           type: string
+          default: NL326
       tags:
         - Geo-Services
       responses:
@@ -67,6 +70,7 @@ paths:
           description: name of NUTS region
           required: true
           type: string
+          default: Groot-Amsterdam
       tags:
         - Geo-Services
       responses:
@@ -85,6 +89,7 @@ paths:
           description: code for NUTS region
           required: true
           type: string
+          default: NL326
       tags:
         - Geo-Services
       responses:
@@ -105,6 +110,7 @@ paths:
           description: Name of the dataset.
           required: true
           type: string
+          default: eter
       tags:
         - Metadata-Services
       responses:
