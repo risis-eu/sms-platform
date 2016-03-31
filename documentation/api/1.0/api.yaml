@@ -76,6 +76,24 @@ paths:
             type: array
             items:
               $ref: '#/definitions/NameToNUTS'
+  /geo.NUTStoPolygon;code={code}:
+    get:
+      summary: given a NUTS code, returns the containing polygon shape and details of the NUTS region.
+      parameters:
+        - name: code
+          in: path
+          description: code for NUTS region
+          required: true
+          type: string
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding NUTS details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/NUTStoPolygon'
   /metadata.dataset;name={name}:
     get:
       summary: given a dataset's name, returns the related metadata properties.
@@ -141,6 +159,14 @@ definitions:
         description: List of NUTS region.
         items:
            $ref: '#/definitions/NUTS'
+  NUTStoPolygon:
+    type: object
+    properties:
+      resources:
+        type: array
+        description: List of NUTS region containg the their corresponding polygons.
+        items:
+           $ref: '#/definitions/NUTSP'
   NUTS:
     type: object
     properties:
@@ -152,6 +178,19 @@ definitions:
         type: string
       level:
         type: integer
+  NUTSP:
+    type: object
+    properties:
+      uri:
+        type: string
+      name:
+        type: string
+      code:
+        type: string
+      level:
+        type: integer
+      polygon:
+        type: string
   DatasetsList:
     type: object
     properties:
