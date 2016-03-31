@@ -30,7 +30,7 @@ paths:
           required: true
           type: string
       tags:
-        - Geo
+        - Geo-Services
       responses:
         200:
           description: An array of object with datasets names and urls.
