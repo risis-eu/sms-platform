@@ -139,17 +139,19 @@ export default {
                 console.log(err);
                 callback(null, {resources: []});
             });
-        } else if (resource === 'geo.MunicipalityToPolygon') {
+        } else if (resource === 'geo.PointToMunicipality') {
             graphName = '';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
-            query = queryObject.getMunicipalityToPolygon(params.code);
+            //query = queryObject.getPointToMunicipality(params.lat, params.long);
+            console.log(query);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 //console.log(res);
                 callback(null, {
-                    code: params.code,
-                    resources: utilObject.parseMunicipalityToPolygon(res)
+                    latitude: parseFloat(params.lat),
+                    longitude: parseFloat(params.long),
+                    resources: utilObject.parsePointToMunicipality(res)
                 });
             }).catch(function (err) {
                 console.log(err);

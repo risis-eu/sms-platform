@@ -138,18 +138,19 @@ class GeoQuery{
         ';
         return this.prefixes + this.query;
     }
-    getMunicipalityToPolygon(code) {
+    getPointToMunicipality(lat, long) {
         /*jshint multistr: true */
         this.query = '\
-        SELECT DISTINCT ?polygon ?osmID WHERE { \
-            GRAPH <http://geo.risis.eu/shapefiles> {\
-            ?uri geo:geometry ?polygon ;\
-                 risisGeoV:osmID ?osmID . \
-            }\
-         } \
+        SELECT DISTINCT ?municipalityID ?country ?name FROM <http://geo.risis.eu/shapefiles> WHERE { \
+            ?uri a risisGeoV:Municipality ;\
+                risisGeoV:municipalityID ?municipalityID ;\
+                dcterms:title ?name ;\
+                edm:country ?country ;\
+                geo:geometry ?polygon .\
+            FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
+          } \
         ';
         return this.prefixes + this.query;
     }
-
 }
 export default GeoQuery;

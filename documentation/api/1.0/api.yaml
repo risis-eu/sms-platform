@@ -156,16 +156,26 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Municipality'
-  /geo.MunicipalityToPolygon;code={code}:
+  /geo.PointToMunicipality;lat={latitude};long={longitude}:
     get:
-      summary: given a municipality code, returns the polygon shape.
+      summary: given a point, returns the related municipality.
+      description: |
+        Receives Longitude and Latitude of a point and returns its municipality details.
       parameters:
-        - name: code
+        - name: latitude
           in: path
-          description: code for municipality
+          description: Latitude of the given point.
           required: true
-          type: string
-          default: NL280619
+          type: number
+          format: double
+          default: 48.210033
+        - name: longitude
+          in: path
+          description: Longitude of the given point.
+          required: true
+          type: number
+          format: double
+          default: 16.363449
       tags:
         - Geo-Services
       responses:
@@ -174,7 +184,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/MunicipalityToPolygon'
+              $ref: '#/definitions/PointToMunicipality'
   /metadata.dataset;name={name}:
     get:
       summary: given a dataset's name, returns the related metadata properties.
@@ -295,11 +305,15 @@ definitions:
       resources:
         type: object
         description: details.
-  MunicipalityToPolygon:
+  PointToMunicipality:
     type: object
     properties:
-      code:
-        type: string
+      longitude:
+        type: number
+        format: double
+      latitude:
+        type: number
+        format: double
       resources:
         type: array
         description: details.
@@ -308,9 +322,11 @@ definitions:
   MCPPol:
     type: object
     properties:
-      osmID:
+      id:
         type: string
-      polygon:
+      name:
+        type: string
+      country:
         type: string
   MCP:
     type: object
