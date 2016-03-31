@@ -93,6 +93,68 @@ export default {
                 console.log(err);
                 callback(null, {resources: []});
             });
+        } else if (resource === 'geo.NUTStoMunicipality') {
+            graphName = '';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getNUTStoMunicipality(params.code);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    code: params.code,
+                    resources: utilObject.parseNUTStoMunicipality(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
+        } else if (resource === 'geo.NameToMunicipality') {
+            graphName = '';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getNameToMunicipality(params.name);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    resources: utilObject.parseNameToMunicipality(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
+        } else if (resource === 'geo.Municipality') {
+            graphName = '';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getMunicipality(params.code);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    resources: utilObject.parseNameToMunicipality(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
+        } else if (resource === 'geo.MunicipalityToPolygon') {
+            graphName = '';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getMunicipalityToPolygon(params.code);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    code: params.code,
+                    resources: utilObject.parseMunicipalityToPolygon(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
         }
     }
     // other methods

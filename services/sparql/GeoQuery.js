@@ -14,6 +14,9 @@ class GeoQuery{
         PREFIX ramon: <http://rdfdata.eionet.europa.eu/ramon/ontology/> \
         PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
         PREFIX edm: <http://www.europeana.eu/schemas/edm/> \
+        PREFIX igeo: <http://rdf.insee.fr/def/geo#> \
+        PREFIX geoname: <http://www.geonames.org/ontology#> \
+        PREFIX risisMCPV: <http://risis.eu/municipalities/vocab/> \
         PREFIX risisGeoV: <http://geo.risis.eu/vocabulary/> \
         ';
         this.query='';
@@ -83,6 +86,67 @@ class GeoQuery{
             	dcterms:title ?name ;\
             	risisGeoV:municipalityID ?municipalityID .\
           } \
+        ';
+        return this.prefixes + this.query;
+    }
+    getNUTStoMunicipality(code) {
+        let codeURI = 'http://nuts.geovocab.org/id/' + code;
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?name ?municipalityID ?isCore ?fua ?fuaName ?fuaCode FROM <http://geo.risis.eu/municipalities> WHERE { \
+            ?uri a risisGeoV:Municipality ;\
+            	igeo:NUTS3 "'+codeURI+'" ;\
+            	dcterms:title ?name ;\
+                risisGeoV:isCore ?isCore ;\
+                risisGeoV:functionalUrbanArea ?fua ;\
+            	risisGeoV:municipalityID ?municipalityID .\
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
+    getNameToMunicipality(name) {
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?name ?municipalityID ?isCore ?fua ?fuaName ?fuaCode ?population FROM <http://geo.risis.eu/municipalities> WHERE { \
+            ?uri a risisGeoV:Municipality ;\
+            	dcterms:title ?name ;\
+            	dcterms:title "'+name+'" ;\
+                risisGeoV:isCore ?isCore ;\
+                risisGeoV:functionalUrbanArea ?fua ;\
+            	risisGeoV:municipalityID ?municipalityID .\
+                ?fua dcterms:title ?fuaName .\
+	            ?fua risisGeoV:fuaID ?fuaCode .\
+	            ?fua geoname:population ?population .\
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
+    getMunicipality(code) {
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?name ?municipalityID ?isCore ?fua ?fuaName ?fuaCode ?population FROM <http://geo.risis.eu/municipalities> WHERE { \
+            ?uri a risisGeoV:Municipality ;\
+            	dcterms:title ?name ;\
+                risisGeoV:isCore ?isCore ;\
+                risisGeoV:functionalUrbanArea ?fua ;\
+            	risisGeoV:municipalityID ?municipalityID ;\
+            	risisGeoV:municipalityID "'+code+'" .\
+                ?fua dcterms:title ?fuaName .\
+	            ?fua risisGeoV:fuaID ?fuaCode .\
+	            ?fua geoname:population ?population .\
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
+    getMunicipalityToPolygon(code) {
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?polygon ?osmID WHERE { \
+            GRAPH <http://geo.risis.eu/shapefiles> {\
+            ?uri geo:geometry ?polygon ;\
+                 risisGeoV:osmID ?osmID . \
+            }\
+         } \
         ';
         return this.prefixes + this.query;
     }

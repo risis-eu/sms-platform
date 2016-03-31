@@ -118,6 +118,63 @@ paths:
             type: array
             items:
               $ref: '#/definitions/MunicipalitiesPerCountry'
+  /geo.NameToMunicipality;name={name}:
+    get:
+      summary: given a municipality name, returns the related details.
+      parameters:
+        - name: name
+          in: path
+          description: municipality name
+          required: true
+          type: string
+          default: Amstelveen
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/NameToMunicipality'
+  /geo.Municipality;code={code}:
+    get:
+      summary: given a municipality name, returns the related details.
+      parameters:
+        - name: code
+          in: path
+          description: municipality code
+          required: true
+          type: string
+          default: NL270362
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Municipality'
+  /geo.MunicipalityToPolygon;code={code}:
+    get:
+      summary: given a municipality code, returns the polygon shape.
+      parameters:
+        - name: code
+          in: path
+          description: code for municipality
+          required: true
+          type: string
+          default: NL280619
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MunicipalityToPolygon'
   /metadata.dataset;name={name}:
     get:
       summary: given a dataset's name, returns the related metadata properties.
@@ -226,6 +283,35 @@ definitions:
         description: List of municipalities.
         items:
            $ref: '#/definitions/MCP'
+  NameToMunicipality:
+    type: object
+    properties:
+      resources:
+        type: object
+        description: details.
+  Municipality:
+    type: object
+    properties:
+      resources:
+        type: object
+        description: details.
+  MunicipalityToPolygon:
+    type: object
+    properties:
+      code:
+        type: string
+      resources:
+        type: array
+        description: details.
+        items:
+           $ref: '#/definitions/MCPPol'
+  MCPPol:
+    type: object
+    properties:
+      osmID:
+        type: string
+      polygon:
+        type: string
   MCP:
     type: object
     properties:
