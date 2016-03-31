@@ -26,7 +26,7 @@ export default {
                 callback(null, {
                     latitude: parseFloat(params.lat),
                     longitude: parseFloat(params.long),
-                    resources: utilObject.parsePointToNUTS(res),
+                    resources: utilObject.parsePointToNUTS(res)
                 });
             }).catch(function (err) {
                 console.log(err);
@@ -41,7 +41,7 @@ export default {
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 //console.log(res);
                 callback(null, {
-                    resources: utilObject.parsePointToNUTS(res),
+                    resources: utilObject.parsePointToNUTS(res)
                 });
             }).catch(function (err) {
                 console.log(err);
@@ -56,7 +56,7 @@ export default {
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 //console.log(res);
                 callback(null, {
-                    resources: utilObject.parsePointToNUTS(res),
+                    resources: utilObject.parsePointToNUTS(res)
                 });
             }).catch(function (err) {
                 console.log(err);
@@ -71,7 +71,23 @@ export default {
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 //console.log(res);
                 callback(null, {
-                    resources: utilObject.parseNUTStoPolygon(res),
+                    resources: utilObject.parseNUTStoPolygon(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
+        } else if (resource === 'geo.MunicipalitiesPerCountry') {
+            graphName = '';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getMunicipalitiesPerCountry(params.country);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    country: params.country,
+                    resources: utilObject.MunicipalitiesPerCountry(res)
                 });
             }).catch(function (err) {
                 console.log(err);

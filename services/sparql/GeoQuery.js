@@ -13,6 +13,8 @@ class GeoQuery{
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#> \
         PREFIX ramon: <http://rdfdata.eionet.europa.eu/ramon/ontology/> \
         PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
+        PREFIX edm: <http://www.europeana.eu/schemas/edm/> \
+        PREFIX risisGeoV: <http://geo.risis.eu/vocabulary/> \
         ';
         this.query='';
     }
@@ -68,6 +70,18 @@ class GeoQuery{
                 ramon:level ?level ;\
             	ramon:name ?name ;\
             	geo:geometry ?polygon .\
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
+    getMunicipalitiesPerCountry(country) {
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?name ?municipalityID FROM <http://geo.risis.eu/municipalities> WHERE { \
+            ?uri a risisGeoV:Municipality ;\
+            	edm:country "'+country+'" ;\
+            	dcterms:title ?name ;\
+            	risisGeoV:municipalityID ?municipalityID .\
           } \
         ';
         return this.prefixes + this.query;

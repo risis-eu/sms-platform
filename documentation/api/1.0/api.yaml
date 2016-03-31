@@ -99,6 +99,25 @@ paths:
             type: array
             items:
               $ref: '#/definitions/NUTStoPolygon'
+  /geo.MunicipalitiesPerCountry;country={country}:
+    get:
+      summary: given a country name, returns the list of municipalities.
+      parameters:
+        - name: country
+          in: path
+          description: country name
+          required: true
+          type: string
+          default: Netherlands
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding NUTS details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MunicipalitiesPerCountry'
   /metadata.dataset;name={name}:
     get:
       summary: given a dataset's name, returns the related metadata properties.
@@ -196,6 +215,23 @@ definitions:
       level:
         type: integer
       polygon:
+        type: string
+  MunicipalitiesPerCountry:
+    type: object
+    properties:
+      country:
+        type: string
+      resources:
+        type: array
+        description: List of municipalities.
+        items:
+           $ref: '#/definitions/MCP'
+  MCP:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
         type: string
   DatasetsList:
     type: object

@@ -23,5 +23,15 @@ class GeoUtil{
             return output;
         }
     }
+    MunicipalitiesPerCountry(res) {
+        let parsed = JSON.parse(res);
+        let output=[];
+        if(parsed.results.bindings.length){
+            parsed.results.bindings.forEach(function(el) {
+                output.push({id: el.municipalityID.value, name: el.name.value});
+            });
+            return output;
+        }
+    }
 }
 export default GeoUtil;
