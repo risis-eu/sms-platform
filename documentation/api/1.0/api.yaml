@@ -1,0 +1,60 @@
+swagger: '2.0'
+info:
+  title: SMS Linked Data API
+  description: A set of Linked Data powered APIs for Semantically Mapping Science (SMS)
+  version: "1.0"
+# the domain of the service
+host: sms.risis.eu
+# array of all schemes that your API supports
+schemes:
+  - http
+# will be prefixed to all paths
+basePath: /api
+produces:
+  - application/json
+paths:
+  /geo.pointToNUTS;lat={latitude};long={longitude}:
+    get:
+      summary: given a point, returns the NUTS boundaries.
+      description: |
+        Receives Longitude and Latitude of a point and returns its NUTS containers.
+      parameters:
+        - name: latitude
+          in: path
+          description: Latitude of the given point.
+          required: true
+          type: string
+        - name: longitude
+          in: path
+          description: Longitude of the given point.
+          required: true
+          type: string
+      tags:
+        - Geo
+      responses:
+        200:
+          description: An array of object with datasets names and urls.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/NUTSForPoint'
+definitions:
+  NUTSForPoint:
+    type: object
+    properties:
+      resources:
+        type: array
+        description: List of NUTS region.
+        items:
+           $ref: '#/definitions/NUTS'
+  NUTS:
+    type: object
+    properties:
+      uri:
+        type: string
+      name:
+        type: string
+      code:
+        type: string
+      level:
+        type: string
