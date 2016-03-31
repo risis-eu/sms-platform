@@ -58,7 +58,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/NUTStoName'
-    /geo.NameToNUTS;name={name}:
+  /geo.NameToNUTS;name={name}:
     get:
       summary: given a NUTS region name, returns the code and details of the NUTS region.
       parameters:
