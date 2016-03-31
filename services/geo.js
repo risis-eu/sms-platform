@@ -143,8 +143,8 @@ export default {
             graphName = '';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
-            //query = queryObject.getPointToMunicipality(params.lat, params.long);
-            console.log(query);
+            query = queryObject.getPointToMunicipality(params.lat, params.long);
+            //console.log(query);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 //console.log(res);
