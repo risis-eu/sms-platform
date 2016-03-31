@@ -8,7 +8,7 @@ class GeoUtil{
         let output=[];
         if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
-                output.push({uri: el.uri.value, name: el.name.value, level: el.level.value, code: el.code.value});
+                output.push({uri: el.uri.value, name: el.name.value, level: parseInt(el.level.value), code: el.code.value});
             });
             return output;
         }

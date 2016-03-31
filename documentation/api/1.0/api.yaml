@@ -17,27 +17,63 @@ paths:
     get:
       summary: given a point, returns the NUTS boundaries.
       description: |
-        Receives Longitude and Latitude of a point and returns its NUTS containers.
+        Receives Longitude and Latitude of a point and returns its NUTS containers in different levels.
       parameters:
         - name: latitude
           in: path
           description: Latitude of the given point.
           required: true
-          type: string
+          type: number
+          format: double
         - name: longitude
           in: path
           description: Longitude of the given point.
           required: true
-          type: string
+          type: number
+          format: double
       tags:
         - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding NUTS details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/NUTSForPoint'
+  /metadata.dataset;name={name}:
+    get:
+      summary: given a dataset's name, returns the related metadata properties.
+      description: |
+        Returns all the metadata properties of a given dataset
+      parameters:
+        - name: name
+          in: path
+          description: Name of the dataset.
+          required: true
+          type: string
+      tags:
+        - Metadata-Services
+      responses:
+        200:
+          description: An array of object with property details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DatasetProperties'
+  /metadata.datasetsList:
+    get:
+      summary: gives a list of RISIS datasets.
+      description: |
+        Returns a list of all available RISIS datasets.
+      tags:
+        - Metadata-Services
       responses:
         200:
           description: An array of object with datasets names and urls.
           schema:
             type: array
             items:
-              $ref: '#/definitions/NUTSForPoint'
+              $ref: '#/definitions/DatasetsList'
 definitions:
   NUTSForPoint:
     type: object
@@ -57,4 +93,27 @@ definitions:
       code:
         type: string
       level:
+        type: integer
+  DatasetsList:
+    type: object
+    properties:
+      resources:
+        type: array
+        description: List of Datasets.
+        items:
+           $ref: '#/definitions/DatasetBrief'
+  DatasetBrief:
+    type: object
+    properties:
+      title:
         type: string
+      name:
+        type: string
+      URL:
+        type: string
+      resourceURI:
+        type: string
+      resourceGraphName:
+        type: string
+  DatasetProperties:
+    type: object

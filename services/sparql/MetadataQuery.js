@@ -1,6 +1,6 @@
 'use strict';
 import {getQueryDataTypeValue} from '../utils/helpers';
-class GeoQuery{
+class MetadataQuery{
     constructor() {
         /*jshint multistr: true */
         this.prefixes='\
@@ -16,20 +16,7 @@ class GeoQuery{
         ';
         this.query='';
     }
-    getPointToNUTS(lat, long) {
-        /*jshint multistr: true */
-        this.query = '\
-        SELECT DISTINCT ?uri ?code ?level ?name FROM <http://nuts.geovocab.org/> WHERE { \
-            ?uri a ramon:NUTSRegion ;\
-            	ramon:code ?code ;\
-                ramon:level ?level ;\
-            	ramon:name ?name ;\
-            	geo:geometry ?polygon .\
-            FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
-          } \
-        ';
-        return this.prefixes + this.query;
-    }
+
 
 }
-export default GeoQuery;
+export default MetadataQuery;
