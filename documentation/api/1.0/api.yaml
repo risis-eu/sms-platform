@@ -39,7 +39,43 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/NUTSForPoint'
+              $ref: '#/definitions/pointToNUTS'
+  /geo.NUTStoName;code={code}:
+    get:
+      summary: given a NUTS code, returns the name of the NUTS region.
+      parameters:
+        - name: code
+          in: path
+          description: code for NUTS region
+          required: true
+          type: string
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding NUTS details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/NUTStoName'
+    /geo.NameToNUTS;name={name}:
+    get:
+      summary: given a NUTS region name, returns the code and details of the NUTS region.
+      parameters:
+        - name: name
+          in: path
+          description: name of NUTS region
+          required: true
+          type: string
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding NUTS details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/NameToNUTS'
   /metadata.dataset;name={name}:
     get:
       summary: given a dataset's name, returns the related metadata properties.
@@ -75,7 +111,29 @@ paths:
             items:
               $ref: '#/definitions/DatasetsList'
 definitions:
-  NUTSForPoint:
+  pointToNUTS:
+    type: object
+    properties:
+      longitude:
+        type: number
+        format: double
+      latitude:
+        type: number
+        format: double
+      resources:
+        type: array
+        description: List of NUTS region.
+        items:
+           $ref: '#/definitions/NUTS'
+  NameToNUTS:
+    type: object
+    properties:
+      resources:
+        type: array
+        description: List of NUTS region.
+        items:
+           $ref: '#/definitions/NUTS'
+  NUTStoName:
     type: object
     properties:
       resources:

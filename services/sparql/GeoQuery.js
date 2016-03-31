@@ -30,6 +30,48 @@ class GeoQuery{
         ';
         return this.prefixes + this.query;
     }
+    getNUTSToName(code) {
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?uri ?code ?level ?name FROM <http://nuts.geovocab.org/> WHERE { \
+            ?uri a ramon:NUTSRegion ;\
+            	ramon:code ?code ;\
+                ramon:code "'+code+'" ;\
+                ramon:level ?level ;\
+            	ramon:name ?name ;\
+            	geo:geometry ?polygon .\
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
+    getNameToNUTS(name) {
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?uri ?code ?level ?name FROM <http://nuts.geovocab.org/> WHERE { \
+            ?uri a ramon:NUTSRegion ;\
+            	ramon:code ?code ;\
+                ramon:name "'+name+'" ;\
+                ramon:level ?level ;\
+            	ramon:name ?name ;\
+            	geo:geometry ?polygon .\
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
+    getNUTStoPolygon(code) {
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?uri ?code ?level ?name ?polygon FROM <http://nuts.geovocab.org/> WHERE { \
+            ?uri a ramon:NUTSRegion ;\
+            	ramon:code "'+code+'" ;\
+            	ramon:code ?code ;\
+                ramon:level ?level ;\
+            	ramon:name ?name ;\
+            	geo:geometry ?polygon .\
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
 
 }
 export default GeoQuery;

@@ -24,14 +24,59 @@ export default {
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 //console.log(res);
                 callback(null, {
+                    latitude: params.lat,
+                    longitude: params.long,
                     resources: utilObject.parsePointToNUTS(res),
                 });
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
             });
-        } else if (resource === 'geo.method2') {
-
+        } else if (resource === 'geo.NUTStoName') {
+            graphName = '';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getNUTSToName(params.code);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    resources: utilObject.parsePointToNUTS(res),
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
+        } else if (resource === 'geo.NameToNUTS') {
+            graphName = '';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getNameToNUTS(params.name);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    resources: utilObject.parsePointToNUTS(res),
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
+        } else if (resource === 'geo.NUTStoPolygon') {
+            graphName = '';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getNUTStoPolygon(params.code);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    resources: utilObject.parseNUTStoPolygon(res),
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
         }
     }
     // other methods
