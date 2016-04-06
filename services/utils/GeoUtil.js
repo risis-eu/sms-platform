@@ -63,5 +63,15 @@ class GeoUtil{
             return output;
         }
     }
+    parseMunicipalityToPolygon(res){
+        let parsed = JSON.parse(res);
+        let output=[];
+        if(parsed.results.bindings.length){
+            parsed.results.bindings.forEach(function(el) {
+                output.push({name: el.name.value, polygon: el.polygon.value});
+            });
+            return output;
+        }
+    }
 }
 export default GeoUtil;

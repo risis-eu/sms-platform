@@ -185,6 +185,25 @@ paths:
             type: array
             items:
               $ref: '#/definitions/PointToMunicipality'
+  /geo.MunicipalityToPolygon;code={code}:
+    get:
+      summary: given a municipality code, returns the polygon shape.
+      parameters:
+        - name: code
+          in: path
+          description: municipality code
+          required: true
+          type: string
+          default: AT31726
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MunicipalitytoPolygon'
   /metadata.dataset;name={name}:
     get:
       summary: given a dataset's name, returns the related metadata properties.
@@ -259,6 +278,14 @@ definitions:
         description: List of NUTS region containg the their corresponding polygons.
         items:
            $ref: '#/definitions/NUTSP'
+  MunicipalitytoPolygon:
+    type: object
+    properties:
+      resources:
+        type: array
+        description: List of corresponding polygons.
+        items:
+           $ref: '#/definitions/MCPP'
   NUTS:
     type: object
     properties:
@@ -281,6 +308,13 @@ definitions:
         type: string
       level:
         type: integer
+      polygon:
+        type: string
+  MCPP:
+    type: object
+    properties:
+      name:
+        type: string
       polygon:
         type: string
   MunicipalitiesPerCountry:

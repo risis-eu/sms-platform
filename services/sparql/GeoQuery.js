@@ -152,5 +152,17 @@ class GeoQuery{
         ';
         return this.prefixes + this.query;
     }
+    getMunicipalityToPolygon(id) {
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?polygon ?name FROM <http://geo.risis.eu/shapefiles> WHERE { \
+            ?uri a risisGeoV:Municipality ;\
+                risisGeoV:municipalityID "'+id+'" ;\
+                dcterms:title ?name ;\
+                geo:geometry ?polygon .\
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
 }
 export default GeoQuery;

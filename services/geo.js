@@ -157,6 +157,23 @@ export default {
                 console.log(err);
                 callback(null, {resources: []});
             });
+        } else if (resource === 'geo.MunicipalityToPolygon') {
+            graphName = '';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getMunicipalityToPolygon(params.code);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    code: params.code,
+                    resources: utilObject.parseMunicipalityToPolygon(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
         }
     }
     // other methods
