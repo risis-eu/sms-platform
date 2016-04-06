@@ -199,12 +199,14 @@ module.exports = function handleAuthentication(server) {
                              PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
                              PREFIX dcterms: <http://purl.org/dc/terms/> \
                              INSERT DATA { GRAPH <'+ generalConfig.authGraphName[0] +'> { \
-                             <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; vCard:ROLE """'+req.body.position+'""";foaf:mbox <mailto:'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfGraph '+editorofgraph+'; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1>;ldr:editorOfProperty <'+blanknode+'2>; ldr:editorOfProperty <'+blanknode+'3>; ldr:editorOfProperty <'+blanknode+'4>; ldr:editorOfProperty <'+blanknode+'5> . \
+                             <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; vCard:ROLE """'+req.body.position+'""";foaf:mbox <mailto:'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfGraph '+editorofgraph+'; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1> , <'+blanknode+'2> , <'+blanknode+'3> , <'+blanknode+'4> , <'+blanknode+'5> , <'+blanknode+'6>  , <'+blanknode+'7>  . \
                              <'+blanknode+'1> ldr:resource <'+resourceURI+'> ; ldr:property foaf:firstName . \
                              <'+blanknode+'2> ldr:resource <'+resourceURI+'> ; ldr:property foaf:lastName . \
-                             <'+blanknode+'3> ldr:resource <'+resourceURI+'> ; ldr:property foaf:organization . \
-                             <'+blanknode+'4> ldr:resource <'+resourceURI+'> ; ldr:property ldr:password . \
-                             <'+blanknode+'5> ldr:resource <'+resourceURI+'> ; ldr:property vCard:ROLE . \
+                             <'+blanknode+'3> ldr:resource <'+resourceURI+'> ; ldr:property vCard:role . \
+                             <'+blanknode+'4> ldr:resource <'+resourceURI+'> ; ldr:property vCard:adr . \
+                             <'+blanknode+'5> ldr:resource <'+resourceURI+'> ; ldr:property foaf:organization . \
+                             <'+blanknode+'6> ldr:resource <'+resourceURI+'> ; ldr:property ldr:password . \
+                             <'+blanknode+'7> ldr:resource <'+resourceURI+'> ; ldr:property vivo:orcidId . \
                             }} \
                              ';
                          }else {
@@ -215,12 +217,14 @@ module.exports = function handleAuthentication(server) {
                              PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
                              PREFIX dcterms: <http://purl.org/dc/terms/> \
                              INSERT DATA INTO <'+ generalConfig.authGraphName[0] +'> { \
-                             <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; vCard:ROLE """'+req.body.position+'"""; foaf:mbox <mailto:'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfGraph '+editorofgraph+'; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1>;ldr:editorOfProperty <'+blanknode+'2>; ldr:editorOfProperty <'+blanknode+'3>; ldr:editorOfProperty <'+blanknode+'4>; ldr:editorOfProperty <'+blanknode+'5> . \
+                             <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; vCard:ROLE """'+req.body.position+'"""; foaf:mbox <mailto:'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfGraph '+editorofgraph+'; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1> , <'+blanknode+'2> , <'+blanknode+'3> , <'+blanknode+'4> , <'+blanknode+'5> , <'+blanknode+'6>  , <'+blanknode+'7>  . \
                              <'+blanknode+'1> ldr:resource <'+resourceURI+'> ; ldr:property foaf:firstName . \
                              <'+blanknode+'2> ldr:resource <'+resourceURI+'> ; ldr:property foaf:lastName . \
-                             <'+blanknode+'3> ldr:resource <'+resourceURI+'> ; ldr:property foaf:organization . \
-                             <'+blanknode+'4> ldr:resource <'+resourceURI+'> ; ldr:property ldr:password . \
-                             <'+blanknode+'5> ldr:resource <'+resourceURI+'> ; ldr:property vCard:ROLE . \
+                             <'+blanknode+'3> ldr:resource <'+resourceURI+'> ; ldr:property vCard:role . \
+                             <'+blanknode+'4> ldr:resource <'+resourceURI+'> ; ldr:property vCard:adr . \
+                             <'+blanknode+'5> ldr:resource <'+resourceURI+'> ; ldr:property foaf:organization . \
+                             <'+blanknode+'6> ldr:resource <'+resourceURI+'> ; ldr:property ldr:password . \
+                             <'+blanknode+'7> ldr:resource <'+resourceURI+'> ; ldr:property vivo:orcidId . \
                              } \
                              ';
                          }
