@@ -708,6 +708,19 @@ export default {
                 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
                     isHidden: 1
                 },
+                'http://xmlns.com/foaf/0.1/member': {
+                    allowNewValue: 1,
+                    label: ['Member of'],
+                    shortenURI: 1,
+                    objectIEditor: ['BasicOptionInput'],
+                    options: [
+                        {label: 'RISIS Users', value: 'http://rdf.risis.eu/user/RISISUsers'},
+                        {label: 'Dataset Coordinators', value: 'http://rdf.risis.eu/user/DatasetCoordinators'},
+                        {label: 'Project Review Board', value: 'http://rdf.risis.eu/user/PRB'},
+                        {label: 'FCB', value: 'http://rdf.risis.eu/user/FCB'}
+                    ],
+                    defaultValue: ['http://rdf.risis.eu/user/RISISUsers'],
+                },
                 'http://xmlns.com/foaf/0.1/accountName': {
                     label: ['Username'],
                     readOnly: 1
@@ -778,6 +791,14 @@ export default {
                 'http://www.w3.org/2001/vcard-rdf/3.0#role': {
                     label: ['Position'],
                     hint: ['Position/Role in the organization. E.g. professor, lecturer, phd student, post doc, researcher, other...']
+                },
+                'http://vivoweb.org/ontology/core#orcidId': {
+                    label: ['ORCID ID']
+                },
+                'http://www.w3.org/2001/vcard-rdf/3.0#adr': {
+                    label: ['Postal Address'],
+                    objectIEditor: ['BasicTextareaInput'],
+                    hint: ['Full address of institutional affiliation']
                 }
             }
         },
