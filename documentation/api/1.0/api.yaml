@@ -13,7 +13,7 @@ basePath: /api
 produces:
   - application/json
 paths:
-  /geo.pointToNUTS;lat={latitude};long={longitude}:
+  /geo.PointToNUTS;lat={latitude};long={longitude}:
     get:
       summary: given a point, returns the NUTS boundaries.
       description: |
@@ -204,6 +204,48 @@ paths:
             type: array
             items:
               $ref: '#/definitions/MunicipalitytoPolygon'
+  /geo.PointToGADM28AdminBoundary;lat={latitude};long={longitude};country={country};level={level}:
+    get:
+      summary: given a point, returns the GADM 2.8 administrative boundaries.
+      description: |
+        Receives Longitude and Latitude of a point and returns its administrative boundaries in different levels.
+      parameters:
+        - name: latitude
+          in: path
+          description: Latitude of the given point.
+          required: true
+          type: number
+          format: double
+          default: 45.0804
+        - name: longitude
+          in: path
+          description: Longitude of the given point.
+          required: true
+          type: number
+          format: double
+          default: 4.899431
+        - name: country
+          in: path
+          description: 3 digit ISO code for country.
+          required: true
+          type: string
+          default: NLD
+        - name: level
+          in: path
+          description: level of admin boundary (0=country level)
+          required: true
+          type: number
+          format: integer
+          default: 1
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding admin boundary details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/pointToADMIN'
   /metadata.dataset;name={name}:
     get:
       summary: given a dataset's name, returns the related metadata properties.
@@ -254,6 +296,20 @@ definitions:
         description: List of NUTS region.
         items:
            $ref: '#/definitions/NUTS'
+  pointToADMIN:
+     type: object
+     properties:
+      longitude:
+        type: number
+        format: double
+      latitude:
+        type: number
+        format: double
+      resources:
+        type: array
+        description: List of admin boundaries.
+        items:
+           $ref: '#/definitions/ADMIN28'
   NameToNUTS:
     type: object
     properties:
@@ -294,6 +350,17 @@ definitions:
       name:
         type: string
       code:
+        type: string
+      level:
+        type: integer
+  ADMIN28:
+    type: object
+    properties:
+      uri:
+        type: string
+      title:
+        type: string
+      country:
         type: string
       level:
         type: integer

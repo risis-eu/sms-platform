@@ -63,6 +63,16 @@ class GeoUtil{
             return output;
         }
     }
+    parsePointToGADM28AdminBoundary(res){
+        let parsed = JSON.parse(res);
+        let output=[];
+        if(parsed.results.bindings.length){
+            parsed.results.bindings.forEach(function(el) {
+                output.push({uri: el.uri.value, title: el.title.value, level: el.level.value, country: el.country.value});
+            });
+            return output;
+        }
+    }
     parseMunicipalityToPolygon(res){
         let parsed = JSON.parse(res);
         let output=[];

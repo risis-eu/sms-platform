@@ -15,7 +15,7 @@ export default {
     name: 'geo',
     // At least one of the CRUD methods is Required
     read: (req, resource, params, config, callback) => {
-        if(resource === 'geo.pointToNUTS'){
+        if(resource === 'geo.PointToNUTS'){
             graphName = '';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -169,6 +169,23 @@ export default {
                 callback(null, {
                     code: params.code,
                     resources: utilObject.parseMunicipalityToPolygon(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
+        } else if (resource === 'geo.PointToGADM28AdminBoundary') {
+            graphName = 'big-data-endpoint';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getPointToGADM28AdminBoundary(params.lat, params.long, params.country, params.level);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    latitude: parseFloat(params.lat),
+                    longitude: parseFloat(params.long),
+                    resources: utilObject.parsePointToGADM28AdminBoundary(res)
                 });
             }).catch(function (err) {
                 console.log(err);

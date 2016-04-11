@@ -18,6 +18,7 @@ class GeoQuery{
         PREFIX geoname: <http://www.geonames.org/ontology#> \
         PREFIX risisMCPV: <http://risis.eu/municipalities/vocab/> \
         PREFIX risisGeoV: <http://geo.risis.eu/vocabulary/> \
+        PREFIX risisGADMV: <http://geo.risis.eu/vocabulary/gadm/> \
         ';
         this.query='';
     }
@@ -149,6 +150,27 @@ class GeoQuery{
                 geo:geometry ?polygon .\
             FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
           } \
+        ';
+        return this.prefixes + this.query;
+    }
+    getPointToGADM28AdminBoundary(lat, long, country, level) {
+        let ex1 = '', ex2 = '';
+        if(country){
+            ex1 = 'risisGADMV:ISO "'+country+'" ; ' ;
+        }
+        if(level){
+            ex2 = 'risisGADMV:level '+level+' ; ' ;
+        }
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?uri ?title ?country ?level from <http://geo.risis.eu/gadm> WHERE { \
+            ?uri a risisGADMV:AdministrativeArea ;\
+                dcterms:title ?title ; '+ex1+ex2+'\
+                risisGADMV:level ?level ;\
+                risisGADMV:ISO ?country ;\
+                geo:geometry ?polygon .\
+            FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
+          } LIMIT 6 \
         ';
         return this.prefixes + this.query;
     }
