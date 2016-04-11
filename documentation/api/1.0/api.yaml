@@ -216,7 +216,7 @@ paths:
           required: true
           type: number
           format: double
-          default: 45.0804
+          default: 52.3338
         - name: longitude
           in: path
           description: Longitude of the given point.
