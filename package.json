@@ -49,8 +49,7 @@
     "request-promise": "^1.0.2",
     "serialize-javascript": "^1.1.2",
     "serve-favicon": "^2.3.0",
-    "valid-url": "^1.0.9",
-    "void-components": "^1.0.9"
+    "valid-url": "^1.0.9"
   },
   "devDependencies": {
     "babel-eslint": "^4.0.5",
