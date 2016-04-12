@@ -44,6 +44,27 @@ class GeoQuery{
         }
         return out;
     }
+    ISOtoCountryName(country) {
+        let out = country;
+        if(country.length === 3){
+            listOfCountries.forEach((row)=>{
+                if(row['alpha-3'] === country){
+                    out = row['name'];
+                    return out;
+                }
+            });
+        }else if(country.length === 2){
+            listOfCountries.forEach((row)=>{
+                if(row['alpha-2'] === country){
+                    out = row['name'];
+                    return out;
+                }
+            });
+        }else{
+            return out;
+        }
+        return out;
+    }
     getPointToNUTS(lat, long) {
         /*jshint multistr: true */
         this.query = '\
@@ -105,7 +126,7 @@ class GeoQuery{
         this.query = '\
         SELECT DISTINCT ?name ?municipalityID FROM <http://geo.risis.eu/municipalities> WHERE { \
             ?uri a risisGeoV:Municipality ;\
-            	edm:country "'+country+'" ;\
+            	edm:country "'+this.ISOtoCountryName(country)+'" ;\
             	dcterms:title ?name ;\
             	risisGeoV:municipalityID ?municipalityID .\
           } \
