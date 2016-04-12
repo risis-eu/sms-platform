@@ -196,6 +196,28 @@ class GeoQuery{
         ';
         return this.prefixes + this.query;
     }
+    getGADM28AdminToPolygon(uri) {
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?polygon ?name FROM <http://geo.risis.eu/gadm> WHERE { \
+            <'+uri+'> a risisGADMV:AdministrativeArea ;\
+                dcterms:title ?name ;\
+                geo:geometry ?polygon .\
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
+    getGADM28Admin(uri) {
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?property ?value FROM <http://geo.risis.eu/gadm> WHERE { \
+            <'+uri+'> a risisGADMV:AdministrativeArea ;\
+                ?property ?value .\
+            FILTER (?property != geo:geometry AND ?property != rdf:type)    \
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
     getMunicipalityToPolygon(id) {
         /*jshint multistr: true */
         this.query = '\

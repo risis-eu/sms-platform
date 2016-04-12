@@ -3,6 +3,18 @@ class GeoUtil{
     constructor() {
 
     }
+    getPropertyLabel(uri) {
+        let property = '';
+        let tmp = uri;
+        let tmp2 = tmp.split('#');
+        if(tmp2.length > 1){
+            property = tmp2[1];
+        }else{
+            tmp2 = tmp.split('/');
+            property = tmp2[tmp2.length - 1];
+        }
+        return property;
+    }
     parsePointToNUTS(res) {
         let parsed = JSON.parse(res);
         let output=[];
@@ -79,6 +91,27 @@ class GeoUtil{
         if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
                 output.push({name: el.name.value, polygon: el.polygon.value});
+            });
+            return output;
+        }
+    }
+    parseGADM28AdminToPolygon(res){
+        let parsed = JSON.parse(res);
+        let output=[];
+        if(parsed.results.bindings.length){
+            parsed.results.bindings.forEach(function(el) {
+                output.push({name: el.name.value, polygon: el.polygon.value});
+            });
+            return output;
+        }
+    }
+    parseGADM28Admin(res){
+        let self = this;
+        let parsed = JSON.parse(res);
+        let output={};
+        if(parsed.results.bindings.length){
+            parsed.results.bindings.forEach(function(el) {
+                output[self.getPropertyLabel(el.property.value)] =  el.value.value;
             });
             return output;
         }
