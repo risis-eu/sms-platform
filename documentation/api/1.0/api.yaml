@@ -226,13 +226,13 @@ paths:
           default: 4.899431
         - name: country
           in: path
-          description: 3 digit ISO code for country.
+          description: [Optional] 2 digit, 3 digit ISO code or the name of the country.
           required: true
           type: string
           default: NLD
         - name: level
           in: path
-          description: level of admin boundary (0=country level)
+          description: [Optional] level of admin boundary (0=country level)
           required: true
           type: number
           format: integer

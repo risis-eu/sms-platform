@@ -1,5 +1,6 @@
 'use strict';
 import {getQueryDataTypeValue} from '../utils/helpers';
+import {listOfCountries} from '../../data/countries';
 class GeoQuery{
     constructor() {
         /*jshint multistr: true */
@@ -21,6 +22,27 @@ class GeoQuery{
         PREFIX risisGADMV: <http://geo.risis.eu/vocabulary/gadm/> \
         ';
         this.query='';
+    }
+    convertToISO3(country) {
+        let out = country;
+        if(country.length === 3){
+            return out;
+        }else if(country.length === 2){
+            listOfCountries.forEach((row)=>{
+                if(row['alpha-2'] === country){
+                    out = row['alpha-3'];
+                    return out;
+                }
+            });
+        }else{
+            listOfCountries.forEach((row)=>{
+                if(row['name'] === country){
+                    out = row['alpha-3'];
+                    return out;
+                }
+            });
+        }
+        return out;
     }
     getPointToNUTS(lat, long) {
         /*jshint multistr: true */
@@ -156,7 +178,7 @@ class GeoQuery{
     getPointToGADM28AdminBoundary(lat, long, country, level) {
         let ex1 = '', ex2 = '';
         if(country){
-            ex1 = 'risisGADMV:ISO "'+country+'" ; ' ;
+            ex1 = 'risisGADMV:ISO "'+this.convertToISO3(country)+'" ; ' ;
         }
         if(level){
             ex2 = 'risisGADMV:level '+level+' ; ' ;
