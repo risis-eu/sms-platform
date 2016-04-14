@@ -1,0 +1,58 @@
+<html>
+	<head>
+		<meta charSet="utf-8" />
+		<meta name="viewport" content="width=device-width, user-scalable=no" />
+		<link href="/bower_components/semantic/dist/semantic.min.css" rel="stylesheet" type="text/css" />
+		<title>{{appFullTitle}} | demos:geo -> Address to GADM28Admin</title>
+	</head>
+	<body>
+		<div>
+			<nav  class="ui black menu inverted navbar page grid">
+					<a href="/" class="ui item brand blue label"><img src="/assets/img/sms_logo_t.png" alt="{{appShortTitle}}" /></a>
+					<a href="/demos/geo/addressToGADM28Admin" class="ui item label"> Address to GADM28Admin</a>
+			</nav>
+		</div>
+		<div class="ui page grid">
+            <div class="row">
+                <div class="eight wide column">
+                    <div class="ui cards">
+                         <div class="inverted blue card">
+                             <div class="content">
+                                   <div class="description">
+                                        <form method="post" class="ui form">
+                                            <div class="field required">
+                                                <label>Address</label>
+                                                <div class="ui icon input">
+                                                  <textarea name="addr" placeholder="Enter your address here...">{{input}}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="field">
+                                                <input class="ui blue submit button" type="submit" value="Submit"/>
+                                            </div>
+                                          </form>
+                                    </div>
+                              </div>
+                         </div>
+                     </div>
+                </div>
+                <div class="eight wide column">
+                    {{#address}}
+                    <div class="ui cards">
+                            <span class="top left attached ribbon ui blue label">1</span>
+                             <iframe src="/demos/geo/geocode/{{address}}" height="400" width="100%" style="border:none;overflow: scroll;"></iframe>
+                     </div>
+                     {{/address}}
+                </div>
+                <div class="eight wide column">
+                    {{#point}}
+                    <div class="ui cards">
+                            <span class="top left attached ribbon ui blue label">2</span>
+                             <iframe src="/demos/geo/PointToGADM28Admin/{{point.long}}/{{point.lat}}/{{point.country.shortName}}" height="500" width="500" style="border:none;overflow: scroll;"></iframe>
+                     </div>
+                     {{/point}}
+                </div>
+
+            </div>
+        </div>
+	</body>
+</html>

@@ -364,4 +364,44 @@ module.exports = function handleDemos(server) {
             return 0;
         });
     });
+    var getCountryFromGoogleAPIResult = function(address_components){
+        let shortName='',longName='';
+        address_components.forEach(function(el){
+            if(el.types.indexOf('country') !== -1){
+                shortName = el.short_name;
+                longName = el.long_name;
+            }
+        });
+        return {shortName: shortName, longName: longName};
+    }
+    server.get('/demos/geo/addressToGADM28Admin', function(req, res) {
+        res.render('addressToGADM28Admin', {input: '', appShortTitle: appShortTitle, appFullTitle: appFullTitle});
+    });
+    server.post('/demos/geo/addressToGADM28Admin', function(req, res) {
+        if((!req.body.addr)){
+            res.send('Please add an address in the URI: /demos/geo/geocode/{your address}');
+            return 0;
+        }
+        var longitude, latitude, nCode, mCode, country;
+        var apiKey = config.googleKey;
+        var apiURI = 'https://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent(decodeURIComponent(req.body.addr))+'&key=' + apiKey;
+        rp.get({uri: apiURI}).then(function(body){
+            var parsed = JSON.parse(body);
+            //res.json(parsed);
+            if(parsed.results.length){
+                //var formatted = parsed.results[0].formatted_address;
+                var location = parsed.results[0].geometry.location;
+                latitude = location.lat;
+                longitude = location.lng;
+                country = getCountryFromGoogleAPIResult(parsed.results[0].address_components);
+                res.render('addressToGADM28Admin', {input: req.body.addr, address: encodeURIComponent(req.body.addr), point:{long: longitude, lat: latitude, country: country}});
+            }else{
+                res.send('No result!');
+            }
+        }).catch(function (err) {
+            console.log(err);
+            res.send('');
+            return 0;
+        });
+    });
 };
