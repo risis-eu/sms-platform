@@ -20,6 +20,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
+    "async": "^2.0.0-rc.3",
     "babel": "^5.8.23",
     "babel-core": "^5.8.25",
     "body-parser": "^1.6.4",
