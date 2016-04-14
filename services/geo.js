@@ -174,11 +174,11 @@ export default {
                 console.log(err);
                 callback(null, {resources: []});
             });
-        } else if (resource === 'geo.PointToGADM28AdminBoundary') {
+        } else if (resource === 'geo.PointToGADM28Admin') {
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
-            query = queryObject.getPointToGADM28AdminBoundary(params.lat, params.long, params.country, params.level);
+            query = queryObject.getPointToGADM28Admin(params.lat, params.long, params.country, params.level);
             //console.log(query);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
@@ -186,7 +186,7 @@ export default {
                 callback(null, {
                     latitude: parseFloat(params.lat),
                     longitude: parseFloat(params.long),
-                    resources: utilObject.parsePointToGADM28AdminBoundary(res)
+                    resources: utilObject.parsePointToGADM28Admin(res)
                 });
             }).catch(function (err) {
                 console.log(err);
@@ -196,13 +196,13 @@ export default {
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
-            query = queryObject.getGADM28AdminToPolygon(params.uri);
+            query = queryObject.getGADM28AdminToPolygon('http://geo.risis.eu/gadm/' + params.id);
             //console.log(query);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 //console.log(res);
                 callback(null, {
-                    uri: params.uri,
+                    id: params.id,
                     resources: utilObject.parseGADM28AdminToPolygon(res)
                 });
             }).catch(function (err) {
@@ -213,13 +213,13 @@ export default {
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
-            query = queryObject.getGADM28Admin(params.uri);
+            query = queryObject.getGADM28Admin('http://geo.risis.eu/gadm/' + params.id);
             //console.log(query);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 //console.log(res);
                 callback(null, {
-                    uri: params.uri,
+                    id: params.id,
                     resources: utilObject.parseGADM28Admin(res)
                 });
             }).catch(function (err) {

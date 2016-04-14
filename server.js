@@ -19,6 +19,8 @@ import cookieParser from 'cookie-parser';
 import favicon from 'serve-favicon';
 //required for authentication
 import handleAuthentication from './plugins/authentication/handleAuth';
+//required for geo demos
+import handleDemos from './plugins/demos/handleDemos';
 //required for export resources
 import handleExport from './plugins/export/handleExport';
 import {enableAuthentication} from './configs/general';
@@ -43,6 +45,8 @@ server.use(cookieSession({
     name: 'LDR',
     keys: ['u1waegf234ss', 'u2wef23ed5325']
 }));
+//for demo applications
+handleDemos(server);
 // server.use(csrf({cookie: true}));
 //for authentication: this part is external to the flux architecture
 if(enableAuthentication){

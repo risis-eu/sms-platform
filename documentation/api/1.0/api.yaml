@@ -204,16 +204,16 @@ paths:
             type: array
             items:
               $ref: '#/definitions/MunicipalitytoPolygon'
-  /geo.GADM28Admin;uri={uri}:
+  /geo.GADM28Admin;id={id}:
     get:
       summary: given a admin boundary uri, returns its detailed properties.
       parameters:
-        - name: uri
+        - name: id
           in: path
-          description: uri of the administrative boundary
+          description: id of the administrative boundary
           required: true
           type: string
-          default: http://geo.risis.eu/gadm/158-9-266
+          default: 158-9-266
       tags:
         - Geo-Services
       responses:
@@ -223,16 +223,16 @@ paths:
             type: array
             items:
               $ref: '#/definitions/GADM28Admin'
-  /geo.GADM28AdminToPolygon;uri={uri}:
+  /geo.GADM28AdminToPolygon;id={id}:
     get:
       summary: given a admin boundary uri, returns the polygon shape.
       parameters:
-        - name: uri
+        - name: id
           in: path
-          description: uri of the administrative boundary
+          description: id of the administrative boundary
           required: true
           type: string
-          default: http://geo.risis.eu/gadm/158-9-266
+          default: 158-9-266
       tags:
         - Geo-Services
       responses:
@@ -242,7 +242,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/MunicipalitytoPolygon'
-  /geo.PointToGADM28AdminBoundary;lat={latitude};long={longitude};country={country};level={level}:
+  /geo.PointToGADM28Admin;lat={latitude};long={longitude};country={country};level={level}:
     get:
       summary: given a point, returns the GADM 2.8 administrative boundaries.
       description: |

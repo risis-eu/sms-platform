@@ -196,7 +196,7 @@ class GeoQuery{
         ';
         return this.prefixes + this.query;
     }
-    getPointToGADM28AdminBoundary(lat, long, country, level) {
+    getPointToGADM28Admin(lat, long, country, level) {
         let ex1 = '', ex2 = '';
         if(country){
             ex1 = 'risisGADMV:ISO "'+this.convertToISO3(country)+'" ; ' ;
