@@ -65,6 +65,7 @@ class GeoQuery{
         }
         return out;
     }
+    //FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
     getPointToNUTS(lat, long) {
         /*jshint multistr: true */
         this.query = '\
@@ -74,7 +75,7 @@ class GeoQuery{
                 ramon:level ?level ;\
             	ramon:name ?name ;\
             	geo:geometry ?polygon .\
-            FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
+            FILTER (bif:st_intersects (?polygon, bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
           } \
         ';
         return this.prefixes + this.query;
@@ -191,7 +192,7 @@ class GeoQuery{
                 dcterms:title ?name ;\
                 edm:country ?country ;\
                 geo:geometry ?polygon .\
-            FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
+            FILTER (bif:st_intersects (?polygon, bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
           } \
         ';
         return this.prefixes + this.query;
@@ -212,7 +213,7 @@ class GeoQuery{
                 risisGADMV:level ?level ;\
                 risisGADMV:ISO ?country ;\
                 geo:geometry ?polygon .\
-            FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
+            FILTER (bif:st_intersects (?polygon, bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
           } LIMIT 6 \
         ';
         return this.prefixes + this.query;
