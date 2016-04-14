@@ -286,6 +286,7 @@ module.exports = function handleDemos(server) {
         var height = 500;
         var pointLong = req.params.long;
         var pointLat = req.params.lat;
+        var country = req.params.country;
         if(req.params.width){
             width = req.params.width;
         }
@@ -354,7 +355,7 @@ module.exports = function handleDemos(server) {
                             finalScript = finalScript + ' var marker=new google.maps.Marker({position:myPoint,animation:google.maps.Animation.BOUNCE}); marker.setMap(map); }';
                         }
                     })
-                    finalScript = finalScript + ' google.maps.event.addDomListener(window, "load", initialize); '+ '</script></head><body><div class="ui segments"><div class="ui segment"><h3><a target="_blank" href="/demos/geo/PointToGADM28Admin/'+pointLong+'/'+pointLat+'">Coordinates to GADM28Admin</a></h3></div><div class="ui segment">'+nutsLinks.join(' ')+'<div id="googleMap" style="width:'+width+'px;height:'+height+'px;"></div></div></div><div class="ui message warning"> * Notice: for MultiPolygon areas, only one part is shown on the map.</div></body></html>';
+                    finalScript = finalScript + ' google.maps.event.addDomListener(window, "load", initialize); '+ '</script></head><body><div class="ui segments"><div class="ui segment"><h3><a target="_blank" href="/demos/geo/PointToGADM28Admin/'+pointLong+'/'+pointLat+'"/'+country+'>Coordinates to GADM28Admin</a></h3></div><div class="ui segment">'+nutsLinks.join(' ')+'<div id="googleMap" style="width:'+width+'px;height:'+height+'px;"></div></div></div><div class="ui message warning"> * Notice: for MultiPolygon areas, only one part is shown on the map.</div></body></html>';
                     res.send(finalScript);
                 }
             });
