@@ -26,6 +26,16 @@ export default {
             done();
         }
     },
+    demos: {
+        path: '/demos',
+        method: 'get',
+        handler: require('../components/Demos'),
+        label: 'Demos',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Demos'});
+            done();
+        }
+    },
     facets: {
         path: '/browse/:id?',
         method: 'get',

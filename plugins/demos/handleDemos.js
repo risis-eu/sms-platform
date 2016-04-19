@@ -11,8 +11,8 @@ var smsAPI = '/api';
 
 module.exports = function handleDemos(server) {
 
-    server.get('/demos', function(req, res) {
-        res.json({'message' : 'Hello! I am a demo app! Try this example: /demos/geo/NUTS/NL326'});
+    server.get('/demos/geo', function(req, res) {
+        res.json({'message' : 'Hello! I am a demo Geo app! Try this example: /demos/geo/NUTS/NL326'});
     });
 
     server.get('/demos/geo/geocode/:addr?', function(req, res) {
