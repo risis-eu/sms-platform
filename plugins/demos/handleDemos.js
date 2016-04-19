@@ -40,23 +40,39 @@ module.exports = function handleDemos(server) {
     });
     //todo: handle multi polygons
     var parseVirtPolygon = function(input) {
-        var tmp = input.split(')');
-        var tl = tmp.length;
-        if(tl){
-            var tmp2 = tmp[0].split('(');
-            if(tl === 3){
-                //normal polygon
-                //console.log(tmp);
-                var tmp3 = tmp2[2].split(',');
-            }else if (tl > 3){
-                //polygon with holes or multipolygons
-                //console.log(tmp);
-                //get the first part only
-                var tmp3 = tmp2[3].split(',');
-            }
-            return tmp3;
+        var out = [];
+        if(input.indexOf('MULTIPOLYGON') !== -1){
+            var res = input.replace('MULTIPOLYGON(', '');
+            res = res.substring(0, res.length - 1);
+            // ((----)),((------)),((---------))
+            var parts = res.split('((');
+            parts.forEach(function(el){
+                var tmp = el.trim().replace(')),', '');
+                var tmp = tmp.replace('))', '');
+                if(tmp){
+                    out.push(tmp.split(','));
+                }
+            })
+            return out;
         }else{
-            return [];
+            var tmp = input.split(')');
+            var tl = tmp.length;
+            if(tl){
+                var tmp2 = tmp[0].split('(');
+                if(tl === 3){
+                    //normal polygon
+                    //console.log(tmp);
+                    var tmp3 = tmp2[2].split(',');
+                }else if (tl > 3){
+                    //polygon with holes or multipolygons
+                    //console.log(tmp);
+                    //get the first part only
+                    var tmp3 = tmp2[3].split(',');
+                }
+                return [tmp3];
+            }else{
+                return [];
+            }
         }
     };
 
@@ -81,16 +97,18 @@ module.exports = function handleDemos(server) {
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
             var input = parsed.resources[0].polygon;
-            var points = parseVirtPolygon(input);
-            if(!points.length){
+            var polygons = parseVirtPolygon(input);
+            if(!polygons.length){
                 res.send('');
                 return 0;
             }
             var output = 'var arr = [];';
-            points.forEach(function(el){
-                var tmp = el.split(' ');
-                output = output + 'arr.push(new google.maps.LatLng('+tmp[1]+','+tmp[0]+')); ';
-            })
+            polygons.forEach(function(points){
+                points.forEach(function(el){
+                    var tmp = el.split(' ');
+                    output = output + 'arr.push(new google.maps.LatLng('+tmp[1]+','+tmp[0]+')); ';
+                });
+            });
             var finalScript = '<!DOCTYPE html><html><head><title>'+appShortTitle+': demos/geo -> NUTS: '+req.params.code+'</title><script src="http://maps.googleapis.com/maps/api/js"></script><script> '+ output + ' function initialize(){var mapProp = {center: arr[0],zoom:7,mapTypeId: google.maps.MapTypeId.ROADMAP};' + ' var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);' + ' var regionPath=new google.maps.Polygon({path: arr,strokeColor:"'+color+'",strokeOpacity:0.8,strokeWeight:2,fillColor:"'+color+'",fillOpacity:0.4});' + ' regionPath.setMap(map);}' + ' google.maps.event.addDomListener(window, "load", initialize); '+ '</script></head><body><div id="googleMap" style="width:'+width+'px;height:'+height+'px;"></div></body></html>';
             res.send(finalScript);
         }).catch(function (err) {
@@ -119,16 +137,18 @@ module.exports = function handleDemos(server) {
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
             var input = parsed.resources[0].polygon;
-            var points = parseVirtPolygon(input);
-            if(!points.length){
+            var polygons = parseVirtPolygon(input);
+            if(!polygons.length){
                 res.send('');
                 return 0;
             }
             var output = 'var arr = [];';
-            points.forEach(function(el){
-                var tmp = el.split(' ');
-                output = output + 'arr.push(new google.maps.LatLng('+tmp[1]+','+tmp[0]+')); ';
-            })
+            polygons.forEach(function(points){
+                points.forEach(function(el){
+                    var tmp = el.split(' ');
+                    output = output + 'arr.push(new google.maps.LatLng('+tmp[1]+','+tmp[0]+')); ';
+                });
+            });
             var finalScript = '<!DOCTYPE html><html><head><title>'+appShortTitle+': demos/geo -> PointAndNUTS: ('+pointLat+','+pointLong+') and  '+req.params.code+'</title><script src="http://maps.googleapis.com/maps/api/js"></script><script> '+ output + 'var myPoint=new google.maps.LatLng('+pointLat+','+pointLong+'); var marker;  function initialize(){var mapProp = {center: arr[0],zoom:7,mapTypeId: google.maps.MapTypeId.ROADMAP};' + ' var map=new google.maps.Map(document.getElementById("googleMap"),mapProp); var marker=new google.maps.Marker({position:myPoint,animation:google.maps.Animation.BOUNCE}); marker.setMap(map); ' + ' var regionPath=new google.maps.Polygon({path: arr,strokeColor:"#0000FF",strokeOpacity:0.8,strokeWeight:2,fillColor:"#0000FF",fillOpacity:0.4});' + ' regionPath.setMap(map);}' + ' google.maps.event.addDomListener(window, "load", initialize); '+ '</script></head><body><div id="googleMap" style="width:'+width+'px;height:'+height+'px;"></div></body></html>';
             res.send(finalScript);
         }).catch(function (err) {
@@ -195,12 +215,14 @@ module.exports = function handleDemos(server) {
                 }else{
                     var finalScript = '<!DOCTYPE html><html><head><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> PointToNUTS: ('+pointLat+','+pointLong+')</title><script src="http://maps.googleapis.com/maps/api/js"></script><script> ' + ' var myPoint=new google.maps.LatLng('+pointLat+','+pointLong+'); var marker; ';
                     polygons.forEach(function(input, i){
-                        var points = parseVirtPolygon(input);
+                        var polygons2 = parseVirtPolygon(input);
                         var output = 'var arr'+i+' = [];';
-                        points.forEach(function(el){
-                            var tmp = el.split(' ');
-                            output = output + 'arr'+i+'.push(new google.maps.LatLng('+tmp[1]+','+tmp[0]+')); ';
-                        })
+                        polygons2.forEach(function(points){
+                            points.forEach(function(el){
+                                var tmp = el.split(' ');
+                                output = output + 'arr'+i+'.push(new google.maps.LatLng('+tmp[1]+','+tmp[0]+')); ';
+                            });
+                        });
                         finalScript = finalScript + output;
                         if(i === 0){
                             finalScript = finalScript + ' function initialize(){var mapProp = {center: arr'+i+'[0],zoom:7,mapTypeId: google.maps.MapTypeId.ROADMAP};' +' var map=new google.maps.Map(document.getElementById("googleMap"),mapProp); ';
@@ -250,17 +272,19 @@ module.exports = function handleDemos(server) {
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
             var input = parsed.resources[0].polygon;
-            var points = parseVirtPolygon(input);
-            if(!points.length){
+            var polygons = parseVirtPolygon(input);
+            if(!polygons.length){
                 res.send('');
                 return 0;
             }
             var output = 'var arr = [];';
-            points.forEach(function(el){
-                var tmp = el.split(' ');
-                output = output + 'arr.push(new google.maps.LatLng('+tmp[1]+','+tmp[0]+')); ';
-            })
-            var finalScript = '<!DOCTYPE html><html><head><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> GADM28Admin: '+req.params.code+'</title><script src="http://maps.googleapis.com/maps/api/js"></script><script> '+ output + ' function initialize(){var mapProp = {center: arr[0],zoom:7,mapTypeId: google.maps.MapTypeId.ROADMAP};' + ' var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);' + ' var regionPath=new google.maps.Polygon({path: arr,strokeColor:"'+color+'",strokeOpacity:0.8,strokeWeight:2,fillColor:"'+color+'",fillOpacity:0.4});' + ' regionPath.setMap(map);}' + ' google.maps.event.addDomListener(window, "load", initialize); '+ '</script></head><body><div id="googleMap" style="width:'+width+'px;height:'+height+'px;"></div><div class="ui message warning"> * Notice: for MultiPolygon areas, only one part is shown on the map.</div></body></html>';
+            polygons.forEach(function(points){
+                points.forEach(function(el){
+                    var tmp = el.split(' ');
+                    output = output + 'arr.push(new google.maps.LatLng('+tmp[1]+','+tmp[0]+')); ';
+                });
+            });
+            var finalScript = '<!DOCTYPE html><html><head><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> GADM28Admin: '+req.params.code+'</title><script src="http://maps.googleapis.com/maps/api/js"></script><script> '+ output + ' function initialize(){var mapProp = {center: arr[0],zoom:7,mapTypeId: google.maps.MapTypeId.ROADMAP};' + ' var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);' + ' var regionPath=new google.maps.Polygon({path: arr,strokeColor:"'+color+'",strokeOpacity:0.8,strokeWeight:2,fillColor:"'+color+'",fillOpacity:0.4});' + ' regionPath.setMap(map);}' + ' google.maps.event.addDomListener(window, "load", initialize); '+ '</script></head><body><div id="googleMap" style="width:'+width+'px;height:'+height+'px;"></div></body></html>';
             res.send(finalScript);
         }).catch(function (err) {
             console.log(err);
@@ -332,12 +356,14 @@ module.exports = function handleDemos(server) {
                 }else{
                     var finalScript = '<!DOCTYPE html><html><head><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> PointToGADM28Admin: ('+pointLat+','+pointLong+')</title><script src="http://maps.googleapis.com/maps/api/js"></script><script> ' + ' var myPoint=new google.maps.LatLng('+pointLat+','+pointLong+'); var marker; ';
                     polygons.forEach(function(input, i){
-                        var points = parseVirtPolygon(input);
+                        var polygons2 = parseVirtPolygon(input);
                         var output = 'var arr'+i+' = [];';
-                        points.forEach(function(el){
-                            var tmp = el.split(' ');
-                            output = output + 'arr'+i+'.push(new google.maps.LatLng('+tmp[1]+','+tmp[0]+')); ';
-                        })
+                        polygons2.forEach(function(points){
+                            points.forEach(function(el){
+                                var tmp = el.split(' ');
+                                output = output + 'arr'+i+'.push(new google.maps.LatLng('+tmp[1]+','+tmp[0]+')); ';
+                            });
+                        });
                         finalScript = finalScript + output;
                         if(i === 0){
                             finalScript = finalScript + ' function initialize(){var mapProp = {center: arr'+i+'[0],zoom:7,mapTypeId: google.maps.MapTypeId.ROADMAP};' +' var map=new google.maps.Map(document.getElementById("googleMap"),mapProp); ';
@@ -355,7 +381,7 @@ module.exports = function handleDemos(server) {
                             finalScript = finalScript + ' var marker=new google.maps.Marker({position:myPoint,animation:google.maps.Animation.BOUNCE}); marker.setMap(map); }';
                         }
                     })
-                    finalScript = finalScript + ' google.maps.event.addDomListener(window, "load", initialize); '+ '</script></head><body><div class="ui segments"><div class="ui segment"><h3><a target="_blank" href="/demos/geo/PointToGADM28Admin/'+pointLong+'/'+pointLat+'"/'+country+'>Coordinates to GADM28Admin</a></h3></div><div class="ui segment">'+nutsLinks.join(' ')+'<div id="googleMap" style="width:'+width+'px;height:'+height+'px;"></div></div></div><div class="ui message warning"> * Notice: for MultiPolygon areas, only one part is shown on the map.</div></body></html>';
+                    finalScript = finalScript + ' google.maps.event.addDomListener(window, "load", initialize); '+ '</script></head><body><div class="ui segments"><div class="ui segment"><h3><a target="_blank" href="/demos/geo/PointToGADM28Admin/'+pointLong+'/'+pointLat+'"/'+country+'>Coordinates to GADM28Admin</a></h3></div><div class="ui segment">'+nutsLinks.join(' ')+'<div id="googleMap" style="width:'+width+'px;height:'+height+'px;"></div></div></div></body></html>';
                     res.send(finalScript);
                 }
             });
