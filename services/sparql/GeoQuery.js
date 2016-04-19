@@ -212,9 +212,8 @@ class GeoQuery{
                 dcterms:title ?title ; '+ex1+ex2+'\
                 risisGADMV:level ?level ;\
                 risisGADMV:ISO ?country ;\
-                #geo:geometry ?polygon .\
-                geoV:geometry ?polygon .\
-            FILTER (bif:st_intersects (bif:st_geomfromtext(?polygon), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
+                geo:geometry ?polygon .\
+            FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
           } LIMIT 6 \
         ';
         return this.prefixes + this.query;
