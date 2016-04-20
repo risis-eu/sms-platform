@@ -264,7 +264,7 @@ class GeoQuery{
         /*jshint multistr: true */
         this.query = '\
         SELECT DISTINCT ?uri ?title ?country ?level from <http://geo.risis.eu/osm> WHERE { \
-            ?uri a risisGADMV:AdministrativeArea ;\
+            ?uri a risisOSMV:AdministrativeArea ;\
                 dcterms:title ?title ; '+ex1+ex2+'\
                 risisOSMV:level ?level ;\
                 risisOSMV:ISO ?country ;\
