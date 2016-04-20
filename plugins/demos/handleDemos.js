@@ -431,6 +431,38 @@ module.exports = function handleDemos(server) {
             return 0;
         });
     });
+    server.get('/demos/geo/OSMAdmin/:id', function(req, res) {
+        if(!req.params.id){
+            res.send('a parameter is missing: id');
+            return 0;
+        }
+        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.OSMAdmin;id=' + req.params.id;
+        //console.log(apiURI);
+        rp.get({uri: apiURI}).then(function(body){
+            var parsed = JSON.parse(body);
+            //list of properties
+            var props = parsed.resources;
+            var out = '<div class="ui divided list">';
+            for(var prop in props){
+                if(prop==='dbpedia'){
+                    out = out + '<span class="ui item">DBPedia URI: <a target="_blank" href="'+props[prop]+'">'+props[prop]+'</a></span>';
+                }else if(prop==='wikidata'){
+                    out = out + '<span class="ui item">WikiData URI: <a target="_blank" href="'+props[prop]+'">'+props[prop]+'</a></span>';
+                }else if(prop==='shapeType'){
+                    out = out + '<span class="ui item">Shape Type: <a target="_blank" href="http://www.openstreetmap.org/relation/'+req.params.id.split('_')[1]+'">'+props[prop]+'</a></span>';
+                }else{
+                    out = out + '<span class="ui item">'+prop+': <b>'+props[prop]+'</b></span>';
+
+                }
+            }
+
+            res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to OSM Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/OSMAdmin/'+req.params.id+'">OSM Admin Boundary Properties</a></h3> </div> <div class="ui segment"> '+out+' </div></div></div></div></body></html>');
+        }).catch(function (err) {
+            console.log(err);
+            res.send('');
+            return 0;
+        });
+    });
     server.get('/demos/geo/PointToOSMAdmin/:long?/:lat?/:country?', function(req, res) {
         if(!req.params.lat || !req.params.long){
             res.send('a parameter is missing: lat or long');
@@ -456,10 +488,10 @@ module.exports = function handleDemos(server) {
             var out = '<div class="ui divided list">';
             var dv = '-';
             regionLinks.forEach(function(item, i){
-                out = out + '<a target="_blank" class="ui item" href="/demos/geo/OSMAdmin/'+item.id+'""><a class="ui mini olive circular label">'+(i+1)+'</a>'+ dv +' '+item.title +'</a>';
+                out = out + '<a target="_blank" class="ui item" href="/demos/geo/OSMAdmin/'+item.id+'""><span class="ui mini olive circular label">'+(i+1)+'</span>'+ dv +' '+item.title +'</a>';
                 dv = dv + '-';
             });
-            res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to OSM Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/PointToOSMAdmin/'+pointLong+'/'+pointLat+'/'+country+'">Coordinates to OSMAdmin</a></h3> </div> <div class="ui segment"> '+out+' </div></div></div></div></body></html>');
+            res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to OSM Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/PointToOSMAdmin/'+pointLong+'/'+pointLat+'/'+country+'">Coordinates to OSM Admin Boundaries</a></h3> </div> <div class="ui segment"> '+out+' </div></div></div></div></body></html>');
         }).catch(function (err) {
             console.log(err);
             res.send('');
