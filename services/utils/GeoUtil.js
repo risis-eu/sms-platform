@@ -123,7 +123,11 @@ class GeoUtil{
         let output={};
         if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
-                output[self.getPropertyLabel(el.property.value)] =  el.value.value;
+                if(el.property.value.indexOf('parent') === -1){
+                    output[self.getPropertyLabel(el.property.value)] =  el.value.value;
+                }else{
+                    output[self.getPropertyLabel(el.property.value) + '_ID'] =  self.getPropertyLabel(el.value.value);
+                }
             });
             return output;
         }
