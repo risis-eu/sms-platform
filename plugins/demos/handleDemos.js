@@ -443,16 +443,16 @@ module.exports = function handleDemos(server) {
             //list of properties
             var props = parsed.resources;
             var out = '<div class="ui divided list">';
+            out = out + '<span class="ui item">OSM ID: <a target="_blank" href="http://www.openstreetmap.org/'+req.params.id.split('_')[0]+'/'+req.params.id.split('_')[1]+'">'+req.params.id.replace('_', '/')+'</a></span>';
             for(var prop in props){
                 if(prop==='dbpedia'){
                     out = out + '<span class="ui item">DBPedia URI: <a target="_blank" href="'+props[prop]+'">'+props[prop]+'</a></span>';
                 }else if(prop==='wikidata'){
                     out = out + '<span class="ui item">WikiData URI: <a target="_blank" href="'+props[prop]+'">'+props[prop]+'</a></span>';
                 }else if(prop==='shapeType'){
-                    out = out + '<span class="ui item">Shape Type: <a target="_blank" href="http://www.openstreetmap.org/relation/'+req.params.id.split('_')[1]+'">'+props[prop]+'</a></span>';
+                    out = out + '<span class="ui item">Shape Type: <a target="_blank" href="/demos/geo/OSMAdminToPolygon/'+req.params.id+'">'+props[prop]+'</a></span>';
                 }else{
                     out = out + '<span class="ui item">'+prop+': <b>'+props[prop]+'</b></span>';
-
                 }
             }
 
@@ -522,6 +522,47 @@ module.exports = function handleDemos(server) {
             }else{
                 res.send('No result!');
             }
+        }).catch(function (err) {
+            console.log(err);
+            res.send('');
+            return 0;
+        });
+    });
+    server.get('/demos/geo/OSMAdminToPolygon/:code?/:width?/:height?/:color?', function(req, res) {
+        if(!req.params.code){
+            res.send('identifier parameter is missing!');
+            return 0;
+        }
+        var color = '#0000FF';
+        if(req.params.color){
+            color = '#' + req.params.color;
+        }
+        var width = 500;
+        var height = 500;
+        if(req.params.width){
+            width = req.params.width;
+        }
+        if(req.params.height){
+            height = req.params.height;
+        }
+        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.OSMAdminToPolygon;id=' + req.params.code;
+        rp.get({uri: apiURI}).then(function(body){
+            var parsed = JSON.parse(body);
+            var input = parsed.resources[0].polygon;
+            var polygons = parseVirtPolygon(input);
+            if(!polygons.length){
+                res.send('');
+                return 0;
+            }
+            var output = 'var arr = [];';
+            polygons.forEach(function(points){
+                points.forEach(function(el){
+                    var tmp = el.split(' ');
+                    output = output + 'arr.push(new google.maps.LatLng('+tmp[1]+','+tmp[0]+')); ';
+                });
+            });
+            var finalScript = '<!DOCTYPE html><html><head><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> GADM28Admin: '+req.params.code+'</title><script src="http://maps.googleapis.com/maps/api/js"></script><script> '+ output + ' function initialize(){var mapProp = {center: arr[0],zoom:7,mapTypeId: google.maps.MapTypeId.ROADMAP};' + ' var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);' + ' var regionPath=new google.maps.Polygon({path: arr,strokeColor:"'+color+'",strokeOpacity:0.8,strokeWeight:2,fillColor:"'+color+'",fillOpacity:0.4});' + ' regionPath.setMap(map);}' + ' google.maps.event.addDomListener(window, "load", initialize); '+ '</script></head><body><div id="googleMap" style="width:'+width+'px;height:'+height+'px;"></div></body></html>';
+            res.send(finalScript);
         }).catch(function (err) {
             console.log(err);
             res.send('');
