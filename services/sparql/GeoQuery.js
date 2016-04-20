@@ -20,6 +20,7 @@ class GeoQuery{
         PREFIX risisMCPV: <http://risis.eu/municipalities/vocab/> \
         PREFIX risisGeoV: <http://geo.risis.eu/vocabulary/> \
         PREFIX risisGADMV: <http://geo.risis.eu/vocabulary/gadm/> \
+        PREFIX risisOSMV: <http://geo.risis.eu/vocabulary/osm/> \
         ';
         this.query='';
     }
@@ -246,6 +247,49 @@ class GeoQuery{
         SELECT DISTINCT ?polygon ?name FROM <http://geo.risis.eu/shapefiles> WHERE { \
             ?uri a risisGeoV:Municipality ;\
                 risisGeoV:municipalityID "'+id+'" ;\
+                dcterms:title ?name ;\
+                geo:geometry ?polygon .\
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
+    getPointToOSMAdmin(lat, long, country, level) {
+        let ex1 = '', ex2 = '';
+        if(country){
+            ex1 = 'risisOSMV:ISO "'+this.convertToISO3(country)+'" ; ' ;
+        }
+        if(level){
+            ex2 = 'risisOSMV:level '+level+' ; ' ;
+        }
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?uri ?title ?country ?level from <http://geo.risis.eu/osm> WHERE { \
+            ?uri a risisGADMV:AdministrativeArea ;\
+                dcterms:title ?title ; '+ex1+ex2+'\
+                risisOSMV:level ?level ;\
+                risisOSMV:ISO ?country ;\
+                geo:geometry ?polygon .\
+            FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
+        } LIMIT 12 \
+        ';
+        return this.prefixes + this.query;
+    }
+    getOSMAdmin(uri) {
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?property ?value FROM <http://geo.risis.eu/osm> WHERE { \
+            <'+uri+'> a risisOSMV:AdministrativeArea ;\
+                ?property ?value .\
+            FILTER (?property != geo:geometry AND ?property != rdf:type)    \
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
+    getOSMAdminToPolygon(uri) {
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?polygon ?name FROM <http://geo.risis.eu/osm> WHERE { \
+            <'+uri+'> a risisOSMV:AdministrativeArea ;\
                 dcterms:title ?name ;\
                 geo:geometry ?polygon .\
           } \

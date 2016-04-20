@@ -156,54 +156,6 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Municipality'
-  /geo.PointToMunicipality;lat={latitude};long={longitude}:
-    get:
-      summary: given a point, returns the related municipality.
-      description: |
-        Receives Longitude and Latitude of a point and returns its municipality details.
-      parameters:
-        - name: latitude
-          in: path
-          description: Latitude of the given point.
-          required: true
-          type: number
-          format: double
-          default: 48.210033
-        - name: longitude
-          in: path
-          description: Longitude of the given point.
-          required: true
-          type: number
-          format: double
-          default: 16.363449
-      tags:
-        - Geo-Services
-      responses:
-        200:
-          description: An array of object with corresponding details.
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/PointToMunicipality'
-  /geo.MunicipalityToPolygon;code={code}:
-    get:
-      summary: given a municipality code, returns the polygon shape.
-      parameters:
-        - name: code
-          in: path
-          description: municipality code
-          required: true
-          type: string
-          default: AT31726
-      tags:
-        - Geo-Services
-      responses:
-        200:
-          description: An array of object with corresponding details.
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/MunicipalitytoPolygon'
   /geo.GADM28Admin;id={id}:
     get:
       summary: given a admin boundary uri, returns its detailed properties.
@@ -284,6 +236,134 @@ paths:
             type: array
             items:
               $ref: '#/definitions/pointToADMIN'
+  /geo.PointToOSMAdmin;lat={latitude};long={longitude};country={country};level={level}:
+    get:
+      summary: given a point, returns the OpneStreetMap administrative boundaries.
+      description: |
+        Receives Longitude and Latitude of a point and returns its administrative boundaries in different levels.
+      parameters:
+        - name: latitude
+          in: path
+          description: Latitude of the given point.
+          required: true
+          type: number
+          format: double
+          default: 52.3338
+        - name: longitude
+          in: path
+          description: Longitude of the given point.
+          required: true
+          type: number
+          format: double
+          default: 4.899431
+        - name: country
+          in: path
+          description: Optional 2 digit, 3 digit ISO code or the name of the country.
+          required: true
+          type: string
+          default: NLD
+        - name: level
+          in: path
+          description: Optional level of admin boundary (0=country level)
+          required: true
+          type: number
+          format: integer
+          default: 1
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding admin boundary details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/pointToADMIN'
+  /geo.OSMAdmin;id={id}:
+    get:
+      summary: given a admin boundary uri, returns its detailed properties.
+      parameters:
+        - name: id
+          in: path
+          description: id of the administrative boundary
+          required: true
+          type: string
+          default: relation/157954
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GADM28Admin'
+  /geo.OSMAdminToPolygon;id={id}:
+    get:
+      summary: given a admin boundary uri, returns the polygon shape.
+      parameters:
+        - name: id
+          in: path
+          description: id of the administrative boundary
+          required: true
+          type: string
+          default: relation/157954
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MunicipalitytoPolygon'
+  /geo.PointToMunicipality;lat={latitude};long={longitude}:
+    get:
+      summary: given a point, returns the related municipality.
+      description: |
+        Receives Longitude and Latitude of a point and returns its municipality details.
+      parameters:
+        - name: latitude
+          in: path
+          description: Latitude of the given point.
+          required: true
+          type: number
+          format: double
+          default: 48.210033
+        - name: longitude
+          in: path
+          description: Longitude of the given point.
+          required: true
+          type: number
+          format: double
+          default: 16.363449
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PointToMunicipality'
+  /geo.MunicipalityToPolygon;code={code}:
+    get:
+      summary: given a municipality code, returns the polygon shape.
+      parameters:
+        - name: code
+          in: path
+          description: municipality code
+          required: true
+          type: string
+          default: AT31726
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MunicipalitytoPolygon'
   /metadata.dataset;name={name}:
     get:
       summary: given a dataset's name, returns the related metadata properties.

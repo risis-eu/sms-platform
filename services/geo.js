@@ -226,6 +226,58 @@ export default {
                 console.log(err);
                 callback(null, {resources: []});
             });
+        } else if (resource === 'geo.PointToOSMAdmin') {
+            graphName = 'big-data-endpoint';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getPointToOSMAdmin(params.lat, params.long, params.country, params.level);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    latitude: parseFloat(params.lat),
+                    longitude: parseFloat(params.long),
+                    resources: utilObject.parsePointToOSMAdmin(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
+        } else if (resource === 'geo.OSMAdmin') {
+            graphName = 'big-data-endpoint';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getOSMAdmin('http://geo.risis.eu/osm/' + params.id);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    id: params.id,
+                    resources: utilObject.parseOSMAdmin(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
+        } else if (resource === 'geo.OSMAdminToPolygon') {
+            graphName = 'big-data-endpoint';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getOSMAdminToPolygon('http://geo.risis.eu/osm/' + params.id);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    id: params.id,
+                    resources: utilObject.parseOSMAdminToPolygon(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
         }
     }
     // other methods

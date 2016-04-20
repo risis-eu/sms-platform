@@ -86,6 +86,17 @@ class GeoUtil{
             return output;
         }
     }
+    parsePointToOSMAdmin(res){
+        let self = this;
+        let parsed = JSON.parse(res);
+        let output=[];
+        if(parsed.results.bindings.length){
+            parsed.results.bindings.forEach(function(el) {
+                output.push({id: el.uri.value.replace('http://geo.risis.eu/osm/', ''), title: el.title.value, level: el.level.value, country: el.country.value});
+            });
+            return output;
+        }
+    }
     parseMunicipalityToPolygon(res){
         let parsed = JSON.parse(res);
         let output=[];
@@ -113,6 +124,27 @@ class GeoUtil{
         if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
                 output[self.getPropertyLabel(el.property.value)] =  el.value.value;
+            });
+            return output;
+        }
+    }
+    parseOSMAdmin(res){
+        let self = this;
+        let parsed = JSON.parse(res);
+        let output={};
+        if(parsed.results.bindings.length){
+            parsed.results.bindings.forEach(function(el) {
+                output[self.getPropertyLabel(el.property.value)] =  el.value.value;
+            });
+            return output;
+        }
+    }
+    parseOSMAdminToPolygon(res){
+        let parsed = JSON.parse(res);
+        let output=[];
+        if(parsed.results.bindings.length){
+            parsed.results.bindings.forEach(function(el) {
+                output.push({name: el.name.value, polygon: el.polygon.value});
             });
             return output;
         }
