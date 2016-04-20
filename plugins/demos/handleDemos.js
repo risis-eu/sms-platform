@@ -431,4 +431,69 @@ module.exports = function handleDemos(server) {
             return 0;
         });
     });
+    server.get('/demos/geo/PointToOSMAdmin/:long?/:lat?/:country?', function(req, res) {
+        if(!req.params.lat || !req.params.long){
+            res.send('a parameter is missing: lat or long');
+            return 0;
+        }
+        var countryPart = '';
+        if(req.params.country){
+            countryPart = ';country=' + req.params.country;
+        }
+        var pointLong = req.params.long;
+        var pointLat = req.params.lat;
+        var country = req.params.country;
+        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.PointToOSMAdmin;lat=' + pointLat + ';long=' + pointLong + countryPart;
+        //console.log(apiURI);
+        rp.get({uri: apiURI}).then(function(body){
+            var parsed = JSON.parse(body);
+            //list of regions
+            var regions = parsed.resources;
+            var regionLinks = [];
+            regions.forEach(function(item){
+                regionLinks[parseInt(item.level)] = {id: item.id, title: item.title};
+            });
+            var out = '<div class="ui divided list">';
+            var dv = '-';
+            regionLinks.forEach(function(item, i){
+                out = out + '<a target="_blank" class="ui item" href="/demos/geo/OSMAdmin/'+item.id+'""><a class="ui mini olive circular label">'+(i+1)+'</a>'+ dv +' '+item.title +'</a>';
+                dv = dv + '-';
+            });
+            res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to OSM Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/PointToOSMAdmin/'+pointLong+'/'+pointLat+'/'+country+'">Coordinates to OSMAdmin</a></h3> </div> <div class="ui segment"> '+out+' </div></div></div></div></body></html>');
+        }).catch(function (err) {
+            console.log(err);
+            res.send('');
+            return 0;
+        });
+    });
+    server.get('/demos/geo/addressToOSMAdmin', function(req, res) {
+        res.render('addressToOSMAdmin', {input: '', appShortTitle: appShortTitle, appFullTitle: appFullTitle});
+    });
+    server.post('/demos/geo/addressToOSMAdmin', function(req, res) {
+        if((!req.body.addr)){
+            res.send('Please add an address in the URI: /demos/geo/geocode/{your address}');
+            return 0;
+        }
+        var longitude, latitude, nCode, mCode, country;
+        var apiKey = config.googleKey;
+        var apiURI = 'https://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent(decodeURIComponent(req.body.addr))+'&key=' + apiKey;
+        rp.get({uri: apiURI}).then(function(body){
+            var parsed = JSON.parse(body);
+            //res.json(parsed);
+            if(parsed.results.length){
+                //var formatted = parsed.results[0].formatted_address;
+                var location = parsed.results[0].geometry.location;
+                latitude = location.lat;
+                longitude = location.lng;
+                country = getCountryFromGoogleAPIResult(parsed.results[0].address_components);
+                res.render('addressToOSMAdmin', {input: req.body.addr, address: encodeURIComponent(req.body.addr), point:{long: longitude, lat: latitude, country: country}});
+            }else{
+                res.send('No result!');
+            }
+        }).catch(function (err) {
+            console.log(err);
+            res.send('');
+            return 0;
+        });
+    });
 };
