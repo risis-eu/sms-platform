@@ -231,7 +231,6 @@ export default {
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getPointToOSMAdmin(params.lat, params.long, params.country, params.level);
-            //console.log(query);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 //console.log(res);

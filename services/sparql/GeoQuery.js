@@ -215,7 +215,7 @@ class GeoQuery{
                 risisGADMV:ISO ?country ;\
                 geo:geometry ?polygon .\
             FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
-          } LIMIT 6 \
+        } LIMIT 100 \
         ';
         return this.prefixes + this.query;
     }
@@ -270,7 +270,7 @@ class GeoQuery{
                 risisOSMV:ISO ?country ;\
                 geo:geometry ?polygon .\
             FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
-        } LIMIT 12 \
+        } LIMIT 100 \
         ';
         return this.prefixes + this.query;
     }
