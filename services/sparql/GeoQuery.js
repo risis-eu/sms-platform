@@ -297,7 +297,7 @@ class GeoQuery{
         ';
         return this.prefixes + this.query;
     }
-    getPointToFlickerAdmin(lat, long, level) {
+    getPointToFlickrAdmin(lat, long, level) {
         let ex1 = '';
         if(level){
             ex1 = 'risisFlickrV:level '+level+' ; ' ;

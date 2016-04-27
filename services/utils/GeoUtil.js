@@ -97,7 +97,7 @@ class GeoUtil{
             return output;
         }
     }
-    parsePointToFlickerAdmin(res){
+    parsePointToFlickrAdmin(res){
         let self = this;
         let parsed = JSON.parse(res);
         let output=[];
