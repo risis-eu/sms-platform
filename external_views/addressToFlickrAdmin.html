@@ -3,13 +3,13 @@
 		<meta charSet="utf-8" />
 		<meta name="viewport" content="width=device-width, user-scalable=no" />
 		<link href="/bower_components/semantic/dist/semantic.min.css" rel="stylesheet" type="text/css" />
-		<title>{{appFullTitle}} | demos:geo -> Address to Admin</title>
+		<title>{{appFullTitle}} | demos:geo -> Address to Flickr Admin</title>
 	</head>
 	<body>
 		<div>
 			<nav  class="ui black menu inverted navbar page grid">
 					<a href="/" class="ui item brand blue label"><img src="/assets/img/sms_logo_t.png" alt="{{appShortTitle}}" /></a>
-					<a href="/demos/geo/addressToGADM28Admin" class="ui item label"> Address to Admin</a>
+					<a href="/demos/geo/addressToFlickrAdmin" class="ui item label"> Address to Flickr Admin</a>
 			</nav>
 		</div>
 		<div class="ui page grid">
@@ -47,30 +47,6 @@
                     {{#point}}
                     <div class="ui cards">
                             <span class="top left attached ribbon ui blue label">2</span>
-                             <iframe src="/demos/geo/PointToNUTS/{{point.long}}/{{point.lat}}" height="500" width="500" style="border:none;overflow: scroll;"></iframe>
-                     </div>
-                     {{/point}}
-                </div>
-                <div class="eight wide column">
-                    {{#point}}
-                    <div class="ui cards">
-                            <span class="top left attached ribbon ui blue label">3</span>
-                             <iframe src="/demos/geo/PointToGADM28Admin/{{point.long}}/{{point.lat}}/{{point.country.shortName}}" height="500" width="500" style="border:none;overflow: scroll;"></iframe>
-                     </div>
-                     {{/point}}
-                </div>
-                <div class="eight wide column">
-                    {{#point}}
-                    <div class="ui cards">
-                            <span class="top left attached ribbon ui blue label">3</span>
-                             <iframe src="/demos/geo/PointToOSMAdmin/{{point.long}}/{{point.lat}}/{{point.country.shortName}}" height="500" width="500" style="border:none;overflow: scroll;"></iframe>
-                     </div>
-                     {{/point}}
-                </div>
-                <div class="eight wide column">
-                    {{#point}}
-                    <div class="ui cards">
-                            <span class="top left attached ribbon ui blue label">3</span>
                              <iframe src="/demos/geo/PointToFlickrAdmin/{{point.long}}/{{point.lat}}/{{point.country.shortName}}" height="500" width="500" style="border:none;overflow: scroll;"></iframe>
                      </div>
                      {{/point}}

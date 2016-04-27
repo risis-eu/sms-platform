@@ -308,6 +308,33 @@ module.exports = function handleDemos(server) {
             return 0;
         });
     });
+    server.get('/demos/geo/FlickrAdmin/:id', function(req, res) {
+        if(!req.params.id){
+            res.send('a parameter is missing: id');
+            return 0;
+        }
+        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.FlickrAdmin;id=' + req.params.id;
+        //console.log(apiURI);
+        rp.get({uri: apiURI}).then(function(body){
+            var parsed = JSON.parse(body);
+            //list of properties
+            var props = parsed.resources;
+            var out = '<div class="ui divided list">';
+            out = out + '<span class="ui item">Flickr ID: <b>'+req.params.id+'</b></span>';
+            for(var prop in props){
+                if(prop==='shapeType'){
+                    out = out + '<span class="ui item">Shape Type: <a target="_blank" href="/demos/geo/FlickrAdminToPolygon/'+req.params.id+'">'+props[prop]+'</a></span>';
+                }else{
+                    out = out + '<span class="ui item">'+prop+': <b>'+props[prop]+'</b></span>';
+                }
+            }
+            res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to Flickr Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/GADM28Admin/'+req.params.id+'">Flickr Admin Boundary Properties</a></h3> </div> <div class="ui segment"> '+out+' </div></div></div></div></body></html>');
+        }).catch(function (err) {
+            console.log(err);
+            res.send('');
+            return 0;
+        });
+    });
     server.get('/demos/geo/GADM28AdminToPolygon/:code?/:width?/:height?/:color?', function(req, res) {
         if(!req.params.code){
             res.send('identifier parameter is missing!');
@@ -349,6 +376,91 @@ module.exports = function handleDemos(server) {
             return 0;
         });
     });
+    server.get('/demos/geo/FlickrAdminToPolygon/:code?/:width?/:height?/:color?', function(req, res) {
+        if(!req.params.code){
+            res.send('identifier parameter is missing!');
+            return 0;
+        }
+        var color = '#0000FF';
+        if(req.params.color){
+            color = '#' + req.params.color;
+        }
+        var width = 500;
+        var height = 500;
+        if(req.params.width){
+            width = req.params.width;
+        }
+        if(req.params.height){
+            height = req.params.height;
+        }
+        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.FlickrAdminToPolygon;id=' + req.params.code;
+        rp.get({uri: apiURI}).then(function(body){
+            var parsed = JSON.parse(body);
+            var input = parsed.resources[0].polygon;
+            var polygons = parseVirtPolygon(input);
+            if(!polygons.length){
+                res.send('');
+                return 0;
+            }
+            var output = 'var arr = [];';
+            polygons.forEach(function(points){
+                points.forEach(function(el){
+                    var tmp = el.split(' ');
+                    output = output + 'arr.push(new google.maps.LatLng('+tmp[1]+','+tmp[0]+')); ';
+                });
+            });
+            var finalScript = '<!DOCTYPE html><html><head><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> FlickrAdmin: '+req.params.code+'</title><script src="http://maps.googleapis.com/maps/api/js"></script><script> '+ output + ' function initialize(){var mapProp = {center: arr[0],zoom:7,mapTypeId: google.maps.MapTypeId.ROADMAP};' + ' var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);' + ' var regionPath=new google.maps.Polygon({path: arr,strokeColor:"'+color+'",strokeOpacity:0.8,strokeWeight:2,fillColor:"'+color+'",fillOpacity:0.4});' + ' regionPath.setMap(map);}' + ' google.maps.event.addDomListener(window, "load", initialize); '+ '</script></head><body><div id="googleMap" style="width:'+width+'px;height:'+height+'px;"></div></body></html>';
+            res.send(finalScript);
+        }).catch(function (err) {
+            console.log(err);
+            res.send('');
+            return 0;
+        });
+    });
+
+    server.get('/demos/geo/PointToFlickrAdmin/:long?/:lat?/:country?', function(req, res) {
+        if(!req.params.lat || !req.params.long){
+            res.send('a parameter is missing: lat or long');
+            return 0;
+        }
+        var countryPart = '';
+        if(req.params.country){
+            countryPart = ';country=' + req.params.country;
+        }
+        var pointLong = req.params.long;
+        var pointLat = req.params.lat;
+        var country = req.params.country;
+        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.PointToFlickrAdmin;lat=' + pointLat + ';long=' + pointLong;
+        //console.log(apiURI);
+        rp.get({uri: apiURI}).then(function(body){
+            var parsed = JSON.parse(body);
+            //list of regions
+            var regions = parsed.resources;
+            var regionLinks = [];
+            regions.forEach(function(item){
+                if(!regionLinks[parseInt(item.level)]){
+                    regionLinks[parseInt(item.level)] = [{id: item.id, title: item.title}];
+                }else{
+                    regionLinks[parseInt(item.level)].push({id: item.id, title: item.title});
+                }
+            });
+            var out = '<div class="ui divided list">';
+            var dv = '-';
+            regionLinks.forEach(function(item, i){
+                var itemDIV = [];
+                item.forEach(function(subitem, ii){
+                    itemDIV.push('<a target="_blank" href="/demos/geo/FlickrAdmin/'+subitem.id+'"">'+subitem.title +'</a>')
+                });
+                out = out + '<div class="ui item"><span class="ui mini teal circular label">'+i+'</span>'+ dv +' '+itemDIV.join(' | ') +'</div>';
+                dv = dv + '-';
+            });
+            res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to Flickr Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/PointToFlickrAdmin/'+pointLong+'/'+pointLat+'/'+country+'">Coordinates to Flickr Admin Boundaries</a></h3> </div> <div class="ui segment"> '+out+' </div></div></div></div></body></html>');
+        }).catch(function (err) {
+            console.log(err);
+            res.send('');
+            return 0;
+        });
+    });
 
     server.get('/demos/geo/PointToGADM28Admin/:long?/:lat?/:country?', function(req, res) {
         if(!req.params.lat || !req.params.long){
@@ -370,12 +482,20 @@ module.exports = function handleDemos(server) {
             var regions = parsed.resources;
             var regionLinks = [];
             regions.forEach(function(item){
-                regionLinks[parseInt(item.level)] = {id: item.id, title: item.title};
+                if(!regionLinks[parseInt(item.level)]){
+                    regionLinks[parseInt(item.level)] = [{id: item.id, title: item.title}];
+                }else{
+                    regionLinks[parseInt(item.level)].push({id: item.id, title: item.title});
+                }
             });
             var out = '<div class="ui divided list">';
             var dv = '-';
             regionLinks.forEach(function(item, i){
-                out = out + '<a target="_blank" class="ui item" href="/demos/geo/GADM28Admin/'+item.id+'""><span class="ui mini teal circular label">'+(i+1)+'</span>'+ dv +' '+item.title +'</a>';
+                var itemDIV = [];
+                item.forEach(function(subitem, ii){
+                    itemDIV.push('<a target="_blank" href="/demos/geo/GADM28Admin/'+subitem.id+'"">'+subitem.title +'</a>')
+                });
+                out = out + '<div class="ui item"><span class="ui mini teal circular label">'+(i+1)+'</span>'+ dv +' '+itemDIV.join(' | ') +'</div>';
                 dv = dv + '-';
             });
             res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to GADM Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/PointToGADM28Admin/'+pointLong+'/'+pointLat+'/'+country+'">Coordinates to GADM Admin Boundaries</a></h3> </div> <div class="ui segment"> '+out+' </div></div></div></div></body></html>');
@@ -575,12 +695,20 @@ module.exports = function handleDemos(server) {
             var regions = parsed.resources;
             var regionLinks = [];
             regions.forEach(function(item){
-                regionLinks[parseInt(item.level)] = {id: item.id, title: item.title};
+                if(!regionLinks[parseInt(item.level)]){
+                    regionLinks[parseInt(item.level)] = [{id: item.id, title: item.title}];
+                }else{
+                    regionLinks[parseInt(item.level)].push({id: item.id, title: item.title});
+                }
             });
             var out = '<div class="ui divided list">';
             var dv = '-';
             regionLinks.forEach(function(item, i){
-                out = out + '<a target="_blank" class="ui item" href="/demos/geo/OSMAdmin/'+item.id+'""><span class="ui mini olive circular label">'+(i+1)+'</span>'+ dv +' '+item.title +'</a>';
+                var itemDIV = [];
+                item.forEach(function(subitem, ii){
+                    itemDIV.push('<a target="_blank" href="/demos/geo/OSMAdmin/'+subitem.id+'"">'+subitem.title +'</a>')
+                });
+                out = out + '<div class="ui item"><span class="ui mini teal circular label">'+(i+1)+'</span>'+ dv +' '+itemDIV.join(' | ') +'</div>';
                 dv = dv + '-';
             });
             res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to OSM Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/PointToOSMAdmin/'+pointLong+'/'+pointLat+'/'+country+'">Coordinates to OSM Admin Boundaries</a></h3> </div> <div class="ui segment"> '+out+' </div></div></div></div></body></html>');
@@ -610,7 +738,37 @@ module.exports = function handleDemos(server) {
                 latitude = location.lat;
                 longitude = location.lng;
                 country = getCountryFromGoogleAPIResult(parsed.results[0].address_components);
-                res.render('addressToOSMAdmin', {input: req.body.addr, address: encodeURIComponent(req.body.addr), point:{long: longitude, lat: latitude, country: country}});
+                res.render('addressToOSMAdmin', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, input: req.body.addr, address: encodeURIComponent(req.body.addr), point:{long: longitude, lat: latitude, country: country}});
+            }else{
+                res.send('No result!');
+            }
+        }).catch(function (err) {
+            console.log(err);
+            res.send('');
+            return 0;
+        });
+    });
+    server.get('/demos/geo/addressToFlickrAdmin', function(req, res) {
+        res.render('addressToFlickrAdmin', {input: '', appShortTitle: appShortTitle, appFullTitle: appFullTitle});
+    });
+    server.post('/demos/geo/addressToFlickrAdmin', function(req, res) {
+        if((!req.body.addr)){
+            res.send('Please add an address in the URI: /demos/geo/geocode/{your address}');
+            return 0;
+        }
+        var longitude, latitude, nCode, mCode, country;
+        var apiKey = config.googleKey;
+        var apiURI = 'https://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent(decodeURIComponent(req.body.addr))+'&key=' + apiKey;
+        rp.get({uri: apiURI}).then(function(body){
+            var parsed = JSON.parse(body);
+            //res.json(parsed);
+            if(parsed.results.length){
+                //var formatted = parsed.results[0].formatted_address;
+                var location = parsed.results[0].geometry.location;
+                latitude = location.lat;
+                longitude = location.lng;
+                country = getCountryFromGoogleAPIResult(parsed.results[0].address_components);
+                res.render('addressToFlickrAdmin', {appFullTitle: appFullTitle, input: req.body.addr, address: encodeURIComponent(req.body.addr), point:{long: longitude, lat: latitude, country: country}});
             }else{
                 res.send('No result!');
             }
@@ -681,7 +839,7 @@ module.exports = function handleDemos(server) {
                 latitude = location.lat;
                 longitude = location.lng;
                 country = getCountryFromGoogleAPIResult(parsed.results[0].address_components);
-                res.render('addressToAdmin', {input: req.body.addr, address: encodeURIComponent(req.body.addr), point:{long: longitude, lat: latitude, country: country}});
+                res.render('addressToAdmin', {appFullTitle: appFullTitle, input: req.body.addr, address: encodeURIComponent(req.body.addr), point:{long: longitude, lat: latitude, country: country}});
             }else{
                 res.send('No result!');
             }

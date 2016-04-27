@@ -16,6 +16,7 @@ class Demos extends React.Component {
                         <div className="item">- <a href="/demos/geo/addressToAdmin">Address to Administrative Boundaries (uses all available shape files)</a></div>
                         <div className="item">- <a href="/demos/geo/addressToGADM28Admin">Address to GADM Administrative Boundaries</a></div>
                         <div className="item">- <a href="/demos/geo/addressToOSMAdmin">Address to OSM Administrative Boundaries</a></div>
+                        <div className="item">- <a href="/demos/geo/addressToFlickrAdmin">Address to Flickr Administrative Boundaries</a></div>
                     </div>
                 </div>
             </div>
