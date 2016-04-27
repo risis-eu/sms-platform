@@ -280,7 +280,7 @@ paths:
               $ref: '#/definitions/pointToADMIN'
   /geo.OSMAdmin;id={id}:
     get:
-      summary: given a admin boundary uri, returns its detailed properties.
+      summary: given a admin boundary id, returns its detailed properties.
       parameters:
         - name: id
           in: path
@@ -299,7 +299,7 @@ paths:
               $ref: '#/definitions/GADM28Admin'
   /geo.OSMAdminToPolygon;id={id}:
     get:
-      summary: given a admin boundary uri, returns the polygon shape.
+      summary: given a admin boundary id, returns the polygon shape.
       parameters:
         - name: id
           in: path
@@ -307,6 +307,80 @@ paths:
           required: true
           type: string
           default: relation_157954
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MunicipalitytoPolygon'
+  /geo.PointToFlickrAdmin;lat={latitude};long={longitude};level={level}:
+    get:
+      summary: given a point, returns the Flickr administrative boundaries.
+      description: |
+        Receives Longitude and Latitude of a point and returns its administrative boundaries in different levels.
+      parameters:
+        - name: latitude
+          in: path
+          description: Latitude of the given point.
+          required: true
+          type: number
+          format: double
+          default: 52.3338
+        - name: longitude
+          in: path
+          description: Longitude of the given point.
+          required: true
+          type: number
+          format: double
+          default: 4.899431
+        - name: level
+          in: path
+          description: Optional level of admin boundary (1=country level)
+          required: true
+          type: number
+          format: integer
+          default: 1
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding admin boundary details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/pointToADMIN'
+  /geo.FlickrAdmin;id={id}:
+    get:
+      summary: given a admin boundary id, returns its detailed properties.
+      parameters:
+        - name: id
+          in: path
+          description: id of the administrative boundary
+          required: true
+          type: string
+          default: 727232
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GADM28Admin'
+  /geo.FlickrAdminToPolygon;id={id}:
+    get:
+      summary: given a admin boundary id, returns the polygon shape.
+      parameters:
+        - name: id
+          in: path
+          description: id of the administrative boundary
+          required: true
+          type: string
+          default: 727232
       tags:
         - Geo-Services
       responses:

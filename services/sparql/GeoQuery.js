@@ -21,6 +21,7 @@ class GeoQuery{
         PREFIX risisGeoV: <http://geo.risis.eu/vocabulary/> \
         PREFIX risisGADMV: <http://geo.risis.eu/vocabulary/gadm/> \
         PREFIX risisOSMV: <http://geo.risis.eu/vocabulary/osm/> \
+        PREFIX risisFlickrV: <http://geo.risis.eu/vocabulary/flickr/> \
         ';
         this.query='';
     }
@@ -290,6 +291,45 @@ class GeoQuery{
         this.query = '\
         SELECT DISTINCT ?polygon ?name FROM <http://geo.risis.eu/osm> WHERE { \
             <'+uri+'> a risisOSMV:AdministrativeArea ;\
+                dcterms:title ?name ;\
+                geo:geometry ?polygon .\
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
+    getPointToFlickerAdmin(lat, long, level) {
+        let ex1 = '';
+        if(level){
+            ex1 = 'risisFlickrV:level '+level+' ; ' ;
+        }
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?uri ?title ?level from <http://geo.risis.eu/flickr> WHERE { \
+            ?uri a risisFlickrV:AdministrativeArea ;\
+                dcterms:title ?title ; '+ex1+'\
+                risisFlickrV:level ?level ;\
+                geo:geometry ?polygon .\
+            FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
+        } LIMIT 100 \
+        ';
+        return this.prefixes + this.query;
+    }
+    getFlickrAdmin(uri) {
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?property ?value FROM <http://geo.risis.eu/flickr> WHERE { \
+            <'+uri+'> a risisFlickrV:AdministrativeArea ;\
+                ?property ?value .\
+            FILTER (?property != geo:geometry AND ?property != rdf:type)    \
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
+    getFlickrAdminToPolygon(uri) {
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?polygon ?name FROM <http://geo.risis.eu/flickr> WHERE { \
+            <'+uri+'> a risisFlickrV:AdministrativeArea ;\
                 dcterms:title ?name ;\
                 geo:geometry ?polygon .\
           } \

@@ -277,6 +277,57 @@ export default {
                 console.log(err);
                 callback(null, {resources: []});
             });
+        } else if (resource === 'geo.PointToFlickerAdmin') {
+            graphName = 'big-data-endpoint';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getPointToFlickerAdmin(params.lat, params.long, params.level);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    latitude: parseFloat(params.lat),
+                    longitude: parseFloat(params.long),
+                    resources: utilObject.parsePointToFlickerAdmin(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
+        } else if (resource === 'geo.FlickrAdmin') {
+            graphName = 'big-data-endpoint';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getFlickrAdmin('http://geo.risis.eu/flickr/' + params.id);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    id: params.id,
+                    resources: utilObject.parseFlickrAdmin(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
+        } else if (resource === 'geo.FlickrdminToPolygon') {
+            graphName = 'big-data-endpoint';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getFlickrdminToPolygon('http://geo.risis.eu/flickr/' + params.id);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    id: params.id,
+                    resources: utilObject.parseFlickrdminToPolygon(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
         }
     }
     // other methods
