@@ -38,6 +38,7 @@ class Nav extends React.Component {
                 <NavLink routeName="home" className="brand item ui blue label" activeClass="active"><img src="/assets/img/sms_logo_t.png" alt={appShortTitle} /></NavLink>
                 <NavLink routeName="about" className="item ui label" activeClass="active">About Us</NavLink>
                 <NavLink routeName="dataset" className="item ui label" activeClass="active" href="/datasets">Datasets Metadata</NavLink>
+                <a className="item ui label" href="http://datasets.risis.eu" target="_blank">Datasets Portal</a>
                 <a className="item ui label" href="http://api.sms.risis.eu" target="_blank">Linked Data API</a>
                 <NavLink routeName="demos" className="item ui label" activeClass="active" href="/demos">Demos</NavLink>
                 <div className="right menu">
