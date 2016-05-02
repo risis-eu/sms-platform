@@ -850,4 +850,97 @@ module.exports = function handleDemos(server) {
             return 0;
         });
     });
+
+
+    function get_random_color() {var letters = "ABCDE".split("");var color = "#";for (var i=0; i<3; i++ ) {color += letters[Math.floor(Math.random() * letters.length)];}return color;}
+
+    server.get('/demos/geo/AdminCountryLevels/:country/:level/:source/:width?/:height?', function(req, res) {
+        if(!req.params.country || !req.params.level || !req.params.source){
+            res.send('A parameter is missing, you need something like: /NLD/2/gadm');
+            return 0;
+        }
+        var width = 500;
+        var height = 500;
+        if(req.params.width){
+            width = req.params.width;
+        }
+        if(req.params.height){
+            height = req.params.height;
+        }
+        var sourceSTR = '';
+        var  source = req.params.source;
+        if(source === 'gadm'){
+            sourceSTR = 'GADM28Admin';
+        }else if(source === 'osm'){
+            sourceSTR = 'OSMAdmin';
+        }else if(source === 'flickr'){
+            sourceSTR = 'FlickrAdmin';
+        }
+        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.AdminsByLevel;level='+req.params.level+';country='+req.params.country+';source='+req.params.source;
+        var codes;
+        var colors = ['#0bc4a7', '#1a48eb', '#ecdc0b', '#ed1ec6', '#d9990b', '#0c0d17', '#e3104f', '#6d8ecf', '#0bc4a7'];
+        rp.get({uri: apiURI}).then(function(body){
+            var parsed = JSON.parse(body);
+            //list of regions
+            codes = parsed.resources;
+            if(!Array.isArray(codes)){
+                codes = [codes];
+            }
+            var asyncTasks = [];
+            var polygons = [];
+            var nutsLinks = [];
+            codes.forEach(function(item){
+                nutsLinks.push('<a target="_blank" class="ui label" href="/demos/geo/'+sourceSTR+'/'+item.id+'"">'+item.id+'</a>');
+              // We don't actually execute the async action here
+              // We add a function containing it to an array of "tasks"
+                asyncTasks.push(function(callback){
+                    rp.get({uri: 'http://' + req.headers.host + smsAPI +'/geo.'+sourceSTR+';id=' + item.id}).then(function(body2){
+                        rp.get({uri: 'http://' + req.headers.host + smsAPI + '/geo.'+sourceSTR+'ToPolygon;id=' + item.id}).then(function(body3){
+                            var parsed2 = JSON.parse(body2);
+                            var parsed3 = JSON.parse(body3);
+                            //console.log(parsed2.result.primaryTopic.label);
+                            var input = parsed3.resources[0].polygon;
+                            polygons.push({geometry: input, id: item.id, name: item.title});
+                            callback();
+                        }).catch(function (err3) {
+                            console.log('atomic3: ', err3);
+                            callback();
+                        });
+                    }).catch(function (err) {
+                        console.log('atomic2: ', err);
+                        callback();
+                    });
+                });
+            });
+            async.parallelLimit(asyncTasks, 20, function(){
+                // All tasks are done now
+                var finalScript = '<!DOCTYPE html><html><head><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.css" /><style>		.info {padding: 6px 8px;font: 14px/16px Arial, Helvetica, sans-serif;background: white;background: rgba(255,255,255,0.8);box-shadow: 0 0 15px rgba(0,0,0,0.2);border-radius: 5px;}.info h4 {margin: 0 0 5px;color: #777;}</style><title>Administrative Areas: ('+req.params.country+'), Level: '+req.params.level+', Source: '+req.params.source+'</title> ';
+                var features = [];
+                var colorsObject = {};
+                polygons.forEach(function(input, i){
+                    //console.log(input.name, input.id);
+                    var polygons2 = parseVirtPolygon(input.geometry);
+                    var coordinatesArr = [];
+                    polygons2.forEach(function(points){
+                        points.forEach(function(el){
+                            if(typeof el == 'string'){
+                                var tmp = el.split(' ');
+                                coordinatesArr.push([parseFloat(tmp[0]), parseFloat(tmp[1])]);
+                            }
+                        });
+                    });
+                    features.push({"type": "Feature", "id": input.id, "properties": {"name": input.name}, "geometry": {"type": "Polygon", coordinates: [coordinatesArr]}});
+                });
+                var focusPoint = features[0].geometry.coordinates[0][0];
+                var mapboxAccessToken = config.mapboxKey;
+                var mcpData = {"type":"FeatureCollection","features": features};
+                finalScript = finalScript +  '</head><body><div class="ui segments"><div class="ui segment"><h3><a target="_blank" href="/demos/geo/AdminCountryLevels/'+req.params.country+'/'+req.params.level+'/'+req.params.source+'">Administrative Areas Per Country</a></h3></div><div class="ui segment"><div id="map" style="width:'+width+'px;height:'+height+'px;"></div>'+nutsLinks.join(' ')+'</div></div><script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script><script> var colorObject = '+JSON.stringify(colorsObject)+'; function getColor(d) { return colorObject[d];}	function style(feature) {return {weight: 2,opacity: 1,color: "black",dashArray: "3",fillOpacity: 0.4, fillColor: "#CD0074"};} var map = L.map("map").setView([ '+(focusPoint? focusPoint[1]: 0)+', '+(focusPoint? focusPoint[0]: 1)+'], 7); var info = L.control();info.onAdd = function (map) {this._div = L.DomUtil.create("div", "info");this.update();return this._div;};info.update = function (props) {this._div.innerHTML = "<h4>Municipality: </h4>" +  (props ? ("<b>" + props.name + "</b>") : "Hover over a region");}; info.addTo(map);function highlightFeature(e) {var layer = e.target;layer.setStyle({weight: 5,color: "#666",dashArray: "",fillOpacity: 0.7}); if (!L.Browser.ie && !L.Browser.opera) { layer.bringToFront(); } info.update(layer.feature.properties); } function resetHighlight(e) { geojson.resetStyle(e.target); info.update();} function zoomToFeature(e) {map.fitBounds(e.target.getBounds());} function onEachFeature(feature, layer) {layer.on({mouseover: highlightFeature,mouseout: resetHighlight,click: zoomToFeature});}  L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {attribution: \'Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"http://mapbox.com\">Mapbox</a>\',maxZoom: 18,id: "mapbox.light",accessToken: "'+mapboxAccessToken+'"}).addTo(map); var geojson = L.geoJson('+JSON.stringify(mcpData)+', {style: style, onEachFeature: onEachFeature}).addTo(map);</script></body></html>';
+                res.send(finalScript);
+            });
+        }).catch(function (err) {
+            console.log(err);
+            res.send('');
+            return 0;
+        });
+    });
 };
