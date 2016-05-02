@@ -495,7 +495,7 @@ module.exports = function handleDemos(server) {
                 item.forEach(function(subitem, ii){
                     itemDIV.push('<a target="_blank" href="/demos/geo/GADM28Admin/'+subitem.id+'"">'+subitem.title +'</a>')
                 });
-                out = out + '<div class="ui item"><span class="ui mini teal circular label">'+(i+1)+'</span>'+ dv +' '+itemDIV.join(' | ') +'</div>';
+                out = out + '<div class="ui item"><span class="ui mini teal circular label">'+i+'</span>'+ dv +' '+itemDIV.join(' | ') +'</div>';
                 dv = dv + '-';
             });
             res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to GADM Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/PointToGADM28Admin/'+pointLong+'/'+pointLat+'/'+country+'">Coordinates to GADM Admin Boundaries</a></h3> </div> <div class="ui segment"> '+out+' </div></div></div></div></body></html>');
@@ -708,7 +708,7 @@ module.exports = function handleDemos(server) {
                 item.forEach(function(subitem, ii){
                     itemDIV.push('<a target="_blank" href="/demos/geo/OSMAdmin/'+subitem.id+'"">'+subitem.title +'</a>')
                 });
-                out = out + '<div class="ui item"><span class="ui mini teal circular label">'+(i+1)+'</span>'+ dv +' '+itemDIV.join(' | ') +'</div>';
+                out = out + '<div class="ui item"><span class="ui mini teal circular label">'+i+'</span>'+ dv +' '+itemDIV.join(' | ') +'</div>';
                 dv = dv + '-';
             });
             res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to OSM Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/PointToOSMAdmin/'+pointLong+'/'+pointLat+'/'+country+'">Coordinates to OSM Admin Boundaries</a></h3> </div> <div class="ui segment"> '+out+' </div></div></div></div></body></html>');

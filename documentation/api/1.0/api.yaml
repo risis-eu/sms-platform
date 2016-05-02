@@ -367,7 +367,7 @@ paths:
           description: id of the administrative boundary
           required: true
           type: string
-          default: 727232
+          default: '727232'
       tags:
         - Geo-Services
       responses:
@@ -386,7 +386,7 @@ paths:
           description: id of the administrative boundary
           required: true
           type: string
-          default: 727232
+          default: '727232'
       tags:
         - Geo-Services
       responses:
@@ -396,6 +396,37 @@ paths:
             type: array
             items:
               $ref: '#/definitions/MunicipalitytoPolygon'
+  /geo.AdminsByLevel;level={level};country={country};source={source}:
+    get:
+      summary: given a admin boundary id, returns its detailed properties.
+      parameters:
+        - name: level
+          in: path
+          description: level of interest based on the provided source
+          required: true
+          type: string
+          default: '2'
+        - name: country
+          in: path
+          description: country of interest
+          required: true
+          type: string
+          default: 'NLD'
+        - name: source
+          in: path
+          description: source of data e.g. osm, flickr or gadm
+          required: true
+          type: string
+          default: 'gadm'
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GADM28Admin'
   /geo.PointToMunicipality;lat={latitude};long={longitude}:
     get:
       summary: given a point, returns the related municipality.

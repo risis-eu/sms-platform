@@ -165,6 +165,17 @@ class GeoUtil{
             return output;
         }
     }
+    parseAdminsByLevel(res){
+        let self = this;
+        let parsed = JSON.parse(res);
+        let output=[];
+        if(parsed.results.bindings.length){
+            parsed.results.bindings.forEach(function(el) {
+                output.push({'id': self.getPropertyLabel(el.uri.value), 'title': el.title.value});
+            });
+            return output;
+        }
+    }
     parseOSMAdminToPolygon(res){
         let parsed = JSON.parse(res);
         let output=[];

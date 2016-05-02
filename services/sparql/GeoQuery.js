@@ -345,5 +345,26 @@ class GeoQuery{
         ';
         return this.prefixes + this.query;
     }
+    //source: flickr, osm, gadm
+    getAdminsByLevel(level, country, source) {
+        let vocab;
+        if(source === 'gadm'){
+            vocab = 'risisGADMV';
+        }else if(source === 'osm'){
+            vocab = 'risisOSMV';
+        }else if(source === 'flickr'){
+            vocab = 'risisFlickrV';
+        }
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?uri ?title FROM <http://geo.risis.eu/'+source+'> WHERE { \
+            ?uri a '+vocab+':AdministrativeArea ;\
+                dcterms:title ?title ;\
+                '+vocab+':level '+level+' ;\
+                '+vocab+':ISO "'+this.convertToISO3(country)+'" .\
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
 }
 export default GeoQuery;
