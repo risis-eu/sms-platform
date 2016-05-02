@@ -281,7 +281,7 @@ export default {
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
-            query = queryObject.getPointToFlickrAdmin(params.lat, params.long, params.level);
+            query = queryObject.getPointToFlickrAdmin(params.lat, params.long, params.country, arams.level);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 //console.log(res);

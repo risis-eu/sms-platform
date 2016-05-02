@@ -430,7 +430,7 @@ module.exports = function handleDemos(server) {
         var pointLong = req.params.long;
         var pointLat = req.params.lat;
         var country = req.params.country;
-        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.PointToFlickrAdmin;lat=' + pointLat + ';long=' + pointLong;
+        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.PointToFlickrAdmin;lat=' + pointLat + ';long=' + pointLong+countryPart;
         //console.log(apiURI);
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
@@ -757,6 +757,7 @@ module.exports = function handleDemos(server) {
             return 0;
         }
         var longitude, latitude, nCode, mCode, country;
+
         var apiKey = config.googleKey;
         var apiURI = 'https://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent(decodeURIComponent(req.body.addr))+'&key=' + apiKey;
         rp.get({uri: apiURI}).then(function(body){

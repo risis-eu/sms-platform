@@ -27,6 +27,7 @@ class GeoQuery{
     }
     convertToISO3(country) {
         let out = country;
+        let predefined = {'aland islands': 'ALA', 'macau': 'MAC', 'the bahamas': 'BHS', 'bolivia': 'BOL', 'brunei': 'BRN', 'democratic republic of congo': 'COD', 'cape verde': 'CPV', 'falkland islands': 'FLK', 'federated states of micronesia': 'FSM', 'the gambia': 'GMB', 'ivory coast': 'CIV', 'north korea': 'PRK', 'south korea': 'KOR', 'macedonia': 'MKD', 'netherlands antilles': 'ANT', 'pitcairn islands': 'PCN', 'spratly islands': 'Spratly Islands', 'russia': 'RUS', 'saint helena': 'SHN', 'st. lucia': 'LCA', 'east timor': 'TLS', 'taiwan': 'TWN', 'tanzania': 'TZA', 'united kingdom': 'GBR', 'united states': 'USA', 'venezuela': 'VEN', 'british virgin islands': 'VGB', 'us virgin islands': 'VIR', 'vatican city': 'VAT', 'palestinian occupied territories': 'PSE', 'saint-barthélémy': 'BLM', 'saint-martin': 'MAF'};
         if(country.length === 3){
             return out;
         }else if(country.length === 2){
@@ -37,12 +38,17 @@ class GeoQuery{
                 }
             });
         }else{
-            listOfCountries.forEach((row)=>{
-                if(row['name'] === country){
-                    out = row['alpha-3'];
-                    return out;
-                }
-            });
+            if(predefined[country]){
+                out = predefined[country];
+                return out;
+            }else{
+                listOfCountries.forEach((row)=>{
+                    if(row['name'] === country){
+                        out = row['alpha-3'];
+                        return out;
+                    }
+                });
+            }
         }
         return out;
     }
@@ -215,7 +221,7 @@ class GeoQuery{
                 risisGADMV:level ?level ;\
                 risisGADMV:ISO ?country ;\
                 geo:geometry ?polygon .\
-            FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
+            FILTER (bif:st_intersects (?polygon, bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
         } LIMIT 100 \
         ';
         return this.prefixes + this.query;
@@ -270,7 +276,7 @@ class GeoQuery{
                 risisOSMV:level ?level ;\
                 risisOSMV:ISO ?country ;\
                 geo:geometry ?polygon .\
-            FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
+            FILTER (bif:st_intersects (?polygon, bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
         } LIMIT 100 \
         ';
         return this.prefixes + this.query;
@@ -297,19 +303,22 @@ class GeoQuery{
         ';
         return this.prefixes + this.query;
     }
-    getPointToFlickrAdmin(lat, long, level) {
-        let ex1 = '';
+    getPointToFlickrAdmin(lat, long, country, level) {
+        let ex1 = '', ex2 = '';
+        if(country){
+            ex1 = 'risisFlickrV:ISO "'+this.convertToISO3(country)+'" ; ' ;
+        }
         if(level){
-            ex1 = 'risisFlickrV:level '+level+' ; ' ;
+            ex2 = 'risisFlickrV:level '+level+' ; ' ;
         }
         /*jshint multistr: true */
         this.query = '\
         SELECT DISTINCT ?uri ?title ?level from <http://geo.risis.eu/flickr> WHERE { \
             ?uri a risisFlickrV:AdministrativeArea ;\
-                dcterms:title ?title ; '+ex1+'\
+                dcterms:title ?title ; '+ex1+ex2+'\
                 risisFlickrV:level ?level ;\
                 geo:geometry ?polygon .\
-            FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
+            FILTER (bif:st_intersects (?polygon, bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
         } LIMIT 100 \
         ';
         return this.prefixes + this.query;

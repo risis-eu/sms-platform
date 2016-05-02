@@ -316,7 +316,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/MunicipalitytoPolygon'
-  /geo.PointToFlickrAdmin;lat={latitude};long={longitude};level={level}:
+  /geo.PointToFlickrAdmin;lat={latitude};long={longitude};country={country};level={level}:
     get:
       summary: given a point, returns the Flickr administrative boundaries.
       description: |
@@ -336,6 +336,12 @@ paths:
           type: number
           format: double
           default: 4.899431
+        - name: country
+          in: path
+          description: Optional 2 digit, 3 digit ISO code or the name of the country.
+          required: true
+          type: string
+          default: NLD
         - name: level
           in: path
           description: Optional level of admin boundary (1=country level)
