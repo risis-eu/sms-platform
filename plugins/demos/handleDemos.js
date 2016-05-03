@@ -914,27 +914,49 @@ module.exports = function handleDemos(server) {
             });
             async.parallelLimit(asyncTasks, 20, function(){
                 // All tasks are done now
-                var finalScript = '<!DOCTYPE html><html><head><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.css" /><style>		.info {padding: 6px 8px;font: 14px/16px Arial, Helvetica, sans-serif;background: white;background: rgba(255,255,255,0.8);box-shadow: 0 0 15px rgba(0,0,0,0.2);border-radius: 5px;}.info h4 {margin: 0 0 5px;color: #777;}</style><title>Administrative Areas: ('+req.params.country+'), Level: '+req.params.level+', Source: '+req.params.source+'</title> ';
+                var finalScript = '<!DOCTYPE html><html><head><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" /><style>		.info {padding: 6px 8px;font: 14px/16px Arial, Helvetica, sans-serif;background: white;background: rgba(255,255,255,0.8);box-shadow: 0 0 15px rgba(0,0,0,0.2);border-radius: 5px;}.info h4 {margin: 0 0 5px;color: #777;}</style><title>Administrative Areas: ('+req.params.country+'), Level: '+req.params.level+', Source: '+req.params.source+'</title> ';
                 var features = [];
                 var colorsObject = {};
                 polygons.forEach(function(input, i){
                     //console.log(input.name, input.id);
+                    //handling each polygon in the list
                     var polygons2 = parseVirtPolygon(input.geometry);
-                    var coordinatesArr = [];
-                    polygons2.forEach(function(points){
-                        points.forEach(function(el){
+                    var multiPLG = [];
+                    var polgArr = [];
+                    polygons2.forEach(function(plg){
+                        polgArr = [];
+                        plg.forEach(function(el){
                             if(typeof el == 'string'){
                                 var tmp = el.split(' ');
-                                coordinatesArr.push([parseFloat(tmp[0]), parseFloat(tmp[1])]);
+                                polgArr.push([parseFloat(tmp[0]), parseFloat(tmp[1])]);
                             }
                         });
+                        if(polgArr.length){
+                            multiPLG.push(polgArr);
+                        }
                     });
-                    features.push({"type": "Feature", "id": input.id, "properties": {"name": input.name}, "geometry": {"type": "Polygon", coordinates: [coordinatesArr]}});
+                    var shapeType, coordinatesArr;
+                    if(multiPLG.length > 1){
+                        shapeType = 'MultiPolygon';
+                        coordinatesArr = multiPLG;
+
+                    }else{
+                        shapeType = 'Polygon';
+                        coordinatesArr = multiPLG[0];
+
+                    }
+
+                    features.push({'type': 'Feature', 'id': input.id, 'properties': {'name': input.name}, 'geometry': {'type': shapeType, coordinates: [coordinatesArr]}});
                 });
-                var focusPoint = features[0].geometry.coordinates[0][0];
+                var focusPoint;
+                if(features[0].geometry.type == 'Polygon'){
+                    focusPoint = features[0].geometry.coordinates[0][0];
+                }else{
+                    focusPoint = features[0].geometry.coordinates[0][0][0];
+                }
                 var mapboxAccessToken = config.mapboxKey;
-                var mcpData = {"type":"FeatureCollection","features": features};
-                finalScript = finalScript +  '</head><body><div class="ui segments"><div class="ui segment"><h3><a target="_blank" href="/demos/geo/AdminCountryLevels/'+req.params.country+'/'+req.params.level+'/'+req.params.source+'">Administrative Areas Per Country</a></h3></div><div class="ui segment"><div id="map" style="width:'+width+'px;height:'+height+'px;"></div>'+nutsLinks.join(' ')+'</div></div><script src="http://cdn.leafletjs.com/leaflet-0.7.5/leaflet.js"></script><script> var colorObject = '+JSON.stringify(colorsObject)+'; function getColor(d) { return colorObject[d];}	function style(feature) {return {weight: 2,opacity: 1,color: "black",dashArray: "3",fillOpacity: 0.4, fillColor: "#CD0074"};} var map = L.map("map").setView([ '+(focusPoint? focusPoint[1]: 0)+', '+(focusPoint? focusPoint[0]: 1)+'], 7); var info = L.control();info.onAdd = function (map) {this._div = L.DomUtil.create("div", "info");this.update();return this._div;};info.update = function (props) {this._div.innerHTML = "<h4>Municipality: </h4>" +  (props ? ("<b>" + props.name + "</b>") : "Hover over a region");}; info.addTo(map);function highlightFeature(e) {var layer = e.target;layer.setStyle({weight: 5,color: "#666",dashArray: "",fillOpacity: 0.7}); if (!L.Browser.ie && !L.Browser.opera) { layer.bringToFront(); } info.update(layer.feature.properties); } function resetHighlight(e) { geojson.resetStyle(e.target); info.update();} function zoomToFeature(e) {map.fitBounds(e.target.getBounds());} function onEachFeature(feature, layer) {layer.on({mouseover: highlightFeature,mouseout: resetHighlight,click: zoomToFeature});}  L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {attribution: \'Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"http://mapbox.com\">Mapbox</a>\',maxZoom: 18,id: "mapbox.light",accessToken: "'+mapboxAccessToken+'"}).addTo(map); var geojson = L.geoJson('+JSON.stringify(mcpData)+', {style: style, onEachFeature: onEachFeature}).addTo(map);</script></body></html>';
+                var mcpData = {'type':'FeatureCollection','features': features};
+                finalScript = finalScript +  '</head><body><div class="ui segments"><div class="ui segment"><h3><a target="_blank" href="/demos/geo/AdminCountryLevels/'+req.params.country+'/'+req.params.level+'/'+req.params.source+'">Administrative Areas Per Country</a></h3></div><div class="ui segment"><div id="map" style="width:'+width+'px;height:'+height+'px;"></div>'+nutsLinks.join(' ')+'</div></div><script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script><script> var colorObject = '+JSON.stringify(colorsObject)+'; function getColor(d) { return colorObject[d];}	function style(feature) {return {weight: 2,opacity: 1,color: "black",dashArray: "3",fillOpacity: 0.35, fillColor: "#CD0074"};} var map = L.map("map").setView([ '+(focusPoint? focusPoint[1]: 0)+', '+(focusPoint? focusPoint[0]: 1)+'], 7); var info = L.control();info.onAdd = function (map) {this._div = L.DomUtil.create("div", "info");this.update();return this._div;};info.update = function (props) {this._div.innerHTML = "<h4>Municipality: </h4>" +  (props ? ("<b>" + props.name + "</b>") : "Hover over a region");}; info.addTo(map);function highlightFeature(e) {var layer = e.target;layer.setStyle({weight: 5,color: "#666",dashArray: "",fillOpacity: 0.7}); if (!L.Browser.ie && !L.Browser.opera) { layer.bringToFront(); } info.update(layer.feature.properties); } function resetHighlight(e) { geojson.resetStyle(e.target); info.update();} function zoomToFeature(e) {map.fitBounds(e.target.getBounds());} function onEachFeature(feature, layer) {layer.on({mouseover: highlightFeature,mouseout: resetHighlight,click: zoomToFeature});}  L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {attribution: \'Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"http://mapbox.com\">Mapbox</a>\',maxZoom: 18,id: "mapbox.light",accessToken: "'+mapboxAccessToken+'"}).addTo(map); var geojson = L.geoJson('+JSON.stringify(mcpData)+', {style: style, onEachFeature: onEachFeature}).addTo(map);</script></body></html>';
                 res.send(finalScript);
             });
         }).catch(function (err) {
