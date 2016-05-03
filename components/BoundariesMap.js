@@ -117,7 +117,7 @@ class BoundariesMap extends React.Component {
                       </div>
                       <div className="card">
                         <div className="ui medium image">
-                            <a href="/demos/geo/AdminCountryLevels/NLD/10/osm/1000/1000" target="_blank" className="ui medium rounded image">
+                            <a href="/demos/geo/AdminCountryLevels/NLD/10/osm/1000/1000/0/2550" target="_blank" className="ui medium rounded image">
                               <img src="/assets/img/boundaries/osm10.png"/>
                           </a>
                         </div>
