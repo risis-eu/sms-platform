@@ -221,7 +221,7 @@ class GeoQuery{
                 risisGADMV:level ?level ;\
                 risisGADMV:ISO ?country ;\
                 geo:geometry ?polygon .\
-            FILTER (bif:st_intersects (?polygon, bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
+            FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
         } LIMIT 100 \
         ';
         return this.prefixes + this.query;
@@ -276,7 +276,7 @@ class GeoQuery{
                 risisOSMV:level ?level ;\
                 risisOSMV:ISO ?country ;\
                 geo:geometry ?polygon .\
-            FILTER (bif:st_intersects (?polygon, bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
+            FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
         } LIMIT 100 \
         ';
         return this.prefixes + this.query;
@@ -318,7 +318,7 @@ class GeoQuery{
                 dcterms:title ?title ; '+ex1+ex2+'\
                 risisFlickrV:level ?level ;\
                 geo:geometry ?polygon .\
-            FILTER (bif:st_intersects (?polygon, bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
+            FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
         } LIMIT 100 \
         ';
         return this.prefixes + this.query;
