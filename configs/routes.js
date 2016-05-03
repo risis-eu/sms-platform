@@ -36,6 +36,16 @@ export default {
             done();
         }
     },
+    boundariesMap: {
+        path: '/boundariesMap',
+        method: 'get',
+        handler: require('../components/BoundariesMap'),
+        label: 'boundariesMap',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Example Boundaries Map'});
+            done();
+        }
+    },
     facets: {
         path: '/browse/:id?',
         method: 'get',

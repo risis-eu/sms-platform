@@ -17,7 +17,7 @@ class Demos extends React.Component {
                         <div className="item">- <a href="/demos/geo/addressToGADM28Admin">Address to GADM Administrative Boundaries</a></div>
                         <div className="item">- <a href="/demos/geo/addressToOSMAdmin">Address to OSM Administrative Boundaries</a></div>
                         <div className="item">- <a href="/demos/geo/addressToFlickrAdmin">Address to Flickr Administrative Boundaries</a></div>
-                        <div className="item">- <a href="/demos/geo/AdminCountryLevels/NLD/2/gadm/1000/1000">Example of Administrative Boundaries extracted for a specific country</a></div>
+                        <div className="item">- <a href="/boundariesMap">Example of Administrative Boundaries extracted for a specific country</a></div>
                     </div>
                 </div>
             </div>

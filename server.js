@@ -34,7 +34,7 @@ import { createElementWithContext } from 'fluxible-addons-react';
 const env = process.env.NODE_ENV;
 const htmlComponent = React.createFactory(HtmlComponent);
 const debug = debugLib('linked-data-reactor');
-const publicRoutes = ['/', '/about', '/demos'];
+const publicRoutes = ['/', '/about', '/demos', '/boundariesMap'];
 
 const server = express();
 // we need this because "cookie" is true in csrfProtection
