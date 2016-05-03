@@ -421,7 +421,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/MunicipalitytoPolygon'
-  /geo.AdminsByLevel;level={level};country={country};source={source}:
+  /geo.AdminsByLevel;level={level};country={country};source={source};offset={offset};limit={limit}:
     get:
       summary: given a admin boundary id, returns its detailed properties.
       parameters:
@@ -443,6 +443,18 @@ paths:
           required: true
           type: string
           default: 'gadm'
+        - name: offset
+          in: path
+          description: Optional offset of data to be returned
+          required: true
+          type: integer
+          default: 0
+        - name: limit
+          in: path
+          description: Optional maximum size of data to be returned
+          required: true
+          type: integer
+          default: 100
       tags:
         - Geo-Services
       responses:

@@ -351,7 +351,7 @@ export default {
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
-            query = queryObject.getAdminsByLevel(params.level, params.country, params.source);
+            query = queryObject.getAdminsByLevel(params.level, params.country, params.source, params.offset, params.limit);
             //console.log(query);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){

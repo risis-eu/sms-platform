@@ -368,7 +368,7 @@ class GeoQuery{
         return this.prefixes + this.query;
     }
     //source: flickr, osm, gadm
-    getAdminsByLevel(level, country, source) {
+    getAdminsByLevel(level, country, source, offset, limit) {
         let vocab;
         if(source === 'gadm'){
             vocab = 'risisGADMV';
@@ -377,6 +377,13 @@ class GeoQuery{
         }else if(source === 'flickr'){
             vocab = 'risisFlickrV';
         }
+        let ex1 = '', ex2 = '';
+        if(parseInt(limit)){
+            ex1 = ' LIMIT ' + limit;
+        }
+        if(parseInt(offset)){
+            ex2 = ' OFFSET ' + offset;
+        }
         /*jshint multistr: true */
         this.query = '\
         SELECT DISTINCT ?uri ?title FROM <http://geo.risis.eu/'+source+'> WHERE { \
@@ -384,7 +391,7 @@ class GeoQuery{
                 dcterms:title ?title ;\
                 '+vocab+':level '+level+' ;\
                 '+vocab+':ISO "'+this.convertToISO3(country)+'" .\
-          } \
+          } '+ex1+ex2+' \
         ';
         return this.prefixes + this.query;
     }
