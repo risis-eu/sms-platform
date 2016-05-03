@@ -869,7 +869,7 @@ module.exports = function handleDemos(server) {
 
     function get_random_color() {var letters = "ABCDE".split("");var color = "#";for (var i=0; i<3; i++ ) {color += letters[Math.floor(Math.random() * letters.length)];}return color;}
 
-    server.get('/demos/geo/AdminCountryLevels/:country/:level/:source/:width?/:height?', function(req, res) {
+    server.get('/demos/geo/AdminCountryLevels/:country/:level/:source/:width?/:height?/:offset?/:limit?', function(req, res) {
         if(!req.params.country || !req.params.level || !req.params.source){
             res.send('A parameter is missing, you need something like: /NLD/2/gadm');
             return 0;
@@ -882,6 +882,13 @@ module.exports = function handleDemos(server) {
         if(req.params.height){
             height = req.params.height;
         }
+        var limitSTR='', offsetSTR='';
+        if(req.params.offset){
+            offsetSTR = 'offset='+req.params.offset+';';
+        }
+        if(req.params.limit){
+            limitSTR = 'limit='+req.params.limit+';';
+        }
         var sourceSTR = '';
         var  source = req.params.source;
         if(source === 'gadm'){
@@ -891,7 +898,7 @@ module.exports = function handleDemos(server) {
         }else if(source === 'flickr'){
             sourceSTR = 'FlickrAdmin';
         }
-        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.AdminsByLevel;level='+req.params.level+';country='+req.params.country+';source='+req.params.source;
+        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.AdminsByLevel;level='+req.params.level+';country='+req.params.country+';source='+req.params.source +';'+offsetSTR+limitSTR;
         var codes;
         var colors = ['#0bc4a7', '#1a48eb', '#ecdc0b', '#ed1ec6', '#d9990b', '#0c0d17', '#e3104f', '#6d8ecf', '#0bc4a7'];
         rp.get({uri: apiURI}).then(function(body){
