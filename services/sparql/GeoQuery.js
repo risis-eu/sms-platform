@@ -208,7 +208,7 @@ class GeoQuery{
                 ?fua dcterms:title ?fuaName ;\
 	                 risisOECDV:fuaID ?fuaCode ;\
 	                 geoname:population ?population .\
-                FILTER regex(?name, "'+name+'", "i") \
+                FILTER regex(?name, "^'+name+'$", "i") \
           } \
         ';
         return this.prefixes + this.query;

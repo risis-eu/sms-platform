@@ -446,15 +446,20 @@ module.exports = function handleDemos(server) {
             });
             var out = '<div class="ui divided list">';
             var dv = '-';
+            var oecdDetectList = [];
             regionLinks.forEach(function(item, i){
                 var itemDIV = [];
                 item.forEach(function(subitem, ii){
-                    itemDIV.push('<a target="_blank" href="/demos/geo/FlickrAdmin/'+subitem.id+'"">'+subitem.title +'</a>')
+                    itemDIV.push('<a target="_blank" href="/demos/geo/FlickrAdmin/'+subitem.id+'"">'+subitem.title +'</a>');
+                    if(i>2){
+                        var tt=subitem.title.split(',');
+                        oecdDetectList.push(tt[0]);
+                    }
                 });
                 out = out + '<div class="ui item"><span class="ui mini teal circular label">'+i+'</span>'+ dv +' '+itemDIV.join(' | ') +'</div>';
                 dv = dv + '-';
             });
-            res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to Flickr Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/PointToFlickrAdmin/'+pointLong+'/'+pointLat+'/'+country+'">Coordinates to Flickr Admin Boundaries</a></h3> </div> <div class="ui segment"> '+out+' </div></div></div></div></body></html>');
+            res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to Flickr Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/PointToFlickrAdmin/'+pointLong+'/'+pointLat+'/'+country+'">Coordinates to Flickr Admin Boundaries</a></h3> </div> <div class="ui segment"> '+out+' </div><div class="ui segment"> <iframe src=\'/demos/geo/DetectOECDFUAs/'+country+'/'+JSON.stringify(oecdDetectList)+'\' height="150" width="100%" style="border:none;overflow: scroll;"></iframe></div></div></div></div></body></html>');
         }).catch(function (err) {
             console.log(err);
             res.send('');
@@ -490,15 +495,20 @@ module.exports = function handleDemos(server) {
             });
             var out = '<div class="ui divided list">';
             var dv = '-';
+            var oecdDetectList = [];
             regionLinks.forEach(function(item, i){
                 var itemDIV = [];
                 item.forEach(function(subitem, ii){
+                    if(i>1){
+                        var tt=subitem.title.split(',');
+                        oecdDetectList.push(tt[0]);
+                    }
                     itemDIV.push('<a target="_blank" href="/demos/geo/GADM28Admin/'+subitem.id+'"">'+subitem.title +'</a>')
                 });
                 out = out + '<div class="ui item"><span class="ui mini teal circular label">'+i+'</span>'+ dv +' '+itemDIV.join(' | ') +'</div>';
                 dv = dv + '-';
             });
-            res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to GADM Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/PointToGADM28Admin/'+pointLong+'/'+pointLat+'/'+country+'">Coordinates to GADM Admin Boundaries</a></h3> </div> <div class="ui segment"> '+out+' </div></div></div></div></body></html>');
+            res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to GADM Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/PointToGADM28Admin/'+pointLong+'/'+pointLat+'/'+country+'">Coordinates to GADM Admin Boundaries</a></h3> </div> <div class="ui segment"> '+out+' </div><div class="ui segment"> <iframe src=\'/demos/geo/DetectOECDFUAs/'+country+'/'+JSON.stringify(oecdDetectList)+'\' height="150" width="100%" style="border:none;overflow: scroll;"></iframe></div></div></div></div></body></html>');
         }).catch(function (err) {
             console.log(err);
             res.send('');
@@ -703,15 +713,20 @@ module.exports = function handleDemos(server) {
             });
             var out = '<div class="ui divided list">';
             var dv = '-';
+            var oecdDetectList = [];
             regionLinks.forEach(function(item, i){
                 var itemDIV = [];
                 item.forEach(function(subitem, ii){
+                    if(i>4){
+                        var tt=subitem.title.split(',');
+                        oecdDetectList.push(tt[0]);
+                    }
                     itemDIV.push('<a target="_blank" href="/demos/geo/OSMAdmin/'+subitem.id+'"">'+subitem.title +'</a>')
                 });
                 out = out + '<div class="ui item"><span class="ui mini teal circular label">'+i+'</span>'+ dv +' '+itemDIV.join(' | ') +'</div>';
                 dv = dv + '-';
             });
-            res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to OSM Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/PointToOSMAdmin/'+pointLong+'/'+pointLat+'/'+country+'">Coordinates to OSM Admin Boundaries</a></h3> </div> <div class="ui segment"> '+out+' </div></div></div></div></body></html>');
+            res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to OSM Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/PointToOSMAdmin/'+pointLong+'/'+pointLat+'/'+country+'">Coordinates to OSM Admin Boundaries</a></h3> </div> <div class="ui segment"> '+out+' </div><div class="ui segment"> <iframe src=\'/demos/geo/DetectOECDFUAs/'+country+'/'+JSON.stringify(oecdDetectList)+'\' height="150" width="100%" style="border:none;overflow: scroll;"></iframe></div></div></div></div></body></html>');
         }).catch(function (err) {
             console.log(err);
             res.send('');
@@ -963,6 +978,45 @@ module.exports = function handleDemos(server) {
             console.log(err);
             res.send('');
             return 0;
+        });
+    });
+    server.get('/demos/geo/DetectOECDFUAs/:country/:list', function(req, res) {
+        if(!req.params.list || !req.params.country){
+            res.send('A parameter is missing');
+            return 0;
+        }
+        var list = JSON.parse(req.params.list);
+        var country = req.params.country;
+        var output=[];
+        var asyncTasks = [];
+        list.forEach(function(item){
+              // We add a function containing it to an array of "tasks"
+            asyncTasks.push(function(callback){
+                rp.get({uri: 'http://' + req.headers.host + smsAPI +'/geo.BoundaryToOECDFUA'+';name=' + item+';country='+ country}).then(function(body2){
+                    var parsed2 = JSON.parse(body2);
+                    if(parsed2.resources){
+                        output.push(parsed2);
+                    }
+                    callback();
+                }).catch(function (err) {
+                    console.log('atomic2: ', err);
+                    callback();
+                });
+            });
+        });
+        async.parallelLimit(asyncTasks, 2, function(){
+            // All tasks are done now
+            var finalScript = '<!DOCTYPE html><html><head><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" /><style>	.info {padding: 6px 8px;font: 14px/16px Arial, Helvetica, sans-serif;background: white;background: rgba(255,255,255,0.8);box-shadow: 0 0 15px rgba(0,0,0,0.2);border-radius: 5px;}.info h4 {margin: 0 0 5px;color: #777;}</style><title>Boundaries to FUA: ('+country+'), list: '+list+'</title> ';
+            let outputItems=[];
+            var logitems = [];
+            output.forEach(function(input, i){
+                if(logitems.indexOf(input.resources[0].id) == -1){
+                    logitems.push(input.resources[0].id);
+                    outputItems.push('<div class="item"><b>'+input.resources[0].funactionalUrbanArea.name+'</b> ('+input.resources[0].funactionalUrbanArea.code+')</div>')
+                }
+            });
+            finalScript = finalScript +  '</head><body><div class="ui segments"><div class="ui segment"><h3><a target="_blank" href=\'/demos/geo/DetectOECDFUAs/'+country+'/'+JSON.stringify(list)+'/'+'\'>Boundaries to OECD FUAs</a></h3></div><div class="ui segment"><div class="ui list">'+outputItems.join(' ')+'</div></div></body></html>';
+            res.send(finalScript);
         });
     });
 };
