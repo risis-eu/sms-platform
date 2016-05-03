@@ -156,6 +156,31 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Municipality'
+  /geo.BoundaryToOECDFUA;name={name};country={country}:
+    get:
+      summary: given a boundary name and its country, returns the corresponding OECD FUA and Municipality.
+      parameters:
+        - name: name
+          in: path
+          description: boundary name
+          required: true
+          type: string
+          default: Amstelveen
+        - name: country
+          in: path
+          description: Optional country name, better be in ISO3
+          required: true
+          type: string
+          default: NLD
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Municipality'
   /geo.GADM28Admin;id={id}:
     get:
       summary: given a admin boundary uri, returns its detailed properties.

@@ -192,6 +192,27 @@ class GeoQuery{
         ';
         return this.prefixes + this.query;
     }
+    getBoundaryToOECDFUA(name, country){
+        let ex1 = '';
+        if(country){
+            ex1 = 'risisOECDV:ISO "'+this.convertToISO3(country)+'" ; ' ;
+        }
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?name ?municipalityID ?isCore ?fua ?fuaName ?fuaCode ?population FROM <http://geo.risis.eu/oecd> WHERE { \
+            ?uri a risisOECDV:Municipality ;\
+            	dcterms:title ?name ;\
+                risisOECDV:isCore ?isCore ; '+ex1+'\
+                risisOECDV:functionalUrbanArea ?fua ;\
+            	risisOECDV:municipalityID ?municipalityID .\
+                ?fua dcterms:title ?fuaName ;\
+	                 risisOECDV:fuaID ?fuaCode ;\
+	                 geoname:population ?population .\
+                FILTER regex(?name, "'+name+'", "i") \
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
     getPointToMunicipality(lat, long) {
         /*jshint multistr: true */
         this.query = '\
