@@ -890,7 +890,7 @@ module.exports = function handleDemos(server) {
             var polygons = [];
             var nutsLinks = [];
             codes.forEach(function(item){
-                nutsLinks.push('<a target="_blank" class="ui label" href="/demos/geo/'+sourceSTR+'/'+item.id+'"">'+item.id+'</a>');
+                nutsLinks.push('<a target="_blank" class="ui label" href="/demos/geo/'+sourceSTR+'/'+item.id+'"">'+item.title+'(#'+item.id+')</a>');
               // We don't actually execute the async action here
               // We add a function containing it to an array of "tasks"
                 asyncTasks.push(function(callback){
