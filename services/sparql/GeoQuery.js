@@ -18,6 +18,7 @@ class GeoQuery{
         PREFIX igeo: <http://rdf.insee.fr/def/geo#> \
         PREFIX geoname: <http://www.geonames.org/ontology#> \
         PREFIX risisMCPV: <http://risis.eu/municipalities/vocab/> \
+        PREFIX risisOECDV: <http://geo.risis.eu/vocabulary/oecd/> \
         PREFIX risisGeoV: <http://geo.risis.eu/vocabulary/> \
         PREFIX risisGADMV: <http://geo.risis.eu/vocabulary/gadm/> \
         PREFIX risisOSMV: <http://geo.risis.eu/vocabulary/osm/> \
@@ -27,7 +28,7 @@ class GeoQuery{
     }
     convertToISO3(country) {
         let out = country;
-        let predefined = {'aland islands': 'ALA', 'macau': 'MAC', 'the bahamas': 'BHS', 'bolivia': 'BOL', 'brunei': 'BRN', 'democratic republic of congo': 'COD', 'cape verde': 'CPV', 'falkland islands': 'FLK', 'federated states of micronesia': 'FSM', 'the gambia': 'GMB', 'ivory coast': 'CIV', 'north korea': 'PRK', 'south korea': 'KOR', 'macedonia': 'MKD', 'netherlands antilles': 'ANT', 'pitcairn islands': 'PCN', 'spratly islands': 'Spratly Islands', 'russia': 'RUS', 'saint helena': 'SHN', 'st. lucia': 'LCA', 'east timor': 'TLS', 'taiwan': 'TWN', 'tanzania': 'TZA', 'united kingdom': 'GBR', 'united states': 'USA', 'venezuela': 'VEN', 'british virgin islands': 'VGB', 'us virgin islands': 'VIR', 'vatican city': 'VAT', 'palestinian occupied territories': 'PSE', 'saint-barthélémy': 'BLM', 'saint-martin': 'MAF'};
+        let predefined = {'aland islands': 'ALA', 'macau': 'MAC', 'the bahamas': 'BHS', 'bolivia': 'BOL', 'brunei': 'BRN', 'democratic republic of congo': 'COD', 'cape verde': 'CPV', 'falkland islands': 'FLK', 'federated states of micronesia': 'FSM', 'the gambia': 'GMB', 'ivory coast': 'CIV', 'north korea': 'PRK', 'korea': 'KOR', 'south korea': 'KOR', 'macedonia': 'MKD', 'netherlands antilles': 'ANT', 'pitcairn islands': 'PCN', 'spratly islands': 'Spratly Islands', 'russia': 'RUS', 'saint helena': 'SHN', 'st. lucia': 'LCA', 'east timor': 'TLS', 'taiwan': 'TWN', 'tanzania': 'TZA', 'united kingdom': 'GBR', 'united states': 'USA', 'venezuela': 'VEN', 'british virgin islands': 'VGB', 'us virgin islands': 'VIR', 'vatican city': 'VAT', 'palestinian occupied territories': 'PSE', 'saint-barthélémy': 'BLM', 'saint-martin': 'MAF', 'slovak republic': 'SVK'};
         if(country.length === 3){
             return out;
         }else if(country.length === 2){
@@ -133,11 +134,11 @@ class GeoQuery{
     getMunicipalitiesPerCountry(country) {
         /*jshint multistr: true */
         this.query = '\
-        SELECT DISTINCT ?name ?municipalityID FROM <http://geo.risis.eu/municipalities> WHERE { \
-            ?uri a risisGeoV:Municipality ;\
-            	edm:country "'+this.ISOtoCountryName(country)+'" ;\
+        SELECT DISTINCT ?name ?municipalityID FROM <http://geo.risis.eu/oecd> WHERE { \
+            ?uri a risisOECDV:Municipality ;\
+            	risisOECDV:ISO "'+this.convertToISO3(country)+'" ;\
             	dcterms:title ?name ;\
-            	risisGeoV:municipalityID ?municipalityID .\
+            	risisOECDV:municipalityID ?municipalityID .\
           } \
         ';
         return this.prefixes + this.query;
@@ -146,13 +147,13 @@ class GeoQuery{
         let codeURI = 'http://nuts.geovocab.org/id/' + code;
         /*jshint multistr: true */
         this.query = '\
-        SELECT DISTINCT ?name ?municipalityID ?isCore ?fua ?fuaName ?fuaCode FROM <http://geo.risis.eu/municipalities> WHERE { \
-            ?uri a risisGeoV:Municipality ;\
+        SELECT DISTINCT ?name ?municipalityID ?isCore ?fua ?fuaName ?fuaCode FROM <http://geo.risis.eu/oecd> WHERE { \
+            ?uri a risisOECDV:Municipality ;\
             	igeo:NUTS3 "'+codeURI+'" ;\
             	dcterms:title ?name ;\
-                risisGeoV:isCore ?isCore ;\
-                risisGeoV:functionalUrbanArea ?fua ;\
-            	risisGeoV:municipalityID ?municipalityID .\
+                risisOECDV:isCore ?isCore ;\
+                risisOECDV:functionalUrbanArea ?fua ;\
+            	risisOECDV:municipalityID ?municipalityID .\
           } \
         ';
         return this.prefixes + this.query;
@@ -160,15 +161,15 @@ class GeoQuery{
     getNameToMunicipality(name) {
         /*jshint multistr: true */
         this.query = '\
-        SELECT DISTINCT ?name ?municipalityID ?isCore ?fua ?fuaName ?fuaCode ?population FROM <http://geo.risis.eu/municipalities> WHERE { \
-            ?uri a risisGeoV:Municipality ;\
+        SELECT DISTINCT ?name ?municipalityID ?isCore ?fua ?fuaName ?fuaCode ?population FROM <http://geo.risis.eu/oecd> WHERE { \
+            ?uri a risisOECDV:Municipality ;\
             	dcterms:title ?name ;\
             	dcterms:title "'+name+'" ;\
-                risisGeoV:isCore ?isCore ;\
-                risisGeoV:functionalUrbanArea ?fua ;\
-            	risisGeoV:municipalityID ?municipalityID .\
+                risisOECDV:isCore ?isCore ;\
+                risisOECDV:functionalUrbanArea ?fua ;\
+            	risisOECDV:municipalityID ?municipalityID .\
                 ?fua dcterms:title ?fuaName .\
-	            ?fua risisGeoV:fuaID ?fuaCode .\
+	            ?fua risisOECDV:fuaID ?fuaCode .\
 	            ?fua geoname:population ?population .\
           } \
         ';
@@ -177,15 +178,15 @@ class GeoQuery{
     getMunicipality(code) {
         /*jshint multistr: true */
         this.query = '\
-        SELECT DISTINCT ?name ?municipalityID ?isCore ?fua ?fuaName ?fuaCode ?population FROM <http://geo.risis.eu/municipalities> WHERE { \
-            ?uri a risisGeoV:Municipality ;\
+        SELECT DISTINCT ?name ?municipalityID ?isCore ?fua ?fuaName ?fuaCode ?population FROM <http://geo.risis.eu/oecd> WHERE { \
+            ?uri a risisOECDV:Municipality ;\
             	dcterms:title ?name ;\
-                risisGeoV:isCore ?isCore ;\
-                risisGeoV:functionalUrbanArea ?fua ;\
-            	risisGeoV:municipalityID ?municipalityID ;\
-            	risisGeoV:municipalityID "'+code+'" .\
+                risisOECDV:isCore ?isCore ;\
+                risisOECDV:functionalUrbanArea ?fua ;\
+            	risisOECDV:municipalityID ?municipalityID ;\
+            	risisOECDV:municipalityID "'+code+'" .\
                 ?fua dcterms:title ?fuaName .\
-	            ?fua risisGeoV:fuaID ?fuaCode .\
+	            ?fua risisOECDV:fuaID ?fuaCode .\
 	            ?fua geoname:population ?population .\
           } \
         ';

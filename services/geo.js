@@ -78,10 +78,11 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.MunicipalitiesPerCountry') {
-            graphName = '';
+            graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getMunicipalitiesPerCountry(params.country);
+            //console.log(query);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 //console.log(res);
@@ -94,7 +95,7 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.NUTStoMunicipality') {
-            graphName = '';
+            graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getNUTStoMunicipality(params.code);
@@ -110,7 +111,7 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.NameToMunicipality') {
-            graphName = '';
+            graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getNameToMunicipality(params.name);
@@ -125,7 +126,7 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.Municipality') {
-            graphName = '';
+            graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getMunicipality(params.code);
