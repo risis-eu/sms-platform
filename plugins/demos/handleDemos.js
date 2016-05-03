@@ -717,7 +717,7 @@ module.exports = function handleDemos(server) {
             regionLinks.forEach(function(item, i){
                 var itemDIV = [];
                 item.forEach(function(subitem, ii){
-                    if(i>4){
+                    if(i>3){
                         var tt=subitem.title.split(',');
                         oecdDetectList.push(tt[0]);
                     }
