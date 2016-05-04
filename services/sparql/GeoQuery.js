@@ -27,24 +27,25 @@ class GeoQuery{
         this.query='';
     }
     convertToISO3(country) {
-        let out = country;
+        let inputCountry = country.toLowerCase().trim();
         let predefined = {'aland islands': 'ALA', 'macau': 'MAC', 'the bahamas': 'BHS', 'bolivia': 'BOL', 'brunei': 'BRN', 'democratic republic of congo': 'COD', 'cape verde': 'CPV', 'falkland islands': 'FLK', 'federated states of micronesia': 'FSM', 'the gambia': 'GMB', 'ivory coast': 'CIV', 'north korea': 'PRK', 'korea': 'KOR', 'south korea': 'KOR', 'macedonia': 'MKD', 'netherlands antilles': 'ANT', 'pitcairn islands': 'PCN', 'spratly islands': 'Spratly Islands', 'russia': 'RUS', 'saint helena': 'SHN', 'st. lucia': 'LCA', 'east timor': 'TLS', 'taiwan': 'TWN', 'tanzania': 'TZA', 'united kingdom': 'GBR', 'united states': 'USA', 'venezuela': 'VEN', 'british virgin islands': 'VGB', 'us virgin islands': 'VIR', 'vatican city': 'VAT', 'palestinian occupied territories': 'PSE', 'saint-barthélémy': 'BLM', 'saint-martin': 'MAF', 'slovak republic': 'SVK'};
-        if(country.length === 3){
+        let out = inputCountry;
+        if(inputCountry.length === 3){
             return out;
-        }else if(country.length === 2){
+        }else if(inputCountry.length === 2){
             listOfCountries.forEach((row)=>{
-                if(row['alpha-2'] === country){
+                if(row['alpha-2'].toLowerCase() === inputCountry){
                     out = row['alpha-3'];
                     return out;
                 }
             });
         }else{
-            if(predefined[country]){
-                out = predefined[country];
+            if(predefined[inputCountry]){
+                out = predefined[inputCountry];
                 return out;
             }else{
                 listOfCountries.forEach((row)=>{
-                    if(row['name'] === country){
+                    if(row['name'].toLowerCase() === inputCountry){
                         out = row['alpha-3'];
                         return out;
                     }
