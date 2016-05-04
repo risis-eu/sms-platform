@@ -922,6 +922,7 @@ module.exports = function handleDemos(server) {
         if(req.params.limit){
             limitSTR = 'limit='+req.params.limit+';';
         }
+        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.AdminsByLevel;level='+req.params.level+';country='+req.params.country+';source='+req.params.source +';'+offsetSTR+limitSTR;
         var sourceSTR = '';
         var  source = req.params.source;
         if(source === 'gadm'){
@@ -930,8 +931,10 @@ module.exports = function handleDemos(server) {
             sourceSTR = 'OSMAdmin';
         }else if(source === 'flickr'){
             sourceSTR = 'FlickrAdmin';
+        }else if(source === 'oecd'){
+            sourceSTR = 'OECDFUA';
+            var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.OECDFUAList;country='+req.params.country;
         }
-        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.AdminsByLevel;level='+req.params.level+';country='+req.params.country+';source='+req.params.source +';'+offsetSTR+limitSTR;
         var codes;
         var colors = ['#0bc4a7', '#1a48eb', '#ecdc0b', '#ed1ec6', '#d9990b', '#0c0d17', '#e3104f', '#6d8ecf', '#0bc4a7'];
         rp.get({uri: apiURI}).then(function(body){
