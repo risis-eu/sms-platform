@@ -700,33 +700,45 @@ module.exports = function handleDemos(server) {
         var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.PointToOSMAdmin;lat=' + pointLat + ';long=' + pointLong + countryPart;
         //console.log(apiURI);
         rp.get({uri: apiURI}).then(function(body){
-            var parsed = JSON.parse(body);
-            //list of regions
-            var regions = parsed.resources;
-            var regionLinks = [];
-            regions.forEach(function(item){
-                if(!regionLinks[parseInt(item.level)]){
-                    regionLinks[parseInt(item.level)] = [{id: item.id, title: item.title}];
-                }else{
-                    regionLinks[parseInt(item.level)].push({id: item.id, title: item.title});
-                }
+
+            //collect metadata
+            var apiURI2 = 'http://' + req.headers.host + smsAPI +  '/geo.OSMAdminMetadata'+ countryPart;
+            rp.get({uri: apiURI2}).then(function(body2){
+                var lmetadata = JSON.parse(body2);
+
+                            var parsed = JSON.parse(body);
+                            //list of regions
+                            var regions = parsed.resources;
+                            var regionLinks = [];
+                            regions.forEach(function(item){
+                                if(!regionLinks[parseInt(item.level)]){
+                                    regionLinks[parseInt(item.level)] = [{id: item.id, title: item.title}];
+                                }else{
+                                    regionLinks[parseInt(item.level)].push({id: item.id, title: item.title});
+                                }
+                            });
+                            var out = '<div class="ui divided list">';
+                            var dv = '-';
+                            var oecdDetectList = [];
+                            regionLinks.forEach(function(item, i){
+                                var itemDIV = [];
+                                item.forEach(function(subitem, ii){
+                                    if(i>3){
+                                        var tt=subitem.title.split(',');
+                                        oecdDetectList.push(tt[0]);
+                                    }
+                                    itemDIV.push('<a target="_blank" href="/demos/geo/OSMAdmin/'+subitem.id+'"">'+subitem.title +'</a>')
+                                });
+                                out = out + '<div class="ui item" title="'+lmetadata.resource['level'+i]+'"><span class="ui mini teal circular label">'+i+'</span>'+ dv +' '+itemDIV.join(' | ') +'</div>';
+                                dv = dv + '-';
+                            });
+                            res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to OSM Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/PointToOSMAdmin/'+pointLong+'/'+pointLat+'/'+country+'">Coordinates to OSM Admin Boundaries</a></h3> </div> <div class="ui segment"> '+out+' </div><div class="ui segment"> <iframe src=\'/demos/geo/DetectOECDFUAs/'+country+'/'+JSON.stringify(oecdDetectList)+'\' height="150" width="100%" style="border:none;overflow: scroll;"></iframe></div></div></div></div></body></html>');
+
+            }).catch(function (err2) {
+                console.log(err2);
+                res.send('');
+                return 0;
             });
-            var out = '<div class="ui divided list">';
-            var dv = '-';
-            var oecdDetectList = [];
-            regionLinks.forEach(function(item, i){
-                var itemDIV = [];
-                item.forEach(function(subitem, ii){
-                    if(i>3){
-                        var tt=subitem.title.split(',');
-                        oecdDetectList.push(tt[0]);
-                    }
-                    itemDIV.push('<a target="_blank" href="/demos/geo/OSMAdmin/'+subitem.id+'"">'+subitem.title +'</a>')
-                });
-                out = out + '<div class="ui item"><span class="ui mini teal circular label">'+i+'</span>'+ dv +' '+itemDIV.join(' | ') +'</div>';
-                dv = dv + '-';
-            });
-            res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to OSM Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/PointToOSMAdmin/'+pointLong+'/'+pointLat+'/'+country+'">Coordinates to OSM Admin Boundaries</a></h3> </div> <div class="ui segment"> '+out+' </div><div class="ui segment"> <iframe src=\'/demos/geo/DetectOECDFUAs/'+country+'/'+JSON.stringify(oecdDetectList)+'\' height="150" width="100%" style="border:none;overflow: scroll;"></iframe></div></div></div></div></body></html>');
         }).catch(function (err) {
             console.log(err);
             res.send('');

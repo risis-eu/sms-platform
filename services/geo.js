@@ -289,8 +289,8 @@ export default {
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 //console.log(res);
                 callback(null, {
-                    id: params.id,
-                    resources: utilObject.parseOSMAdminMetadata(res)
+                    country: params.country,
+                    resource: utilObject.parseOSMAdminMetadata(res)
                 });
             }).catch(function (err) {
                 console.log(err);
