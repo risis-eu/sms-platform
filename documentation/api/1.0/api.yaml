@@ -322,6 +322,31 @@ paths:
             type: array
             items:
               $ref: '#/definitions/GADM28Admin'
+  /geo.OSMAdminMetadata;country={country};level={level}:
+    get:
+      summary: given a country, returns the metadata about its OSM admin levels.
+      parameters:
+        - name: country
+          in: path
+          description: country name, better be in ISO3
+          required: true
+          type: string
+          default: NLD
+        - name: country
+          in: path
+          description: Optional level name between 1 to 11
+          required: true
+          type: string
+          default: 2
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GADM28Admin'
   /geo.OSMAdminToPolygon;id={id}:
     get:
       summary: given a admin boundary id, returns the polygon shape.

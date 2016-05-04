@@ -176,6 +176,17 @@ class GeoUtil{
             return output;
         }
     }
+    parseOSMAdminMetadata(res){
+        let self = this;
+        let parsed = JSON.parse(res);
+        let output=[];
+        if(parsed.results.bindings.length){
+            parsed.results.bindings.forEach(function(el) {
+                output.push({'property': self.getPropertyLabel(el.level.value), 'description': el.levelDesc.value});
+            });
+            return output;
+        }
+    }
     parseOSMAdminToPolygon(res){
         let parsed = JSON.parse(res);
         let output=[];

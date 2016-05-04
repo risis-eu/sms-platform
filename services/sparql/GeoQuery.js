@@ -11,6 +11,7 @@ class GeoQuery{
         PREFIX pav: <http://purl.org/pav/> \
         PREFIX wv: <http://vocab.org/waiver/terms/norms> \
         PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
+        PREFIX dbpo: <http://dbpedia.org/ontology/> \
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#> \
         PREFIX ramon: <http://rdfdata.eionet.europa.eu/ramon/ontology/> \
         PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
@@ -28,10 +29,10 @@ class GeoQuery{
     }
     convertToISO3(country) {
         let inputCountry = country.toLowerCase().trim();
-        let predefined = {'aland islands': 'ALA', 'macau': 'MAC', 'the bahamas': 'BHS', 'bolivia': 'BOL', 'brunei': 'BRN', 'democratic republic of congo': 'COD', 'cape verde': 'CPV', 'falkland islands': 'FLK', 'federated states of micronesia': 'FSM', 'the gambia': 'GMB', 'ivory coast': 'CIV', 'north korea': 'PRK', 'korea': 'KOR', 'south korea': 'KOR', 'macedonia': 'MKD', 'netherlands antilles': 'ANT', 'pitcairn islands': 'PCN', 'spratly islands': 'Spratly Islands', 'russia': 'RUS', 'saint helena': 'SHN', 'st. lucia': 'LCA', 'east timor': 'TLS', 'taiwan': 'TWN', 'tanzania': 'TZA', 'united kingdom': 'GBR', 'united states': 'USA', 'venezuela': 'VEN', 'british virgin islands': 'VGB', 'us virgin islands': 'VIR', 'vatican city': 'VAT', 'palestinian occupied territories': 'PSE', 'saint-barthélémy': 'BLM', 'saint-martin': 'MAF', 'slovak republic': 'SVK'};
+        let predefined = {'aland islands': 'ALA', 'macau': 'MAC', 'the bahamas': 'BHS', 'bolivia': 'BOL', 'brunei': 'BRN', 'democratic republic of congo': 'COD', 'cape verde': 'CPV', 'falkland islands': 'FLK', 'federated states of micronesia': 'FSM', 'the gambia': 'GMB', 'ivory coast': 'CIV', 'north korea': 'PRK', 'south korea': 'KOR', 'macedonia': 'MKD', 'netherlands antilles': 'ANT', 'pitcairn islands': 'PCN', 'spratly islands': 'Spratly Islands', 'russia': 'RUS', 'saint helena': 'SHN', 'st. lucia': 'LCA', 'east timor': 'TLS', 'taiwan': 'TWN', 'tanzania': 'TZA', 'united kingdom': 'GBR', 'united states': 'USA', 'venezuela': 'VEN', 'british virgin islands': 'VGB', 'us virgin islands': 'VIR', 'vatican city': 'VAT', 'palestinian occupied territories': 'PSE', 'saint-barthélémy': 'BLM', 'saint-martin': 'MAF', 'vietnam': 'VNM', 'the united states': 'USA', 'the isle of man': 'IMN', 'moldova': 'MDA', 'democratic republic of the congo': 'COD', 'the central african republic': 'CAF', 'bangeladesh': 'BGD'};
         let out = inputCountry;
         if(inputCountry.length === 3){
-            return out;
+            return country;
         }else if(inputCountry.length === 2){
             listOfCountries.forEach((row)=>{
                 if(row['alpha-2'].toLowerCase() === inputCountry){
@@ -311,6 +312,22 @@ class GeoQuery{
             <'+uri+'> a risisOSMV:AdministrativeArea ;\
                 ?property ?value .\
             FILTER (?property != geo:geometry AND ?property != rdf:type)    \
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
+    getOSMAdminMetadata(country, level) {
+        let ex1='';
+        if(level){
+            ex1= 'risisOSMV:level'+level+ ' ?levelDesc ;';
+        }
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?uri ?level ?levelDesc FROM <http://geo.risis.eu/osm/metadata> WHERE { \
+            ?uri a dbpo:Country ;'+ex1+'\
+                ?level ?levelDesc ;\
+                risisOSMV:ISO "'+this.convertToISO3(country)+'" .\
+                FILTER (?level != rdf:type AND ?level != risisOSMV:ISO)    \
           } \
         ';
         return this.prefixes + this.query;

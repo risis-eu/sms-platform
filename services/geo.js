@@ -279,6 +279,23 @@ export default {
                 console.log(err);
                 callback(null, {resources: []});
             });
+        } else if (resource === 'geo.OSMAdminMetadata') {
+            graphName = 'big-data-endpoint';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getOSMAdminMetadata(params.country, params.level);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    id: params.id,
+                    resources: utilObject.parseOSMAdminMetadata(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
         } else if (resource === 'geo.OSMAdminToPolygon') {
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
