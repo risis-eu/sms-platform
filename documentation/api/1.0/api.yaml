@@ -332,7 +332,7 @@ paths:
           required: true
           type: string
           default: NLD
-        - name: country
+        - name: level
           in: path
           description: Optional level name between 1 to 11
           required: true
