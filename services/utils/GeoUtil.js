@@ -165,6 +165,34 @@ class GeoUtil{
             return output;
         }
     }
+    parseOECDFUA(res){
+        let self = this;
+        let parsed = JSON.parse(res);
+        let output={};
+        if(parsed.results.bindings.length){
+            parsed.results.bindings.forEach(function(el) {
+                output[self.getPropertyLabel(el.property.value)] =  el.value.value;
+            });
+            return output;
+        }
+    }
+    parseOECDFUAList(res, country){
+        let self = this;
+        let parsed = JSON.parse(res);
+        let output=[];
+        if(parsed.results.bindings.length){
+            if(country){
+                parsed.results.bindings.forEach(function(el) {
+                    output.push({'id': self.getPropertyLabel(el.uri.value), 'title': el.title.value});
+                });
+            }else{
+                parsed.results.bindings.forEach(function(el) {
+                    output.push({'country': el.country ? el.country.value :'','id': self.getPropertyLabel(el.uri.value), 'title': el.title.value});
+                });
+            }
+            return output;
+        }
+    }
     parseAdminsByLevel(res){
         let self = this;
         let parsed = JSON.parse(res);

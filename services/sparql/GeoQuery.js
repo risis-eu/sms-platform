@@ -385,6 +385,17 @@ class GeoQuery{
         ';
         return this.prefixes + this.query;
     }
+    getOECDFUAToPolygon(uri) {
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?polygon ?name FROM <http://geo.risis.eu/oecd> WHERE { \
+            <'+uri+'> a risisOECDV:FunctionalUrbanArea ;\
+                dcterms:title ?name ;\
+                geo:geometry ?polygon .\
+          } \
+        ';
+        return this.prefixes + this.query;
+    }
     //source: flickr, osm, gadm
     getAdminsByLevel(level, country, source, offset, limit) {
         let vocab;
@@ -410,6 +421,32 @@ class GeoQuery{
                 '+vocab+':level '+level+' ;\
                 '+vocab+':ISO "'+this.convertToISO3(country)+'" .\
           } '+ex1+ex2+' \
+        ';
+        return this.prefixes + this.query;
+    }
+    getOECDFUAList(country) {
+        let ex1 = '';
+        if(country){
+            ex1 = ' risisOECDV:ISO "'+this.convertToISO3(country)+'" ;';
+        }
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?uri ?title ?country FROM <http://geo.risis.eu/oecd> WHERE { \
+            ?uri a risisOECDV:FunctionalUrbanArea ; '+ex1+'\
+                dcterms:title ?title .\
+                OPTIONAL {?uri risisOECDV:ISO ?country .}\
+          }  \
+        ';
+        return this.prefixes + this.query;
+    }
+    getOECDFUA(uri) {
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?property ?value FROM <http://geo.risis.eu/oecd> WHERE { \
+            <'+uri+'> a risisOECDV:FunctionalUrbanArea ;\
+                ?property ?value .\
+            FILTER (?property != geo:geometry AND ?property != rdf:type)    \
+          } \
         ';
         return this.prefixes + this.query;
     }

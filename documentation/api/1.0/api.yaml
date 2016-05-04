@@ -181,6 +181,63 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Municipality'
+  /geo.OECDFUAList;country={country}:
+    get:
+      summary: given a country, returns the list of all OECDF functional urban areas.
+      parameters:
+        - name: country
+          in: path
+          description: country name, better be in ISO3
+          required: true
+          type: string
+          default: NLD
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GADM28Admin'
+  /geo.OECDFUA;id={id}:
+    get:
+      summary: given the id of a functional urban area, returns its detailed properties.
+      parameters:
+        - name: id
+          in: path
+          description: id of the functional urban area
+          required: true
+          type: string
+          default: NL002
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GADM28Admin'
+  /geo.OECDFUAToPolygon;id={id}:
+    get:
+      summary: given the id of a functional urban area, returns the polygon shape.
+      parameters:
+        - name: id
+          in: path
+          description: id of the functional urban area
+          required: true
+          type: string
+          default: NL002
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MunicipalitytoPolygon'
   /geo.GADM28Admin;id={id}:
     get:
       summary: given a admin boundary uri, returns its detailed properties.
@@ -336,7 +393,7 @@ paths:
           in: path
           description: Optional level name between 1 to 11
           required: true
-          type: string
+          type: integer
           default: 2
       tags:
         - Geo-Services

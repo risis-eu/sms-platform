@@ -364,6 +364,23 @@ export default {
                 console.log(err);
                 callback(null, {resources: []});
             });
+        } else if (resource === 'geo.OECDFUAToPolygon') {
+            graphName = 'big-data-endpoint';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getOECDFUAToPolygon('http://geo.risis.eu/oecd/fua/' + params.id);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    id: params.id,
+                    resources: utilObject.parseFlickrAdminToPolygon(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
         } else if (resource === 'geo.AdminsByLevel') {
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -378,6 +395,40 @@ export default {
                     country: params.country,
                     source: params.source,
                     resources: utilObject.parseAdminsByLevel(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
+        } else if (resource === 'geo.OECDFUAList') {
+            graphName = 'big-data-endpoint';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getOECDFUAList(params.country);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    country: params.country,
+                    resources: utilObject.parseOECDFUAList(res, params.country)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
+        } else if (resource === 'geo.OECDFUA') {
+            graphName = 'big-data-endpoint';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getOECDFUA('http://geo.risis.eu/oecd/fua/' + params.id);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    country: params.country,
+                    resources: utilObject.parseOECDFUA(res)
                 });
             }).catch(function (err) {
                 console.log(err);
