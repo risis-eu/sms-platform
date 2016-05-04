@@ -427,6 +427,15 @@ module.exports = function handleDemos(server) {
         if(req.params.country){
             countryPart = ';country=' + req.params.country;
         }
+        var lmetadata= {
+            'resource': {
+                'level1': 'country',
+                'level2': 'region',
+                'level3': 'county',
+                'level4': 'locality',
+                'level5': 'neighbourhood',
+            }
+        };
         var pointLong = req.params.long;
         var pointLat = req.params.lat;
         var country = req.params.country;
@@ -456,7 +465,7 @@ module.exports = function handleDemos(server) {
                         oecdDetectList.push(tt[0]);
                     }
                 });
-                out = out + '<div class="ui item"><span class="ui mini teal circular label">'+i+'</span>'+ dv +' '+itemDIV.join(' | ') +'</div>';
+                out = out + '<div class="ui item" title="'+lmetadata.resource['level'+i]+'"><span class="ui mini teal circular label">'+i+'</span>'+ dv +' '+itemDIV.join(' | ') +'</div>';
                 dv = dv + '-';
             });
             res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Point to Flickr Admin</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/PointToFlickrAdmin/'+pointLong+'/'+pointLat+'/'+country+'">Coordinates to Flickr Admin Boundaries</a></h3> </div> <div class="ui segment"> '+out+' </div><div class="ui segment"> <iframe src=\'/demos/geo/DetectOECDFUAs/'+country+'/'+JSON.stringify(oecdDetectList)+'\' height="150" width="100%" style="border:none;overflow: scroll;"></iframe></div></div></div></div></body></html>');
@@ -476,6 +485,18 @@ module.exports = function handleDemos(server) {
         if(req.params.country){
             countryPart = ';country=' + req.params.country;
         }
+        //provinces, departments, bibhag, bundeslander, daerah istimewa, fivondronana, krong, landsvæðun, opština, sous-préfectures, counties, and thana
+        var lmetadata= {
+            'resource': {
+                'level0': 'country',
+                'level1': 'provinces',
+                'level2': 'region',
+                'level3': 'county',
+                'level4': 'locality',
+                'level5': 'neighbourhood',
+                'level6': 'neighbourhood',
+            }
+        };
         var pointLong = req.params.long;
         var pointLat = req.params.lat;
         var country = req.params.country;
