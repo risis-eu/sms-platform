@@ -238,6 +238,41 @@ paths:
             type: array
             items:
               $ref: '#/definitions/MunicipalitytoPolygon'
+  /geo.PointToOECDFUA;lat={latitude};long={longitude};country={country}:
+    get:
+      summary: given a point, returns the OECD FUAs.
+      description: |
+        Receives Longitude and Latitude of a point and returns its OECD FUA.
+      parameters:
+        - name: latitude
+          in: path
+          description: Latitude of the given point.
+          required: true
+          type: number
+          format: double
+          default: 52.3338
+        - name: longitude
+          in: path
+          description: Longitude of the given point.
+          required: true
+          type: number
+          format: double
+          default: 4.899431
+        - name: country
+          in: path
+          description: Optional 2 digit, 3 digit ISO code or the name of the country.
+          required: true
+          type: string
+          default: NLD
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: An array of object with corresponding admin boundary details.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/pointToADMIN'
   /geo.GADM28Admin;id={id}:
     get:
       summary: given a admin boundary uri, returns its detailed properties.

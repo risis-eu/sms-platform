@@ -2,11 +2,13 @@
 var rp = require('request-promise');
 var async = require('async');
 var path = require('path');
-
+var fs = require ('fs');
 var config = require('./config');
 var generalConfig = require('../../configs/general');
 var appShortTitle = generalConfig.appShortTitle;
 var appFullTitle = generalConfig.appFullTitle;
+var NL_Universities = require('../../data/nl_universities');
+
 var smsAPI = '/api';
 
 module.exports = function handleDemos(server) {
@@ -1060,6 +1062,101 @@ module.exports = function handleDemos(server) {
             });
             finalScript = finalScript +  '</head><body><div class="ui segments"><div class="ui segment"><h3><a target="_blank" href=\'/demos/geo/DetectOECDFUAs/'+country+'/'+JSON.stringify(list)+'/'+'\'>Boundaries to OECD FUAs</a></h3></div><div class="ui segment"><div class="ui list">'+outputItems.join(' ')+'</div></div></body></html>';
             res.send(finalScript);
+        });
+    });
+    server.get('/demos/geo/NL_Universities/:width?/:height?', function(req, res) {
+        var width = 500;
+        var height = 500;
+        if(req.params.width){
+            width = req.params.width;
+        }
+        if(req.params.height){
+            height = req.params.height;
+        }
+        var colors = ['#0bc4a7', '#1a48eb', '#ecdc0b', '#ed1ec6', '#d9990b', '#0c0d17', '#e3104f', '#6d8ecf', '#0bc4a7'];
+        var asyncTasks = [];
+        var polygons = [];
+        NL_Universities.forEach((university)=>{
+            var long = university.processed.geometry.location.lng;
+            var lat = university.processed.geometry.location.lat;
+            var name = university.addr;
+            var country = "NL";
+            asyncTasks.push(function(callback){
+                rp.get({uri: 'http://' + req.headers.host + smsAPI +'/geo.PointToOECDFUA;lat=' + lat + ';long=' + long + ';country=' + country}).then(function(body2){
+                    rp.get({uri: 'http://' + req.headers.host + smsAPI +'/geo.PointToFlickrAdmin;lat=' + lat + ';long=' + long + ';country=' + country + ';level=3'}).then(function(body3){
+                        rp.get({uri: 'http://' + req.headers.host + smsAPI +'/geo.PointToGADMAdmin;lat=' + lat + ';long=' + long + ';country=' + country + ';level=2'}).then(function(body4){
+                            rp.get({uri: 'http://' + req.headers.host + smsAPI +'/geo.PointToOSMAdmin;lat=' + lat + ';long=' + long + ';country=' + country + ';level=8'}).then(function(body5){
+                                var parsed2 = JSON.parse(body2);
+                                var parsed3 = JSON.parse(body3);
+                                var parsed4 = JSON.parse(body4);
+                                var parsed5 = JSON.parse(body5);
+                                var input = parsed2.resources[0].polygon;
+                                polygons.push({name: name, polygons: {'oecd': parsed2.resources[0].polygon, 'flickr': parsed3.resources[0].polygon, 'gadm': parsed4.resources[0].polygon, 'osm': parsed5.resources[0].polygon}});
+                                callback();
+                            }).catch(function (err5) {
+                                console.log('atomic5: ', err5);
+                                callback();
+                            });
+                        }).catch(function (err4) {
+                            console.log('atomic4: ', err4);
+                            callback();
+                        });
+                    }).catch(function (err3) {
+                        console.log('atomic3: ', err3);
+                        callback();
+                    });
+                }).catch(function (err) {
+                    console.log('atomic2: ', err);
+                    callback();
+                });
+            });
+        });
+        async.parallelLimit(asyncTasks, 20, function(){
+                // All tasks are done now
+                var finalScript = '<!DOCTYPE html><html><head><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" /><style>		.info {padding: 6px 8px;font: 14px/16px Arial, Helvetica, sans-serif;background: white;background: rgba(255,255,255,0.8);box-shadow: 0 0 15px rgba(0,0,0,0.2);border-radius: 5px;}.info h4 {margin: 0 0 5px;color: #777;}</style><title>Netherlands Universities</title> ';
+                var features = [];
+                var colorsObject = {};
+                polygons.forEach(function(input, i){
+                    //console.log(input.name, input.id);
+                    //handling each polygon in the list
+                    var polygons2 = parseVirtPolygon(input.polygons.oecd.geometry);
+                    var multiPLG = [];
+                    var polgArr = [];
+                    polygons2.forEach(function(plg){
+                        polgArr = [];
+                        plg.forEach(function(el){
+                            if(typeof el == 'string'){
+                                var tmp = el.split(' ');
+                                polgArr.push([parseFloat(tmp[0]), parseFloat(tmp[1])]);
+                            }
+                        });
+                        if(polgArr.length){
+                            multiPLG.push(polgArr);
+                        }
+                    });
+                    var shapeType, coordinatesArr;
+                    if(multiPLG.length > 1){
+                        shapeType = 'MultiPolygon';
+                        coordinatesArr = multiPLG;
+
+                    }else{
+                        shapeType = 'Polygon';
+                        coordinatesArr = multiPLG[0];
+
+                    }
+
+                    features.push({'type': 'Feature', 'id': input.id, 'properties': {'name': input.name}, 'geometry': {'type': shapeType, coordinates: [coordinatesArr]}});
+                });
+                var focusPoint;
+                if(features[0].geometry.type == 'Polygon'){
+                    focusPoint = features[0].geometry.coordinates[0][0];
+                }else{
+                    focusPoint = features[0].geometry.coordinates[0][0][0];
+                }
+                var mapboxAccessToken = config.mapboxKey;
+                var mcpData = {'type':'FeatureCollection','features': features};
+                finalScript = finalScript +  '</head><body><div class="ui segments"><div class="ui segment"><h3></h3></div><div class="ui segment"><div id="map" style="width:'+width+'px;height:'+height+'px;"></div><b></b>'+nutsLinks.length+' boundaries found:<br/> '+nutsLinks.join(' ')+'</div></div><script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script><script> var colorObject = '+JSON.stringify(colorsObject)+'; function getColor(d) { return colorObject[d];}	function style(feature) {return {weight: 2,opacity: 1,color: "black",dashArray: "3",fillOpacity: 0.35, fillColor: "#CD0074"};} var map = L.map("map").setView([ '+(focusPoint? focusPoint[1]: 0)+', '+(focusPoint? focusPoint[0]: 1)+'], 7); var info = L.control();info.onAdd = function (map) {this._div = L.DomUtil.create("div", "info");this.update();return this._div;};info.update = function (props) {this._div.innerHTML = "<h4>Municipality: </h4>" +  (props ? ("<b>" + props.name + "</b>") : "Hover over a region");}; info.addTo(map);function highlightFeature(e) {var layer = e.target;layer.setStyle({weight: 5,color: "#666",dashArray: "",fillOpacity: 0.7}); if (!L.Browser.ie && !L.Browser.opera) { layer.bringToFront(); } info.update(layer.feature.properties); } function resetHighlight(e) { geojson.resetStyle(e.target); info.update();} function zoomToFeature(e) {map.fitBounds(e.target.getBounds());} function onEachFeature(feature, layer) {layer.on({mouseover: highlightFeature,mouseout: resetHighlight,click: zoomToFeature});}  L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {attribution: \'Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"http://mapbox.com\">Mapbox</a>\',maxZoom: 18,id: "mapbox.light",accessToken: "'+mapboxAccessToken+'"}).addTo(map); var geojson = L.geoJson('+JSON.stringify(mcpData)+', {style: style, onEachFeature: onEachFeature}).addTo(map);</script></body></html>';
+                res.send(finalScript);
         });
     });
 };

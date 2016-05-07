@@ -353,10 +353,11 @@ class GeoQuery{
         }
         /*jshint multistr: true */
         this.query = '\
-        SELECT DISTINCT ?uri ?title ?level from <http://geo.risis.eu/flickr> WHERE { \
+        SELECT DISTINCT ?uri ?title ?country ?level from <http://geo.risis.eu/flickr> WHERE { \
             ?uri a risisFlickrV:AdministrativeArea ;\
                 dcterms:title ?title ; '+ex1+ex2+'\
                 risisFlickrV:level ?level ;\
+                risisFlickrV:ISO ?country ;\
                 geo:geometry ?polygon .\
             FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
         } LIMIT 100 \
@@ -447,6 +448,23 @@ class GeoQuery{
                 ?property ?value .\
             FILTER (?property != geo:geometry AND ?property != rdf:type)    \
           } \
+        ';
+        return this.prefixes + this.query;
+    }
+    getPointToOECDFUA(lat, long, country) {
+        let ex1 = '';
+        if(country){
+            ex1 = 'risisOECDV:ISO "'+this.convertToISO3(country)+'" ; ' ;
+        }
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?uri ?title ?country from <http://geo.risis.eu/oecd> WHERE { \
+            ?uri a risisOECDV:FunctionalUrbanArea ;\
+                dcterms:title ?title ; '+ex1+'\
+                risisOECDV:ISO ?country ;\
+                geo:geometry ?polygon .\
+            FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
+        } LIMIT 100 \
         ';
         return this.prefixes + this.query;
     }

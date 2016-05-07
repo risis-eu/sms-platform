@@ -103,7 +103,18 @@ class GeoUtil{
         let output=[];
         if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
-                output.push({id: el.uri.value.replace('http://geo.risis.eu/flickr/', ''), title: el.title.value, level: el.level.value});
+                output.push({id: el.uri.value.replace('http://geo.risis.eu/flickr/', ''), title: el.title.value, level: el.level.value, country: el.country.value});
+            });
+            return output;
+        }
+    }
+    parsePointToOECDFUA(res){
+        let self = this;
+        let parsed = JSON.parse(res);
+        let output=[];
+        if(parsed.results.bindings.length){
+            parsed.results.bindings.forEach(function(el) {
+                output.push({id: el.uri.value.replace('http://geo.risis.eu/oecd/fua/', ''), title: el.title.value, country: el.country.value});
             });
             return output;
         }
