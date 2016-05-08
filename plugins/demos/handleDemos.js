@@ -7,7 +7,6 @@ var config = require('./config');
 var generalConfig = require('../../configs/general');
 var appShortTitle = generalConfig.appShortTitle;
 var appFullTitle = generalConfig.appFullTitle;
-var NL_Universities = require('../../data/nl_universities');
 
 var smsAPI = '/api';
 
@@ -1024,6 +1023,170 @@ module.exports = function handleDemos(server) {
             res.send('');
             return 0;
         });
+    });
+    server.get('/demos/geo/NL_Universities/:width?/:height?', function(req, res) {
+        var nl_unis_oecd_polygons = require('../../data/nl_universities/nl_unis_oecd_polygons');
+        var nl_unis_osm_polygons = require('../../data/nl_universities/nl_unis_osm_polygons');
+        var nl_unis_gadm_polygons = require('../../data/nl_universities/nl_unis_gadm_polygons');
+        var nl_unis_flickr_polygons = require('../../data/nl_universities/nl_unis_flickr_polygons');
+        var nl_universities = require('../../data/nl_universities/nl_universities');
+
+        var width = 500;
+        var height = 500;
+        if(req.params.width){
+            width = req.params.width;
+        }
+        if(req.params.height){
+            height = req.params.height;
+        }
+        let flagID ={};
+        var colors = ['#0bc4a7', '#1a48eb', '#ecdc0b', '#ed1ec6', '#d9990b', '#0c0d17', '#e3104f', '#6d8ecf', '#0bc4a7'];
+        var finalScript = '<!DOCTYPE html><html><head><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" /><style>		.info {padding: 6px 8px;font: 14px/16px Arial, Helvetica, sans-serif;background: white;background: rgba(255,255,255,0.8);box-shadow: 0 0 15px rgba(0,0,0,0.2);border-radius: 5px;}.info h4 {margin: 0 0 5px;color: #777;}</style><title>NL Universities</title> ';
+        var features = [];
+        var colorsObject = {};
+
+        nl_unis_osm_polygons.forEach((uni)=>{
+            if(!flagID[uni.processed.id]){
+                var polygons2 = parseVirtPolygon(uni.processed.resources[0].polygon);
+                var multiPLG = [];
+                var polgArr = [];
+                polygons2.forEach(function(plg){
+                    polgArr = [];
+                    plg.forEach(function(el){
+                        if(typeof el == 'string'){
+                            var tmp = el.split(' ');
+                            polgArr.push([parseFloat(tmp[0]), parseFloat(tmp[1])]);
+                        }
+                    });
+                    if(polgArr.length){
+                        multiPLG.push(polgArr);
+                    }
+                });
+                var shapeType, coordinatesArr;
+                if(multiPLG.length > 1){
+                    shapeType = 'MultiPolygon';
+                    coordinatesArr = multiPLG;
+
+                }else{
+                    shapeType = 'Polygon';
+                    coordinatesArr = multiPLG[0];
+
+                }
+                flagID[uni.processed.id]=1;
+                features.push({'type': 'Feature', 'id': uni.processed.id, 'properties': {'name': uni.processed.resources[0].name, source: 'osm'}, 'geometry': {'type': shapeType, coordinates: [coordinatesArr]}});
+            }
+
+        });
+        nl_unis_gadm_polygons.forEach((uni)=>{
+            if(!flagID[uni.processed.id]){
+                var polygons2 = parseVirtPolygon(uni.processed.resources[0].polygon);
+                var multiPLG = [];
+                var polgArr = [];
+                polygons2.forEach(function(plg){
+                    polgArr = [];
+                    plg.forEach(function(el){
+                        if(typeof el == 'string'){
+                            var tmp = el.split(' ');
+                            polgArr.push([parseFloat(tmp[0]), parseFloat(tmp[1])]);
+                        }
+                    });
+                    if(polgArr.length){
+                        multiPLG.push(polgArr);
+                    }
+                });
+                var shapeType, coordinatesArr;
+                if(multiPLG.length > 1){
+                    shapeType = 'MultiPolygon';
+                    coordinatesArr = multiPLG;
+
+                }else{
+                    shapeType = 'Polygon';
+                    coordinatesArr = multiPLG[0];
+
+                }
+                flagID[uni.processed.id]=1;
+                features.push({'type': 'Feature', 'id': uni.processed.id, 'properties': {'name': uni.processed.resources[0].name, source: 'gadm'}, 'geometry': {'type': shapeType, coordinates: [coordinatesArr]}});
+            }
+
+        });
+        nl_unis_flickr_polygons.forEach((uni)=>{
+            if(!flagID[uni.processed.id]){
+                var polygons2 = parseVirtPolygon(uni.processed.resources[0].polygon);
+                var multiPLG = [];
+                var polgArr = [];
+                polygons2.forEach(function(plg){
+                    polgArr = [];
+                    plg.forEach(function(el){
+                        if(typeof el == 'string'){
+                            var tmp = el.split(' ');
+                            polgArr.push([parseFloat(tmp[0]), parseFloat(tmp[1])]);
+                        }
+                    });
+                    if(polgArr.length){
+                        multiPLG.push(polgArr);
+                    }
+                });
+                var shapeType, coordinatesArr;
+                if(multiPLG.length > 1){
+                    shapeType = 'MultiPolygon';
+                    coordinatesArr = multiPLG;
+
+                }else{
+                    shapeType = 'Polygon';
+                    coordinatesArr = multiPLG[0];
+
+                }
+                flagID[uni.processed.id]=1;
+                features.push({'type': 'Feature', 'id': uni.processed.id, 'properties': {'name': uni.processed.resources[0].name, source: 'flickr'}, 'geometry': {'type': shapeType, coordinates: [coordinatesArr]}});
+            }
+
+        });
+        nl_unis_oecd_polygons.forEach((uni)=>{
+            if(!flagID[uni.processed.id]){
+                var polygons2 = parseVirtPolygon(uni.processed.resources[0].polygon);
+                var multiPLG = [];
+                var polgArr = [];
+                polygons2.forEach(function(plg){
+                    polgArr = [];
+                    plg.forEach(function(el){
+                        if(typeof el == 'string'){
+                            var tmp = el.split(' ');
+                            polgArr.push([parseFloat(tmp[0]), parseFloat(tmp[1])]);
+                        }
+                    });
+                    if(polgArr.length){
+                        multiPLG.push(polgArr);
+                    }
+                });
+                var shapeType, coordinatesArr;
+                if(multiPLG.length > 1){
+                    shapeType = 'MultiPolygon';
+                    coordinatesArr = multiPLG;
+
+                }else{
+                    shapeType = 'Polygon';
+                    coordinatesArr = multiPLG[0];
+
+                }
+                flagID[uni.processed.id]=1;
+                features.push({'type': 'Feature', 'id': uni.processed.id, 'properties': {'name': uni.processed.resources[0].name, source: 'oecd'}, 'geometry': {'type': shapeType, coordinates: [coordinatesArr]}});
+            }
+
+        });
+        nl_universities.forEach((uni)=>{
+            features.push({'type': 'Feature', 'id': uni.addr, 'properties': {'name': uni.addr}, 'geometry': {'type': 'Point', coordinates: [uni.processed.geometry.location.lat, uni.processed.geometry.location.lng]}});
+        });
+        var focusPoint;
+        if(features[0].geometry.type == 'Polygon'){
+            focusPoint = features[0].geometry.coordinates[0][0];
+        }else{
+            focusPoint = features[0].geometry.coordinates[0][0][0];
+        }
+        var mapboxAccessToken = config.mapboxKey;
+        var mcpData = {'type':'FeatureCollection','features': features};
+        finalScript = finalScript +  '</head><body><div id="map" style="width:'+width+'px;height:'+height+'px;"></div><script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script><script> var colorObject = '+JSON.stringify(colorsObject)+'; function getColor(d) { return colorObject[d];}	function style(feature) {return {weight: 2,opacity: 1,color: feature.properties.source == "oecd" ? "#CD0074" : (feature.properties.source =="osm" ? "#ecdc0b" : (feature.properties.source =="gadm" ? "#6d8ecf" : "#0bc4a7")),dashArray: "3",fillOpacity: 0.35, fillColor: feature.properties.source == "oecd" ? "#CD0074" : (feature.properties.source =="osm" ? "#ecdc0b" : (feature.properties.source =="gadm" ? "#6d8ecf" : "#0bc4a7"))};} var map = L.map("map").setView([ '+(focusPoint? focusPoint[1]: 0)+', '+(focusPoint? focusPoint[0]: 1)+'], 7); var info = L.control();info.onAdd = function (map) {this._div = L.DomUtil.create("div", "info");this.update();return this._div;};info.update = function (props) {this._div.innerHTML = "<h4>Municipality: </h4>" +  (props ? ("<b>" + props.name + "</b>") : "Hover over a region");}; info.addTo(map);function highlightFeature(e) {var layer = e.target;layer.setStyle({weight: 5,color: "#666",dashArray: "",fillOpacity: 0.7}); if (!L.Browser.ie && !L.Browser.opera) { layer.bringToFront(); } info.update(layer.feature.properties); } function resetHighlight(e) { geojson.resetStyle(e.target); info.update();} function zoomToFeature(e) {map.fitBounds(e.target.getBounds());} function onEachFeature(feature, layer) {layer.on({mouseover: highlightFeature,mouseout: resetHighlight,click: zoomToFeature});}  L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {attribution: \'Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"http://mapbox.com\">Mapbox</a>\',maxZoom: 18,id: "mapbox.light",accessToken: "'+mapboxAccessToken+'"}).addTo(map); var geojson = L.geoJson('+JSON.stringify(mcpData)+', {style: style, onEachFeature: onEachFeature}).addTo(map);</script></body></html>';
+        res.send(finalScript);
+
     });
     server.get('/demos/geo/DetectOECDFUAs/:country/:list', function(req, res) {
         if(!req.params.list || !req.params.country){
