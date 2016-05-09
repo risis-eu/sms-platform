@@ -18,6 +18,7 @@ class Demos extends React.Component {
                         <div className="item">- <a href="/demos/geo/addressToOSMAdmin">Address to OSM Administrative Boundaries</a></div>
                         <div className="item">- <a href="/demos/geo/addressToFlickrAdmin">Address to Flickr Administrative Boundaries</a></div>
                         <div className="item">- <a href="/boundariesMap">Example of Administrative Boundaries extracted for a specific country</a></div>
+                        <div className="item">- <a href="/demos/geo/NL_Universities/1000/1000">Educational Institutes in the Netherlands</a></div>
                     </div>
                 </div>
             </div>
