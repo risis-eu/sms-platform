@@ -626,6 +626,7 @@ export default {
                 category: ['technicalAspects'],
                 hint: ['Technical features of a dataset.'],
                 objectIEditor: ['MediaTypeInput'],
+                placeholder: ["Enter your specific file format..."],
                 allowUserDefinedValue: 1
             },
             'http://rdfs.org/ns/void#dataDump': {

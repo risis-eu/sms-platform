@@ -57,13 +57,10 @@ class ObjectIEditor extends React.Component {
                 editor = <LanguageInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
             break;
             case 'MediaTypeInput':
-                editor = <MediaTypeInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
+                editor = <MediaTypeInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onEnterPress={this.handleEnterPress.bind(this)}/>;
             break;
             case 'FileSizeInput':
-                editor = <FileSizeInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
-            break;
-            case 'BasicCalendarInput':
-                editor = <BasicCalendarInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
+                editor = <FileSizeInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onEnterPress={this.handleEnterPress.bind(this)}/>;
             break;
             case 'BasicOptionInput':
                 editor = <BasicOptionInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;

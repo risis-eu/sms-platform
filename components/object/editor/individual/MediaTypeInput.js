@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {list} from '../../../../data/mimeTypes';
-import {BasicIndividualInput} from './BasicIndividualInput';
+import BasicIndividualInput from './BasicIndividualInput';
 
 class MediaTypeInput extends React.Component {
     constructor(props) {
