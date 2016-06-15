@@ -46,6 +46,7 @@
     "react-dom": "^15.1.0",
     "react-google-maps": "^4.10.0",
     "react-search-input": "^0.8.1",
+    "redis": "^2.6.1",
     "request-promise": "^3.0.0",
     "serialize-javascript": "^1.2.0",
     "serve-favicon": "^2.3.0",
