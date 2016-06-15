@@ -1,6 +1,5 @@
 'use strict';
-import {getQueryDataTypeValue} from '../utils/helpers';
-import {listOfCountries} from '../../data/countries';
+import {getQueryDataTypeValue, convertToISO3, ISOtoCountryName} from '../utils/helpers';
 class GeoQuery{
     constructor() {
         /*jshint multistr: true */
@@ -26,55 +25,6 @@ class GeoQuery{
         PREFIX risisFlickrV: <http://geo.risis.eu/vocabulary/flickr/> \
         ';
         this.query='';
-    }
-    convertToISO3(country) {
-        let inputCountry = country.toLowerCase().trim();
-        let predefined = {'aland islands': 'ALA', 'macau': 'MAC', 'the bahamas': 'BHS', 'bolivia': 'BOL', 'brunei': 'BRN', 'democratic republic of congo': 'COD', 'cape verde': 'CPV', 'falkland islands': 'FLK', 'federated states of micronesia': 'FSM', 'the gambia': 'GMB', 'ivory coast': 'CIV', 'north korea': 'PRK', 'south korea': 'KOR', 'macedonia': 'MKD', 'netherlands antilles': 'ANT', 'pitcairn islands': 'PCN', 'spratly islands': 'Spratly Islands', 'russia': 'RUS', 'saint helena': 'SHN', 'st. lucia': 'LCA', 'east timor': 'TLS', 'taiwan': 'TWN', 'tanzania': 'TZA', 'united kingdom': 'GBR', 'united states': 'USA', 'venezuela': 'VEN', 'british virgin islands': 'VGB', 'us virgin islands': 'VIR', 'vatican city': 'VAT', 'palestinian occupied territories': 'PSE', 'saint-barthélémy': 'BLM', 'saint-martin': 'MAF', 'vietnam': 'VNM', 'the united states': 'USA', 'the isle of man': 'IMN', 'moldova': 'MDA', 'democratic republic of the congo': 'COD', 'the central african republic': 'CAF', 'bangeladesh': 'BGD', 'iran': 'IRN'};
-        let out = inputCountry;
-        if(inputCountry.length === 3){
-            return country;
-        }else if(inputCountry.length === 2){
-            listOfCountries.forEach((row)=>{
-                if(row['alpha-2'].toLowerCase() === inputCountry){
-                    out = row['alpha-3'];
-                    return out;
-                }
-            });
-        }else{
-            if(predefined[inputCountry]){
-                out = predefined[inputCountry];
-                return out;
-            }else{
-                listOfCountries.forEach((row)=>{
-                    if(row['name'].toLowerCase() === inputCountry){
-                        out = row['alpha-3'];
-                        return out;
-                    }
-                });
-            }
-        }
-        return out;
-    }
-    ISOtoCountryName(country) {
-        let out = country;
-        if(country.length === 3){
-            listOfCountries.forEach((row)=>{
-                if(row['alpha-3'] === country){
-                    out = row['name'];
-                    return out;
-                }
-            });
-        }else if(country.length === 2){
-            listOfCountries.forEach((row)=>{
-                if(row['alpha-2'] === country){
-                    out = row['name'];
-                    return out;
-                }
-            });
-        }else{
-            return out;
-        }
-        return out;
     }
     //FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
     getPointToNUTS(lat, long) {
@@ -138,7 +88,7 @@ class GeoQuery{
         this.query = '\
         SELECT DISTINCT ?name ?municipalityID FROM <http://geo.risis.eu/oecd> WHERE { \
             ?uri a risisOECDV:Municipality ;\
-            	risisOECDV:ISO "'+this.convertToISO3(country)+'" ;\
+            	risisOECDV:ISO "'+convertToISO3(country)+'" ;\
             	dcterms:title ?name ;\
             	risisOECDV:municipalityID ?municipalityID .\
           } \
@@ -197,7 +147,7 @@ class GeoQuery{
     getBoundaryToOECDFUA(name, country){
         let ex1 = '';
         if(country){
-            ex1 = 'risisOECDV:ISO "'+this.convertToISO3(country)+'" ; ' ;
+            ex1 = 'risisOECDV:ISO "'+convertToISO3(country)+'" ; ' ;
         }
         /*jshint multistr: true */
         this.query = '\
@@ -232,7 +182,7 @@ class GeoQuery{
     getPointToGADM28Admin(lat, long, country, level) {
         let ex1 = '', ex2 = '';
         if(country){
-            ex1 = 'risisGADMV:ISO "'+this.convertToISO3(country)+'" ; ' ;
+            ex1 = 'risisGADMV:ISO "'+convertToISO3(country)+'" ; ' ;
         }
         if(level){
             ex2 = 'risisGADMV:level '+level+' ; ' ;
@@ -287,7 +237,7 @@ class GeoQuery{
     getPointToOSMAdmin(lat, long, country, level) {
         let ex1 = '', ex2 = '';
         if(country){
-            ex1 = 'risisOSMV:ISO "'+this.convertToISO3(country)+'" ; ' ;
+            ex1 = 'risisOSMV:ISO "'+convertToISO3(country)+'" ; ' ;
         }
         if(level){
             ex2 = 'risisOSMV:level '+level+' ; ' ;
@@ -326,7 +276,7 @@ class GeoQuery{
         SELECT DISTINCT ?uri ?level ?levelDesc FROM <http://geo.risis.eu/osm/metadata> WHERE { \
             ?uri a dbpo:Country ;'+ex1+'\
                 ?level ?levelDesc ;\
-                risisOSMV:ISO "'+this.convertToISO3(country)+'" .\
+                risisOSMV:ISO "'+convertToISO3(country)+'" .\
                 FILTER (?level != rdf:type AND ?level != risisOSMV:ISO)    \
           } \
         ';
@@ -346,7 +296,7 @@ class GeoQuery{
     getPointToFlickrAdmin(lat, long, country, level) {
         let ex1 = '', ex2 = '';
         if(country){
-            ex1 = 'risisFlickrV:ISO "'+this.convertToISO3(country)+'" ; ' ;
+            ex1 = 'risisFlickrV:ISO "'+convertToISO3(country)+'" ; ' ;
         }
         if(level){
             ex2 = 'risisFlickrV:level '+level+' ; ' ;
@@ -420,7 +370,7 @@ class GeoQuery{
             ?uri a '+vocab+':AdministrativeArea ;\
                 dcterms:title ?title ;\
                 '+vocab+':level '+level+' ;\
-                '+vocab+':ISO "'+this.convertToISO3(country)+'" .\
+                '+vocab+':ISO "'+convertToISO3(country)+'" .\
           } '+ex1+ex2+' \
         ';
         return this.prefixes + this.query;
@@ -428,7 +378,7 @@ class GeoQuery{
     getOECDFUAList(country) {
         let ex1 = '';
         if(country){
-            ex1 = ' risisOECDV:ISO "'+this.convertToISO3(country)+'" ;';
+            ex1 = ' risisOECDV:ISO "'+convertToISO3(country)+'" ;';
         }
         /*jshint multistr: true */
         this.query = '\
@@ -454,7 +404,7 @@ class GeoQuery{
     getPointToOECDFUA(lat, long, country) {
         let ex1 = '';
         if(country){
-            ex1 = 'risisOECDV:ISO "'+this.convertToISO3(country)+'" ; ' ;
+            ex1 = 'risisOECDV:ISO "'+convertToISO3(country)+'" ; ' ;
         }
         /*jshint multistr: true */
         this.query = '\

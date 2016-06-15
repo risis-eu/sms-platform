@@ -1,4 +1,6 @@
 'use strict';
+import {convertToISO3, ISOtoCountryName} from '../utils/helpers';
+
 class GeoUtil{
     constructor() {
 
@@ -75,35 +77,65 @@ class GeoUtil{
             return output;
         }
     }
-    parsePointToGADM28Admin(res){
+    parsePointToGADM28Admin(res, country){
         let self = this;
         let parsed = JSON.parse(res);
         let output=[];
+        let cISO = '';
+        if(country){
+            cISO = convertToISO3(country);
+        }
         if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
-                output.push({id: self.getPropertyLabel(el.uri.value), title: el.title.value, level: el.level.value, country: el.country.value});
+                if(country){
+                    if(el.country.value === cISO){
+                        output.push({id: self.getPropertyLabel(el.uri.value), title: el.title.value, level: el.level.value, country: el.country.value});
+                    }
+                }else{
+                    output.push({id: self.getPropertyLabel(el.uri.value), title: el.title.value, level: el.level.value, country: el.country.value});
+                }
             });
             return output;
         }
     }
-    parsePointToOSMAdmin(res){
+    parsePointToOSMAdmin(res, country){
         let self = this;
         let parsed = JSON.parse(res);
         let output=[];
+        let cISO = '';
+        if(country){
+            cISO = convertToISO3(country);
+        }
         if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
-                output.push({id: el.uri.value.replace('http://geo.risis.eu/osm/', ''), title: el.title.value, level: el.level.value, country: el.country.value});
+                if(country){
+                    if(el.country.value === cISO){
+                        output.push({id: el.uri.value.replace('http://geo.risis.eu/osm/', ''), title: el.title.value, level: el.level.value, country: el.country.value});
+                    }
+                }else{
+                    output.push({id: el.uri.value.replace('http://geo.risis.eu/osm/', ''), title: el.title.value, level: el.level.value, country: el.country.value});
+                }
             });
             return output;
         }
     }
-    parsePointToFlickrAdmin(res){
+    parsePointToFlickrAdmin(res, country){
         let self = this;
         let parsed = JSON.parse(res);
         let output=[];
+        let cISO = '';
+        if(country){
+            cISO = convertToISO3(country);
+        }
         if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
-                output.push({id: el.uri.value.replace('http://geo.risis.eu/flickr/', ''), title: el.title.value, level: el.level.value, country: el.country.value});
+                if(country){
+                    if(el.country.value === cISO){
+                        output.push({id: el.uri.value.replace('http://geo.risis.eu/flickr/', ''), title: el.title.value, level: el.level.value, country: el.country.value});
+                    }
+                }else{
+                    output.push({id: el.uri.value.replace('http://geo.risis.eu/flickr/', ''), title: el.title.value, level: el.level.value, country: el.country.value});
+                }
             });
             return output;
         }

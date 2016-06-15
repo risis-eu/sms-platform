@@ -1,6 +1,56 @@
 import {sparqlEndpoint} from '../../configs/server';
+import {listOfCountries} from '../../data/countries';
 import validUrl from 'valid-url';
 export default {
+    convertToISO3(country) {
+        let inputCountry = country.toLowerCase().trim();
+        let predefined = {'aland islands': 'ALA', 'macau': 'MAC', 'the bahamas': 'BHS', 'bolivia': 'BOL', 'brunei': 'BRN', 'democratic republic of congo': 'COD', 'cape verde': 'CPV', 'falkland islands': 'FLK', 'federated states of micronesia': 'FSM', 'the gambia': 'GMB', 'ivory coast': 'CIV', 'north korea': 'PRK', 'south korea': 'KOR', 'macedonia': 'MKD', 'netherlands antilles': 'ANT', 'pitcairn islands': 'PCN', 'spratly islands': 'Spratly Islands', 'russia': 'RUS', 'saint helena': 'SHN', 'st. lucia': 'LCA', 'east timor': 'TLS', 'taiwan': 'TWN', 'tanzania': 'TZA', 'united kingdom': 'GBR', 'united states': 'USA', 'venezuela': 'VEN', 'british virgin islands': 'VGB', 'us virgin islands': 'VIR', 'vatican city': 'VAT', 'palestinian occupied territories': 'PSE', 'saint-barthélémy': 'BLM', 'saint-martin': 'MAF', 'vietnam': 'VNM', 'the united states': 'USA', 'the isle of man': 'IMN', 'moldova': 'MDA', 'democratic republic of the congo': 'COD', 'the central african republic': 'CAF', 'bangeladesh': 'BGD', 'iran': 'IRN'};
+        let out = inputCountry;
+        if(inputCountry.length === 3){
+            return country;
+        }else if(inputCountry.length === 2){
+            listOfCountries.forEach((row)=>{
+                if(row['alpha-2'].toLowerCase() === inputCountry){
+                    out = row['alpha-3'];
+                    return out;
+                }
+            });
+        }else{
+            if(predefined[inputCountry]){
+                out = predefined[inputCountry];
+                return out;
+            }else{
+                listOfCountries.forEach((row)=>{
+                    if(row['name'].toLowerCase() === inputCountry){
+                        out = row['alpha-3'];
+                        return out;
+                    }
+                });
+            }
+        }
+        return out;
+    },
+    ISOtoCountryName(country) {
+        let out = country;
+        if(country.length === 3){
+            listOfCountries.forEach((row)=>{
+                if(row['alpha-3'] === country){
+                    out = row['name'];
+                    return out;
+                }
+            });
+        }else if(country.length === 2){
+            listOfCountries.forEach((row)=>{
+                if(row['alpha-2'] === country){
+                    out = row['name'];
+                    return out;
+                }
+            });
+        }else{
+            return out;
+        }
+        return out;
+    },
     getHTTPOptions: function(graphName) {
         let httpOptions, g;
         if(sparqlEndpoint[graphName]){

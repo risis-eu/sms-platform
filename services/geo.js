@@ -205,7 +205,7 @@ export default {
                 callback(null, {
                     latitude: parseFloat(params.lat),
                     longitude: parseFloat(params.long),
-                    resources: utilObject.parsePointToGADM28Admin(res)
+                    resources: utilObject.parsePointToGADM28Admin(res, params.country)
                 });
             }).catch(function (err) {
                 console.log(err);
@@ -256,7 +256,7 @@ export default {
                 callback(null, {
                     latitude: parseFloat(params.lat),
                     longitude: parseFloat(params.long),
-                    resources: utilObject.parsePointToOSMAdmin(res)
+                    resources: utilObject.parsePointToOSMAdmin(res, params.country)
                 });
             }).catch(function (err) {
                 console.log(err);
@@ -324,7 +324,7 @@ export default {
                 callback(null, {
                     latitude: parseFloat(params.lat),
                     longitude: parseFloat(params.long),
-                    resources: utilObject.parsePointToFlickrAdmin(res)
+                    resources: utilObject.parsePointToFlickrAdmin(res, params.country)
                 });
             }).catch(function (err) {
                 console.log(err);
