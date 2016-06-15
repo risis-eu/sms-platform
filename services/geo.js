@@ -9,7 +9,7 @@ import redis from 'redis';
 const outputFormat = 'application/sparql-results+json';
 const redisServer = {'host': '127.0.0.1', 'port': '6379'}; //defaukt: 127.0.0.1 and 6379
 /*-----------------------------------*/
-let endpointParameters, graphName, query, qresponse, queryObject, utilObject;
+let endpointParameters, graphName, query, queryObject, utilObject;
 queryObject = new GeoQuery();
 utilObject = new GeoUtil();
 //redis for caching
@@ -239,12 +239,13 @@ export default {
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
-            query = queryObject.getPointToGADM28Admin(params.lat, params.long, params.country, params.level);
+            let queryGADM = queryObject.getPointToGADM28Admin(params.lat, params.long, params.country, params.level);
             //console.log(query);
             //start to get it from the cache
-            redisClient.get(['GADM28', params.lat, params.long, params.country, params.level].join('-'), function(err, reply) {
+            let hashID = ['GADM', params.lat, params.long, params.country, params.level].join('-');
+            redisClient.get(hashID, function(error, reply) {
                 if(reply){
-                    //console.log('GADM28 response from cache...');
+                    //console.log('GADM response from cache...');
                     callback(null, {
                         latitude: parseFloat(params.lat),
                         longitude: parseFloat(params.long),
@@ -252,14 +253,14 @@ export default {
                     });
                 }else{
                     //send request
-                    rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                    rp.get({uri: getHTTPQuery('read', queryGADM, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
-                        qresponse = utilObject.parsePointToGADM28Admin(res, params.country);
-                        redisClient.set(['GADM28', params.lat, params.long, params.country, params.level].join('-'), JSON.stringify(qresponse));
+                        redisClient.set(hashID, JSON.stringify(utilObject.parsePointToGADM28Admin(res, params.country)));
+                        console.log();
                         callback(null, {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
-                            resources: qresponse
+                            resources: utilObject.parsePointToGADM28Admin(res, params.country)
                         });
                     }).catch(function (err) {
                         console.log(err);
@@ -305,9 +306,10 @@ export default {
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
-            query = queryObject.getPointToOSMAdmin(params.lat, params.long, params.country, params.level);
+            let queryOSM = queryObject.getPointToOSMAdmin(params.lat, params.long, params.country, params.level);
             //start to get it from the cache
-            redisClient.get(['OSM',params.lat, params.long, params.country, params.level].join('-'), function(err, reply) {
+            let hashID = ['OSM',params.lat, params.long, params.country, params.level].join('-');
+            redisClient.get(hashID, function(error, reply) {
                 if(reply){
                     //console.log('OSM response from cache...');
                     callback(null, {
@@ -317,14 +319,14 @@ export default {
                     });
                 }else{
                     //send request
-                    rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                    //console.log(queryOSM);
+                    rp.get({uri: getHTTPQuery('read', queryOSM, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
-                        qresponse = utilObject.parsePointToOSMAdmin(res, params.country);
-                        redisClient.set(['OSM', params.lat, params.long, params.country, params.level].join('-'), JSON.stringify(qresponse));
+                        redisClient.set(hashID, JSON.stringify(utilObject.parsePointToOSMAdmin(res, params.country)));
                         callback(null, {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
-                            resources: qresponse
+                            resources: utilObject.parsePointToOSMAdmin(res, params.country)
                         });
                     }).catch(function (err) {
                         console.log(err);
@@ -388,9 +390,10 @@ export default {
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
-            query = queryObject.getPointToFlickrAdmin(params.lat, params.long, params.country, params.level);
+            let queryFlickr = queryObject.getPointToFlickrAdmin(params.lat, params.long, params.country, params.level);
             //start to get it from the cache
-            redisClient.get(['Flickr', params.lat, params.long, params.country, params.level].join('-'), function(err, reply) {
+            let hashID = ['Flickr', params.lat, params.long, params.country, params.level].join('-');
+            redisClient.get(hashID, function(error, reply) {
                 if(reply){
                     //console.log('Flickr response from cache...');
                     callback(null, {
@@ -400,14 +403,13 @@ export default {
                     });
                 }else{
                     //send request
-                    rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                    rp.get({uri: getHTTPQuery('read', queryFlickr, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
-                        qresponse = utilObject.parsePointToFlickrAdmin(res, params.country);
-                        redisClient.set(['Flickr', params.lat, params.long, params.country, params.level].join('-'), JSON.stringify(qresponse));
+                        redisClient.set(hashID, JSON.stringify(utilObject.parsePointToFlickrAdmin(res, params.country)));
                         callback(null, {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
-                            resources: qresponse
+                            resources: utilObject.parsePointToFlickrAdmin(res, params.country)
                         });
                     }).catch(function (err) {
                         console.log(err);
