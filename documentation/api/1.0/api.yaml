@@ -629,6 +629,29 @@ paths:
             type: array
             items:
               $ref: '#/definitions/MunicipalitytoPolygon'
+  /geo.googleGeocode;addr={addr};apiKey={apiKey}:
+    get:
+      summary: gecodes the given address by using the Google geocoding API
+      parameters:
+        - name: addr
+          in: path
+          description: addrress
+          required: true
+          type: string
+          default: De Boelelaan 1105, 1081 HV Amsterdam
+        - name: apiKey
+          in: path
+          description: api key for google services
+          required: true
+          type: string
+          default: insert your API key
+      tags:
+        - Geo-Services
+      responses:
+        200:
+          description: list of candidate coordinates for this address
+          schema:
+            type: object
   /metadata.dataset;name={name}:
     get:
       summary: given a dataset's name, returns the related metadata properties.
