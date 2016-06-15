@@ -25,7 +25,36 @@ export default {
     name: 'geo',
     // At least one of the CRUD methods is Required
     read: (req, resource, params, config, callback) => {
-        if(resource === 'geo.PointToNUTS'){
+        if(resource === 'geo.googleGeocode'){
+            let address = encodeURIComponent(decodeURIComponent(params.addr));
+            let apiURI = 'https://maps.googleapis.com/maps/api/geocode/json?address='+address+'&key=' + params.apiKey;
+            //start to get it from the cache
+            redisClient.get(['googleGeocode', address].join('-'), function(err, reply) {
+                if(reply){
+                    //console.log('GoogleGeocode response from cache...');
+                    callback(null, {
+                        address: decodeURIComponent(params.addr),
+                        resources: JSON.parse(reply)
+                    });
+                }else{
+                    //send request
+                    rp.get({uri: apiURI}).then(function(res){
+                        //console.log(res);
+                        redisClient.set(['googleGeocode', address].join('-'), res);
+                        callback(null, {
+                            address: params.addr,
+                            resources: JSON.parse(res)
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {
+                            address: params.addr,
+                            resources: {results: []}
+                        });
+                    });
+                }
+            });
+        } else if(resource === 'geo.PointToNUTS'){
             graphName = '';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY

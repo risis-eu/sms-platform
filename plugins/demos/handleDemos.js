@@ -22,13 +22,13 @@ module.exports = function handleDemos(server) {
             return 0;
         }
         var apiKey = config.googleKey;
-        var apiURI = 'https://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent(decodeURIComponent(req.params.addr))+'&key=' + apiKey;
+        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.googleGeocode;addr=' + encodeURIComponent(decodeURIComponent(req.params.addr)) + ';apiKey=' + apiKey;
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
             //res.json(parsed);
-            if(parsed.results.length){
-                var formatted = parsed.results[0].formatted_address;
-                var location = parsed.results[0].geometry.location;
+            if(parsed.resources.results.length){
+                var formatted = parsed.resources.results[0].formatted_address;
+                var location = parsed.resources.results[0].geometry.location;
                 res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> geocode</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/geocode/'+encodeURIComponent(req.params.addr)+'">Address to Coordinates</a></h3> </div> <div class="ui segment"> <div class="content"> <div class="description"> <form method="post" class="ui form fields"><div class="field success"> <label>Fomatted Address</label> <div class="ui icon input"> <textarea rows="4">'+formatted+'</textarea> </div> </div> <div class="field success"> <label>Latitude</label> <div class="ui icon input"> <input type="text" value="'+location.lat+'" /> </div> </div> <div class="field success"> <label>Longitude</label> <div class="ui icon input"> <input type="text" value="'+location.lng+'" /> </div> </div> <div class="field"> </div></form></div> </div> </div> </div> </div></div> <div style="display:none">'+JSON.stringify(parsed)+'</div></body></html>');
             }else{
                 res.send('No result!');
