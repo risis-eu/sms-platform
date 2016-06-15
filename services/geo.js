@@ -40,10 +40,13 @@ export default {
                     //send request
                     rp.get({uri: apiURI}).then(function(res){
                         //console.log(res);
-                        redisClient.set(['googleGeocode', address].join('-'), res);
+                        let gres = JSON.parse(res);
+                        if(!gres.error_message){
+                            redisClient.set(['googleGeocode', address].join('-'), res);
+                        }
                         callback(null, {
                             address: params.addr,
-                            resources: JSON.parse(res)
+                            resources: gres
                         });
                     }).catch(function (err) {
                         console.log(err);
