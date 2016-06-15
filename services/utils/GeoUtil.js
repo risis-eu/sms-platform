@@ -56,6 +56,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parseNameToMunicipality(res){
         let parsed = JSON.parse(res);
@@ -66,6 +67,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parsePointToMunicipality(res){
         let parsed = JSON.parse(res);
@@ -76,6 +78,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parsePointToGADM28Admin(res, country){
         let self = this;
@@ -97,6 +100,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parsePointToOSMAdmin(res, country){
         let self = this;
@@ -118,6 +122,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parsePointToFlickrAdmin(res, country){
         let self = this;
@@ -139,6 +144,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parsePointToOECDFUA(res){
         let self = this;
@@ -150,6 +156,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parseMunicipalityToPolygon(res){
         let parsed = JSON.parse(res);
@@ -160,6 +167,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parseGADM28AdminToPolygon(res){
         let parsed = JSON.parse(res);
@@ -170,6 +178,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parseGADM28Admin(res){
         let self = this;
@@ -185,6 +194,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parseOSMAdmin(res){
         let self = this;
@@ -196,6 +206,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parseFlickrAdmin(res){
         let self = this;
@@ -207,6 +218,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parseOECDFUA(res){
         let self = this;
@@ -218,6 +230,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parseOECDFUAList(res, country){
         let self = this;
@@ -235,6 +248,7 @@ class GeoUtil{
             }
             return output;
         }
+        return output;
     }
     parseAdminsByLevel(res){
         let self = this;
@@ -246,6 +260,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parseOSMAdminMetadata(res){
         let self = this;
@@ -257,6 +272,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parseOSMAdminToPolygon(res){
         let parsed = JSON.parse(res);
@@ -267,6 +283,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parseFlickrAdminToPolygon(res){
         let parsed = JSON.parse(res);
@@ -277,6 +294,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
 }
 export default GeoUtil;

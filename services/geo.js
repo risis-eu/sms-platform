@@ -18,8 +18,12 @@ redisClient.on('connect', function() {
     console.log('redis cache server connected...');
 });
 redisClient.on('error', function (err) {
+    //console.log(err);
     console.log('redis Error ' + err);
-    redisClient.quit();
+    //stop in case of bad connection
+    if(err.code === 'ECONNREFUSED'){
+        //redisClient.quit();
+    }
 });
 export default {
     name: 'geo',
