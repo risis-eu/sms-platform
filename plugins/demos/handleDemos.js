@@ -7,6 +7,7 @@ var config = require('./config');
 var generalConfig = require('../../configs/general');
 var appShortTitle = generalConfig.appShortTitle;
 var appFullTitle = generalConfig.appFullTitle;
+var demoSMSKey = 'kYHSiH9255$deg$nbYUsff';
 
 var smsAPI = '/api';
 
@@ -94,7 +95,7 @@ module.exports = function handleDemos(server) {
         if(req.params.height){
             height = req.params.height;
         }
-        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.NUTStoPolygon;code=' + req.params.code;
+        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.NUTStoPolygon;smsKey='+demoSMSKey+';code=' + req.params.code;
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
             var input = parsed.resources[0].polygon;
@@ -134,7 +135,7 @@ module.exports = function handleDemos(server) {
         if(req.params.height){
             height = req.params.height;
         }
-        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.NUTStoPolygon;code=' + req.params.code;
+        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.NUTStoPolygon;smsKey='+demoSMSKey+';code=' + req.params.code;
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
             var input = parsed.resources[0].polygon;
@@ -165,7 +166,7 @@ module.exports = function handleDemos(server) {
         }
         var pointLong = req.params.long;
         var pointLat = req.params.lat;
-        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.PointToNUTS;lat=' + pointLat + ';long=' + pointLong;
+        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.PointToNUTS;smsKey='+demoSMSKey+';lat=' + pointLat + ';long=' + pointLong;
         //console.log(apiURI);
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
@@ -207,7 +208,7 @@ module.exports = function handleDemos(server) {
         if(req.params.height){
             height = req.params.height;
         }
-        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.PointToNUTS;lat=' + pointLat + ';long=' + pointLong;
+        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.PointToNUTS;smsKey='+demoSMSKey+';lat=' + pointLat + ';long=' + pointLong;
         var codes;
         var colors = ['#0bc4a7', '#1a48eb', '#ecdc0b', '#ed1ec6', '#d9990b', '#0c0d17', '#e3104f', '#6d8ecf'];
         rp.get({uri: apiURI}).then(function(body){
@@ -222,7 +223,7 @@ module.exports = function handleDemos(server) {
               // We don't actually execute the async action here
               // We add a function containing it to an array of "tasks"
                 asyncTasks.push(function(callback){
-                    rp.get({uri: 'http://' + req.headers.host + smsAPI + '/geo.NUTStoPolygon;code=' + item.code}).then(function(body2){
+                    rp.get({uri: 'http://' + req.headers.host + smsAPI + '/geo.NUTStoPolygon;smsKey='+demoSMSKey+';code=' + item.code}).then(function(body2){
                         var parsed2 = JSON.parse(body2);
                         var input = parsed2.resources[0].polygon;
                         polygons.push(input);
@@ -285,7 +286,7 @@ module.exports = function handleDemos(server) {
             res.send('a parameter is missing: id');
             return 0;
         }
-        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.GADM28Admin;id=' + req.params.id;
+        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.GADM28Admin;smsKey='+demoSMSKey+';id=' + req.params.id;
         //console.log(apiURI);
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
@@ -314,7 +315,7 @@ module.exports = function handleDemos(server) {
             res.send('a parameter is missing: id');
             return 0;
         }
-        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.FlickrAdmin;id=' + req.params.id;
+        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.FlickrAdmin;smsKey='+demoSMSKey+';id=' + req.params.id;
         //console.log(apiURI);
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
@@ -353,7 +354,7 @@ module.exports = function handleDemos(server) {
         if(req.params.height){
             height = req.params.height;
         }
-        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.GADM28AdminToPolygon;id=' + req.params.code;
+        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.GADM28AdminToPolygon;smsKey='+demoSMSKey+';id=' + req.params.code;
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
             var input = parsed.resources[0].polygon;
@@ -394,7 +395,7 @@ module.exports = function handleDemos(server) {
         if(req.params.height){
             height = req.params.height;
         }
-        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.FlickrAdminToPolygon;id=' + req.params.code;
+        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.FlickrAdminToPolygon;smsKey='+demoSMSKey+';id=' + req.params.code;
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
             var input = parsed.resources[0].polygon;
@@ -440,7 +441,7 @@ module.exports = function handleDemos(server) {
         var pointLong = req.params.long;
         var pointLat = req.params.lat;
         var country = req.params.country;
-        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.PointToFlickrAdmin;lat=' + pointLat + ';long=' + pointLong+countryPart;
+        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.PointToFlickrAdmin;smsKey='+demoSMSKey+';lat=' + pointLat + ';long=' + pointLong+countryPart;
         //console.log(apiURI);
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
@@ -501,7 +502,7 @@ module.exports = function handleDemos(server) {
         var pointLong = req.params.long;
         var pointLat = req.params.lat;
         var country = req.params.country;
-        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.PointToGADM28Admin;lat=' + pointLat + ';long=' + pointLong + countryPart;
+        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.PointToGADM28Admin;smsKey='+demoSMSKey+';lat=' + pointLat + ';long=' + pointLong + countryPart;
         //console.log(apiURI);
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
@@ -561,7 +562,7 @@ module.exports = function handleDemos(server) {
         if(req.params.height){
             height = req.params.height;
         }
-        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.PointToGADM28Admin;lat=' + pointLat + ';long=' + pointLong + countryPart;
+        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.PointToGADM28Admin;smsKey='+demoSMSKey+';lat=' + pointLat + ';long=' + pointLong + countryPart;
         //console.log(apiURI);
         var codes;
         var colors = ['#0bc4a7', '#1a48eb', '#ecdc0b', '#ed1ec6', '#d9990b', '#0c0d17', '#e3104f', '#6d8ecf'];
@@ -577,7 +578,7 @@ module.exports = function handleDemos(server) {
               // We don't actually execute the async action here
               // We add a function containing it to an array of "tasks"
                 asyncTasks.push(function(callback){
-                    rp.get({uri: 'http://' + req.headers.host + smsAPI + '/geo.GADM28AdminToPolygon;id=' + item.id}).then(function(body2){
+                    rp.get({uri: 'http://' + req.headers.host + smsAPI + '/geo.GADM28AdminToPolygon;smsKey='+demoSMSKey+';id=' + item.id}).then(function(body2){
                         var parsed2 = JSON.parse(body2);
                         var input = parsed2.resources[0].polygon;
                         polygons.push(input);
@@ -680,7 +681,7 @@ module.exports = function handleDemos(server) {
             res.send('a parameter is missing: id');
             return 0;
         }
-        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.OSMAdmin;id=' + req.params.id;
+        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.OSMAdmin;smsKey='+demoSMSKey+';id=' + req.params.id;
         //console.log(apiURI);
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
@@ -719,12 +720,12 @@ module.exports = function handleDemos(server) {
         var pointLong = req.params.long;
         var pointLat = req.params.lat;
         var country = req.params.country;
-        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.PointToOSMAdmin;lat=' + pointLat + ';long=' + pointLong + countryPart;
+        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.PointToOSMAdmin;smsKey='+demoSMSKey+';lat=' + pointLat + ';long=' + pointLong + countryPart;
         //console.log(apiURI);
         rp.get({uri: apiURI}).then(function(body){
 
             //collect metadata
-            var apiURI2 = 'http://' + req.headers.host + smsAPI +  '/geo.OSMAdminMetadata'+ countryPart;
+            var apiURI2 = 'http://' + req.headers.host + smsAPI +  '/geo.OSMAdminMetadata;smsKey='+demoSMSKey+ countryPart;
             rp.get({uri: apiURI2}).then(function(body2){
                 var lmetadata = JSON.parse(body2);
 
@@ -845,7 +846,7 @@ module.exports = function handleDemos(server) {
         if(req.params.height){
             height = req.params.height;
         }
-        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.OSMAdminToPolygon;id=' + req.params.code;
+        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.OSMAdminToPolygon;smsKey='+demoSMSKey+';id=' + req.params.code;
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
             var input = parsed.resources[0].polygon;
@@ -923,7 +924,7 @@ module.exports = function handleDemos(server) {
         if(req.params.limit){
             limitSTR = 'limit='+req.params.limit+';';
         }
-        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.AdminsByLevel;level='+req.params.level+';country='+req.params.country+';source='+req.params.source +';'+offsetSTR+limitSTR;
+        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.AdminsByLevel;smsKey='+demoSMSKey+';level='+req.params.level+';country='+req.params.country+';source='+req.params.source +';'+offsetSTR+limitSTR;
         var sourceSTR = '';
         var  source = req.params.source;
         if(source === 'gadm'){
@@ -934,7 +935,7 @@ module.exports = function handleDemos(server) {
             sourceSTR = 'FlickrAdmin';
         }else if(source === 'oecd'){
             sourceSTR = 'OECDFUA';
-            var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.OECDFUAList;country='+req.params.country;
+            var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.OECDFUAList;smsKey='+demoSMSKey+';country='+req.params.country;
         }
         var codes;
         var colors = ['#0bc4a7', '#1a48eb', '#ecdc0b', '#ed1ec6', '#d9990b', '#0c0d17', '#e3104f', '#6d8ecf', '#0bc4a7'];
@@ -953,8 +954,8 @@ module.exports = function handleDemos(server) {
               // We don't actually execute the async action here
               // We add a function containing it to an array of "tasks"
                 asyncTasks.push(function(callback){
-                    rp.get({uri: 'http://' + req.headers.host + smsAPI +'/geo.'+sourceSTR+';id=' + item.id}).then(function(body2){
-                        rp.get({uri: 'http://' + req.headers.host + smsAPI + '/geo.'+sourceSTR+'ToPolygon;id=' + item.id}).then(function(body3){
+                    rp.get({uri: 'http://' + req.headers.host + smsAPI +'/geo.'+sourceSTR+';smsKey='+demoSMSKey+';id=' + item.id}).then(function(body2){
+                        rp.get({uri: 'http://' + req.headers.host + smsAPI + '/geo.'+sourceSTR+'ToPolygon;smsKey='+demoSMSKey+';id=' + item.id}).then(function(body3){
                             var parsed2 = JSON.parse(body2);
                             var parsed3 = JSON.parse(body3);
                             //console.log(parsed2.result.primaryTopic.label);
@@ -1202,7 +1203,7 @@ module.exports = function handleDemos(server) {
         list.forEach(function(item){
               // We add a function containing it to an array of "tasks"
             asyncTasks.push(function(callback){
-                rp.get({uri: 'http://' + req.headers.host + smsAPI +'/geo.BoundaryToOECDFUA'+';name=' + item+';country='+ country}).then(function(body2){
+                rp.get({uri: 'http://' + req.headers.host + smsAPI +'/geo.BoundaryToOECDFUA'+';smsKey='+demoSMSKey+';name=' + item+';country='+ country}).then(function(body2){
                     var parsed2 = JSON.parse(body2);
                     if(parsed2.resources){
                         output.push(parsed2);

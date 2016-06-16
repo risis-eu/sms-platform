@@ -9,5 +9,6 @@ export default {
     },
     dbpediaLookupService: [
         { host: 'lookup.dbpedia.org' }
-    ]
+    ],
+    apiTokens: ['wefHWDFWF$$235EFGWFGle']
 };

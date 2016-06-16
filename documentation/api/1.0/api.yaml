@@ -13,7 +13,7 @@ basePath: /api
 produces:
   - application/json
 paths:
-  /geo.PointToNUTS;lat={latitude};long={longitude}:
+  /geo.PointToNUTS;lat={latitude};long={longitude};smsKey={smsKey}:
     get:
       summary: given a point, returns the NUTS boundaries.
       description: |
@@ -33,6 +33,12 @@ paths:
           type: number
           format: double
           default: 4.899431
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -42,7 +48,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/pointToNUTS'
-  /geo.NUTStoName;code={code}:
+  /geo.NUTStoName;code={code};smsKey={smsKey}:
     get:
       summary: given a NUTS code, returns the name of the NUTS region.
       parameters:
@@ -52,6 +58,12 @@ paths:
           required: true
           type: string
           default: NL326
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -61,7 +73,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/NUTStoName'
-  /geo.NameToNUTS;name={name}:
+  /geo.NameToNUTS;name={name};smsKey={smsKey}:
     get:
       summary: given a NUTS region name, returns the code and details of the NUTS region.
       parameters:
@@ -71,6 +83,12 @@ paths:
           required: true
           type: string
           default: Groot-Amsterdam
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -80,7 +98,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/NameToNUTS'
-  /geo.NUTStoPolygon;code={code}:
+  /geo.NUTStoPolygon;code={code};smsKey={smsKey}:
     get:
       summary: given a NUTS code, returns the containing polygon shape and details of the NUTS region.
       parameters:
@@ -90,6 +108,12 @@ paths:
           required: true
           type: string
           default: NL326
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -99,7 +123,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/NUTStoPolygon'
-  /geo.MunicipalitiesPerCountry;country={country}:
+  /geo.MunicipalitiesPerCountry;country={country};smsKey={smsKey}:
     get:
       summary: given a country name, returns the list of municipalities.
       parameters:
@@ -109,6 +133,12 @@ paths:
           required: true
           type: string
           default: Netherlands
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -118,7 +148,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/MunicipalitiesPerCountry'
-  /geo.NameToMunicipality;name={name}:
+  /geo.NameToMunicipality;name={name};smsKey={smsKey}:
     get:
       summary: given a municipality name, returns the related details.
       parameters:
@@ -128,6 +158,12 @@ paths:
           required: true
           type: string
           default: Amstelveen
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -137,7 +173,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/NameToMunicipality'
-  /geo.Municipality;code={code}:
+  /geo.Municipality;code={code};smsKey={smsKey}:
     get:
       summary: given a municipality code, returns the related details.
       parameters:
@@ -147,6 +183,12 @@ paths:
           required: true
           type: string
           default: NL270362
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -156,7 +198,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Municipality'
-  /geo.BoundaryToOECDFUA;name={name};country={country}:
+  /geo.BoundaryToOECDFUA;name={name};country={country};smsKey={smsKey}:
     get:
       summary: given a boundary name and its country, returns the corresponding OECD FUA and Municipality.
       parameters:
@@ -172,6 +214,12 @@ paths:
           required: true
           type: string
           default: NLD
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -181,7 +229,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Municipality'
-  /geo.OECDFUAList;country={country}:
+  /geo.OECDFUAList;country={country};smsKey={smsKey}:
     get:
       summary: given a country, returns the list of all OECDF functional urban areas.
       parameters:
@@ -191,6 +239,12 @@ paths:
           required: true
           type: string
           default: NLD
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -200,7 +254,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/GADM28Admin'
-  /geo.OECDFUA;id={id}:
+  /geo.OECDFUA;id={id};smsKey={smsKey}:
     get:
       summary: given the id of a functional urban area, returns its detailed properties.
       parameters:
@@ -210,6 +264,12 @@ paths:
           required: true
           type: string
           default: NL002
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -219,7 +279,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/GADM28Admin'
-  /geo.OECDFUAToPolygon;id={id}:
+  /geo.OECDFUAToPolygon;id={id};smsKey={smsKey}:
     get:
       summary: given the id of a functional urban area, returns the polygon shape.
       parameters:
@@ -229,6 +289,12 @@ paths:
           required: true
           type: string
           default: NL002
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -238,7 +304,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/MunicipalitytoPolygon'
-  /geo.PointToOECDFUA;lat={latitude};long={longitude};country={country}:
+  /geo.PointToOECDFUA;lat={latitude};long={longitude};country={country};smsKey={smsKey}:
     get:
       summary: given a point, returns the OECD FUAs.
       description: |
@@ -264,6 +330,12 @@ paths:
           required: true
           type: string
           default: NLD
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -273,7 +345,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/pointToADMIN'
-  /geo.GADM28Admin;id={id}:
+  /geo.GADM28Admin;id={id};smsKey={smsKey}:
     get:
       summary: given a admin boundary uri, returns its detailed properties.
       parameters:
@@ -283,6 +355,12 @@ paths:
           required: true
           type: string
           default: 158-9-266
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -292,7 +370,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/GADM28Admin'
-  /geo.GADM28AdminToPolygon;id={id}:
+  /geo.GADM28AdminToPolygon;id={id};smsKey={smsKey}:
     get:
       summary: given a admin boundary uri, returns the polygon shape.
       parameters:
@@ -302,6 +380,12 @@ paths:
           required: true
           type: string
           default: 158-9-266
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -311,7 +395,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/MunicipalitytoPolygon'
-  /geo.PointToGADM28Admin;lat={latitude};long={longitude};country={country};level={level}:
+  /geo.PointToGADM28Admin;lat={latitude};long={longitude};country={country};level={level};smsKey={smsKey}:
     get:
       summary: given a point, returns the GADM 2.8 administrative boundaries.
       description: |
@@ -344,6 +428,12 @@ paths:
           type: number
           format: integer
           default: 1
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -353,7 +443,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/pointToADMIN'
-  /geo.PointToOSMAdmin;lat={latitude};long={longitude};country={country};level={level}:
+  /geo.PointToOSMAdmin;lat={latitude};long={longitude};country={country};level={level};smsKey={smsKey}:
     get:
       summary: given a point, returns the OpneStreetMap administrative boundaries.
       description: |
@@ -386,6 +476,12 @@ paths:
           type: number
           format: integer
           default: 1
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -395,7 +491,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/pointToADMIN'
-  /geo.OSMAdmin;id={id}:
+  /geo.OSMAdmin;id={id};smsKey={smsKey}:
     get:
       summary: given a admin boundary id, returns its detailed properties.
       parameters:
@@ -405,6 +501,12 @@ paths:
           required: true
           type: string
           default: relation_157954
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -414,7 +516,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/GADM28Admin'
-  /geo.OSMAdminMetadata;country={country};level={level}:
+  /geo.OSMAdminMetadata;country={country};level={level};smsKey={smsKey}:
     get:
       summary: given a country, returns the metadata about its OSM admin levels.
       parameters:
@@ -430,6 +532,12 @@ paths:
           required: true
           type: integer
           default: 2
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -439,7 +547,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/GADM28Admin'
-  /geo.OSMAdminToPolygon;id={id}:
+  /geo.OSMAdminToPolygon;id={id};smsKey={smsKey}:
     get:
       summary: given a admin boundary id, returns the polygon shape.
       parameters:
@@ -449,6 +557,12 @@ paths:
           required: true
           type: string
           default: relation_157954
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -458,7 +572,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/MunicipalitytoPolygon'
-  /geo.PointToFlickrAdmin;lat={latitude};long={longitude};country={country};level={level}:
+  /geo.PointToFlickrAdmin;lat={latitude};long={longitude};country={country};level={level};smsKey={smsKey}:
     get:
       summary: given a point, returns the Flickr administrative boundaries.
       description: |
@@ -491,6 +605,12 @@ paths:
           type: number
           format: integer
           default: 1
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -500,7 +620,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/pointToADMIN'
-  /geo.FlickrAdmin;id={id}:
+  /geo.FlickrAdmin;id={id};smsKey={smsKey}:
     get:
       summary: given a admin boundary id, returns its detailed properties.
       parameters:
@@ -510,6 +630,12 @@ paths:
           required: true
           type: string
           default: '727232'
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -519,7 +645,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/GADM28Admin'
-  /geo.FlickrAdminToPolygon;id={id}:
+  /geo.FlickrAdminToPolygon;id={id};smsKey={smsKey}:
     get:
       summary: given a admin boundary id, returns the polygon shape.
       parameters:
@@ -529,6 +655,12 @@ paths:
           required: true
           type: string
           default: '727232'
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -538,7 +670,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/MunicipalitytoPolygon'
-  /geo.AdminsByLevel;level={level};country={country};source={source};offset={offset};limit={limit}:
+  /geo.AdminsByLevel;level={level};country={country};source={source};offset={offset};limit={limit};smsKey={smsKey}:
     get:
       summary: given a admin boundary id, returns its detailed properties.
       parameters:
@@ -572,6 +704,12 @@ paths:
           required: true
           type: integer
           default: 100
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -581,7 +719,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/GADM28Admin'
-  /geo.PointToMunicipality;lat={latitude};long={longitude}:
+  /geo.PointToMunicipality;lat={latitude};long={longitude};smsKey={smsKey}:
     get:
       summary: given a point, returns the related municipality.
       description: |
@@ -601,6 +739,12 @@ paths:
           type: number
           format: double
           default: 16.363449
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:
@@ -610,7 +754,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/PointToMunicipality'
-  /geo.MunicipalityToPolygon;code={code}:
+  /geo.MunicipalityToPolygon;code={code};smsKey={smsKey}:
     get:
       summary: given a municipality code, returns the polygon shape.
       parameters:
@@ -620,6 +764,12 @@ paths:
           required: true
           type: string
           default: AT31726
+        - name: smsKey
+          in: path
+          description: SMS API Key.
+          required: true
+          type: string
+          default: wefHWDFWF$$235EFGWFGle
       tags:
         - Geo-Services
       responses:

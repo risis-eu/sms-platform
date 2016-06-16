@@ -1,5 +1,5 @@
 'use strict';
-import {getEndpointParameters, getHTTPQuery} from './utils/helpers';
+import {getEndpointParameters, getHTTPQuery, isValidAPIToken} from './utils/helpers';
 import {defaultGraphName} from '../configs/general';
 import GeoQuery from './sparql/GeoQuery';
 import GeoUtil from './utils/GeoUtil';
@@ -62,6 +62,9 @@ export default {
                 }
             });
         } else if(resource === 'geo.PointToNUTS'){
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = '';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -79,6 +82,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.NUTStoName') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = '';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -94,6 +100,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.NameToNUTS') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = '';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -109,6 +118,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.NUTStoPolygon') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = '';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -124,6 +136,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.MunicipalitiesPerCountry') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -141,6 +156,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.NUTStoMunicipality') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -157,6 +175,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.NameToMunicipality') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -172,6 +193,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.Municipality') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -187,6 +211,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.PointToMunicipality') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = '';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -205,6 +232,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.BoundaryToOECDFUA') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -223,6 +253,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.MunicipalityToPolygon') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = '';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -240,6 +273,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.PointToGADM28Admin') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -259,12 +295,14 @@ export default {
                     //send request
                     rp.get({uri: getHTTPQuery('read', queryGADM, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
-                        redisClient.set(hashID, JSON.stringify(utilObject.parsePointToGADM28Admin(res, params.country)));
-                        console.log();
+                        let resGADM = utilObject.parsePointToGADM28Admin(res, params.country);
+                        if(!resGADM.error){
+                            redisClient.set(hashID, resGADM);
+                        }
                         callback(null, {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
-                            resources: utilObject.parsePointToGADM28Admin(res, params.country)
+                            resources: resGADM
                         });
                     }).catch(function (err) {
                         console.log(err);
@@ -273,6 +311,9 @@ export default {
                 }
             });
         } else if (resource === 'geo.GADM28AdminToPolygon') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -290,6 +331,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.GADM28Admin') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -307,6 +351,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.PointToOSMAdmin') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -326,11 +373,14 @@ export default {
                     //console.log(queryOSM);
                     rp.get({uri: getHTTPQuery('read', queryOSM, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
-                        redisClient.set(hashID, JSON.stringify(utilObject.parsePointToOSMAdmin(res, params.country)));
+                        let resOSM = utilObject.parsePointToOSMAdmin(res, params.country);
+                        if(!resOSM.error){
+                            redisClient.set(hashID, resOSM);
+                        }
                         callback(null, {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
-                            resources: utilObject.parsePointToOSMAdmin(res, params.country)
+                            resources: resOSM
                         });
                     }).catch(function (err) {
                         console.log(err);
@@ -340,6 +390,9 @@ export default {
             });
 
         } else if (resource === 'geo.OSMAdmin') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -357,6 +410,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.OSMAdminMetadata') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -374,6 +430,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.OSMAdminToPolygon') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -391,6 +450,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.PointToFlickrAdmin') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -409,11 +471,14 @@ export default {
                     //send request
                     rp.get({uri: getHTTPQuery('read', queryFlickr, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
-                        redisClient.set(hashID, JSON.stringify(utilObject.parsePointToFlickrAdmin(res, params.country)));
+                        let resFlickr = utilObject.parsePointToFlickrAdmin(res, params.country);
+                        if(!resFlickr.error){
+                            redisClient.set(hashID, resFlickr);
+                        }
                         callback(null, {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
-                            resources: utilObject.parsePointToFlickrAdmin(res, params.country)
+                            resources: resFlickr
                         });
                     }).catch(function (err) {
                         console.log(err);
@@ -422,6 +487,9 @@ export default {
                 }
             });
         } else if (resource === 'geo.FlickrAdmin') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -439,6 +507,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.FlickrAdminToPolygon') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -456,6 +527,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.OECDFUAToPolygon') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -473,6 +547,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.AdminsByLevel') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -492,6 +569,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.OECDFUAList') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -509,6 +589,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.OECDFUA') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
@@ -526,6 +609,9 @@ export default {
                 callback(null, {resources: []});
             });
         } else if (resource === 'geo.PointToOECDFUA') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+            }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY

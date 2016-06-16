@@ -1,7 +1,14 @@
-import {sparqlEndpoint} from '../../configs/server';
+import {sparqlEndpoint, apiTokens} from '../../configs/server';
 import {listOfCountries} from '../../data/countries';
 import validUrl from 'valid-url';
 export default {
+    isValidAPIToken(token) {
+        if(apiTokens.indexOf(token) === -1){
+            return 0;
+        }else{
+            return 1;
+        }
+    },
     convertToISO3(country) {
         let inputCountry = country.toLowerCase().trim();
         let predefined = {'aland islands': 'ALA', 'macau': 'MAC', 'the bahamas': 'BHS', 'bolivia': 'BOL', 'brunei': 'BRN', 'democratic republic of congo': 'COD', 'cape verde': 'CPV', 'falkland islands': 'FLK', 'federated states of micronesia': 'FSM', 'the gambia': 'GMB', 'ivory coast': 'CIV', 'north korea': 'PRK', 'south korea': 'KOR', 'macedonia': 'MKD', 'netherlands antilles': 'ANT', 'pitcairn islands': 'PCN', 'spratly islands': 'Spratly Islands', 'russia': 'RUS', 'saint helena': 'SHN', 'st. lucia': 'LCA', 'east timor': 'TLS', 'taiwan': 'TWN', 'tanzania': 'TZA', 'united kingdom': 'GBR', 'united states': 'USA', 'venezuela': 'VEN', 'british virgin islands': 'VGB', 'us virgin islands': 'VIR', 'vatican city': 'VAT', 'palestinian occupied territories': 'PSE', 'saint-barthélémy': 'BLM', 'saint-martin': 'MAF', 'vietnam': 'VNM', 'the united states': 'USA', 'the isle of man': 'IMN', 'moldova': 'MDA', 'democratic republic of the congo': 'COD', 'the central african republic': 'CAF', 'bangeladesh': 'BGD', 'iran': 'IRN'};
