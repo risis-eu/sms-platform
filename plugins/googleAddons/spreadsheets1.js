@@ -21,16 +21,16 @@ function createSpreadsheets() {
 
    ss.insertSheet('Flickr boundaries', 3);
    var flickrSheet = ss.getSheetByName('Flickr boundaries');
-   flickrSheet.getRange('A1:M1').setValues([['ID','address', 'level_1_name',	'level_2_name',	'level_3_name',	',level_4_name',	'level_5_name', '',	'level_1_id',	'level_2_id',	'level_3_id',	'level_4_id',	'level_5_id']]).setFontWeight("bold");
+   flickrSheet.getRange('A1:M1').setValues([['ID','address', 'level_1_name',	'level_2_name',	'level_3_name',	'level_4_name',	'level_5_name', '',	'level_1_id',	'level_2_id',	'level_3_id',	'level_4_id',	'level_5_id']]).setFontWeight("bold");
 
 
    ss.insertSheet('OSM boundaries', 4);
    var osmSheet = ss.getSheetByName('OSM boundaries');
-   osmSheet.getRange('A1:Y1').setValues([['ID','address', 'level_1_name',	'level_2_name',	'level_3_name',	',level_4_name',	'level_5_name', 'level_6_name', 'level_7_name', 'level_8_name', 'level_9_name', 'level_10_name', 'level_11_name', '',	'level_1_id',	'level_2_id',	'level_3_id',	'level_4_id','level_5_id','level_6_id','level_7_id','level_8_id','level_9_id','level_10_id','level_11_id']]).setFontWeight("bold");
+   osmSheet.getRange('A1:Y1').setValues([['ID','address', 'level_1_name',	'level_2_name',	'level_3_name',	'level_4_name',	'level_5_name', 'level_6_name', 'level_7_name', 'level_8_name', 'level_9_name', 'level_10_name', 'level_11_name', '',	'level_1_id',	'level_2_id',	'level_3_id',	'level_4_id','level_5_id','level_6_id','level_7_id','level_8_id','level_9_id','level_10_id','level_11_id']]).setFontWeight("bold");
 
    ss.insertSheet('OSM metadata', 5);
    var osmmSheet = ss.getSheetByName('OSM metadata');
-   osmmSheet.getRange('A1:L1').setValues([['country', 'level_1',	'level_2',	'level_3',	',level_4',	'level_5',	'level_6',	'level_7',	'level_8',	'level_9',	'level_10', 'level_11']]).setFontWeight("bold");
+   osmmSheet.getRange('A1:L1').setValues([['country', 'level_1',	'level_2',	'level_3',	'level_4',	'level_5',	'level_6',	'level_7',	'level_8',	'level_9',	'level_10', 'level_11']]).setFontWeight("bold");
 
 }
 function getCountryFromGoogleAPIResult(address_components){
@@ -201,17 +201,19 @@ function findGADMBoundaries() {
   sheet.getRange(2,1, IDData.length).setValues(IDData);
   sheet.getRange(2,2, addressData.length).setValues(addressData);
 
-  sheet.getRange(2,3, level1nameData.length).setValues(level1nameData);
-  sheet.getRange(2,4, level2nameData.length).setValues(level2nameData);
-  sheet.getRange(2,5, level3nameData.length).setValues(level3nameData);
-  sheet.getRange(2,6, level4nameData.length).setValues(level4nameData);
-  sheet.getRange(2,7, level5nameData.length).setValues(level5nameData);
+  sheet.getRange(2,3, level1nameData.length).setValues(level0nameData);
+  sheet.getRange(2,4, level1nameData.length).setValues(level1nameData);
+  sheet.getRange(2,5, level2nameData.length).setValues(level2nameData);
+  sheet.getRange(2,6, level3nameData.length).setValues(level3nameData);
+  sheet.getRange(2,7, level4nameData.length).setValues(level4nameData);
+  sheet.getRange(2,8, level5nameData.length).setValues(level5nameData);
 
-  sheet.getRange(2,9, level1idData.length).setValues(level1idData);
-  sheet.getRange(2,10, level2idData.length).setValues(level2idData);
-  sheet.getRange(2,11, level3idData.length).setValues(level3idData);
-  sheet.getRange(2,12, level4idData.length).setValues(level4idData);
-  sheet.getRange(2,13, level5idData.length).setValues(level5idData);
+  sheet.getRange(2,10, level1idData.length).setValues(level0idData);
+  sheet.getRange(2,11, level1idData.length).setValues(level1idData);
+  sheet.getRange(2,12, level2idData.length).setValues(level2idData);
+  sheet.getRange(2,13, level3idData.length).setValues(level3idData);
+  sheet.getRange(2,14, level4idData.length).setValues(level4idData);
+  sheet.getRange(2,15, level5idData.length).setValues(level5idData);
 
 }
 
