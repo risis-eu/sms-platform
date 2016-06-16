@@ -1,3 +1,19 @@
+// The onOpen function is executed automatically every time a Spreadsheet is loaded
+ function onOpen() {
+   var ss = SpreadsheetApp.getActiveSpreadsheet();
+   var menuEntries = [];
+
+   menuEntries.push({name: "Step 1. Initialize", functionName: "createSpreadsheets"});
+   menuEntries.push(null); // line separator
+   menuEntries.push({name: "Step 2. Geocode addresses", functionName: "geoCodeAddresses"});
+   menuEntries.push(null); // line separator
+   menuEntries.push({name: "Step 3. Find GADM boundaries", functionName: "findGADMBoundaries"});
+   menuEntries.push({name: "Step 3. Find Flickr boundaries", functionName: "findFlickrBoundaries"});
+   menuEntries.push({name: "Step 3. Find OSM boundaries", functionName: "findOSMBoundaries"});
+   menuEntries.push(null); // line separator
+   menuEntries.push({name: "About SMS Platform", functionName: "showAbout"});
+   ss.addMenu("SMS Web Services", menuEntries);
+ }
 function createSpreadsheets() {
    var ss = SpreadsheetApp.getActiveSpreadsheet();
 
@@ -16,7 +32,7 @@ function createSpreadsheets() {
 
    ss.insertSheet('GADM boundaries', 2);
    var gadmSheet = ss.getSheetByName('GADM boundaries');
-   gadmSheet.getRange('A1:O1').setValues([['ID','address', 'level_0_name',	'level_1_name',	'level_2_name',	'level_3_name',	',level_4_name',	'level_5_name', '', 'level_0_id',	'level_1_id',	'level_2_id',	'level_3_id',	'level_4_id',	'level_5_id']]).setFontWeight("bold");
+   gadmSheet.getRange('A1:O1').setValues([['ID','address', 'level_0_name',	'level_1_name',	'level_2_name',	'level_3_name',	'level_4_name',	'level_5_name', '', 'level_0_id',	'level_1_id',	'level_2_id',	'level_3_id',	'level_4_id',	'level_5_id']]).setFontWeight("bold");
 
 
    ss.insertSheet('Flickr boundaries', 3);
@@ -418,4 +434,7 @@ function findOSMBoundaries() {
   sheet.getRange(2,23, level9idData.length).setValues(level9idData);
   sheet.getRange(2,24, level10idData.length).setValues(level10idData);
   sheet.getRange(2,25, level11idData.length).setValues(level11idData);
+}
+function showAbout(){
+  Browser.msgBox('This add-on is powered by SMS (Semantically Mapping Science) platform. More information is available at http://sms.risis.eu');
 }
