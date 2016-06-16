@@ -1221,7 +1221,7 @@ module.exports = function handleDemos(server) {
             let outputItems=[];
             var logitems = [];
             output.forEach(function(input, i){
-                if(logitems.indexOf(input.resources[0].funactionalUrbanArea.code) == -1){
+                if(input.resources.length && logitems.indexOf(input.resources[0].funactionalUrbanArea.code) == -1){
                     logitems.push(input.resources[0].funactionalUrbanArea.code);
                     outputItems.push('<div class="item"><b>'+input.resources[0].funactionalUrbanArea.name+'</b> ('+input.resources[0].funactionalUrbanArea.code+')</div>')
                 }
