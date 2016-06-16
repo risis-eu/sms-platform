@@ -296,9 +296,9 @@ export default {
                     rp.get({uri: getHTTPQuery('read', queryGADM, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
                         let resGADM = utilObject.parsePointToGADM28Admin(res, params.country);
-                        if(!resGADM.error){
+                        //if(!resGADM.error){
                             redisClient.set(hashID, resGADM);
-                        }
+                        //}
                         callback(null, {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
@@ -374,9 +374,9 @@ export default {
                     rp.get({uri: getHTTPQuery('read', queryOSM, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
                         let resOSM = utilObject.parsePointToOSMAdmin(res, params.country);
-                        if(!resOSM.error){
+                        //if(!resOSM.error){
                             redisClient.set(hashID, resOSM);
-                        }
+                        //}
                         callback(null, {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
@@ -472,9 +472,9 @@ export default {
                     rp.get({uri: getHTTPQuery('read', queryFlickr, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
                         let resFlickr = utilObject.parsePointToFlickrAdmin(res, params.country);
-                        if(!resFlickr.error){
+                        //if(!resFlickr.error){
                             redisClient.set(hashID, resFlickr);
-                        }
+                        //}
                         callback(null, {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
