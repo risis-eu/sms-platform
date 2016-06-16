@@ -63,7 +63,7 @@ export default {
             });
         } else if(resource === 'geo.PointToNUTS'){
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = '';
             endpointParameters = getEndpointParameters(graphName);
@@ -83,7 +83,7 @@ export default {
             });
         } else if (resource === 'geo.NUTStoName') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = '';
             endpointParameters = getEndpointParameters(graphName);
@@ -101,7 +101,7 @@ export default {
             });
         } else if (resource === 'geo.NameToNUTS') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = '';
             endpointParameters = getEndpointParameters(graphName);
@@ -119,7 +119,7 @@ export default {
             });
         } else if (resource === 'geo.NUTStoPolygon') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = '';
             endpointParameters = getEndpointParameters(graphName);
@@ -137,7 +137,7 @@ export default {
             });
         } else if (resource === 'geo.MunicipalitiesPerCountry') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -157,7 +157,7 @@ export default {
             });
         } else if (resource === 'geo.NUTStoMunicipality') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -176,7 +176,7 @@ export default {
             });
         } else if (resource === 'geo.NameToMunicipality') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -194,7 +194,7 @@ export default {
             });
         } else if (resource === 'geo.Municipality') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -212,7 +212,7 @@ export default {
             });
         } else if (resource === 'geo.PointToMunicipality') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = '';
             endpointParameters = getEndpointParameters(graphName);
@@ -233,7 +233,7 @@ export default {
             });
         } else if (resource === 'geo.BoundaryToOECDFUA') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -254,7 +254,7 @@ export default {
             });
         } else if (resource === 'geo.MunicipalityToPolygon') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = '';
             endpointParameters = getEndpointParameters(graphName);
@@ -274,7 +274,7 @@ export default {
             });
         } else if (resource === 'geo.PointToGADM28Admin') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -312,7 +312,7 @@ export default {
             });
         } else if (resource === 'geo.GADM28AdminToPolygon') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -332,7 +332,7 @@ export default {
             });
         } else if (resource === 'geo.GADM28Admin') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -352,7 +352,7 @@ export default {
             });
         } else if (resource === 'geo.PointToOSMAdmin') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -391,7 +391,7 @@ export default {
 
         } else if (resource === 'geo.OSMAdmin') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -411,7 +411,7 @@ export default {
             });
         } else if (resource === 'geo.OSMAdminMetadata') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -431,7 +431,7 @@ export default {
             });
         } else if (resource === 'geo.OSMAdminToPolygon') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -451,7 +451,7 @@ export default {
             });
         } else if (resource === 'geo.PointToFlickrAdmin') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -488,7 +488,7 @@ export default {
             });
         } else if (resource === 'geo.FlickrAdmin') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -508,7 +508,7 @@ export default {
             });
         } else if (resource === 'geo.FlickrAdminToPolygon') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -528,7 +528,7 @@ export default {
             });
         } else if (resource === 'geo.OECDFUAToPolygon') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -548,7 +548,7 @@ export default {
             });
         } else if (resource === 'geo.AdminsByLevel') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -570,7 +570,7 @@ export default {
             });
         } else if (resource === 'geo.OECDFUAList') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -590,7 +590,7 @@ export default {
             });
         } else if (resource === 'geo.OECDFUA') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
@@ -610,7 +610,7 @@ export default {
             });
         } else if (resource === 'geo.PointToOECDFUA') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
-                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}});
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
