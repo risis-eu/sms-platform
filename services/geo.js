@@ -297,7 +297,7 @@ export default {
                         //console.log(res);
                         let resGADM = utilObject.parsePointToGADM28Admin(res, params.country);
                         //if(!resGADM.error){
-                            redisClient.set(hashID, resGADM);
+                            redisClient.set(hashID, JSON.stringify(resGADM));
                         //}
                         callback(null, {
                             latitude: parseFloat(params.lat),
@@ -375,7 +375,7 @@ export default {
                         //console.log(res);
                         let resOSM = utilObject.parsePointToOSMAdmin(res, params.country);
                         //if(!resOSM.error){
-                            redisClient.set(hashID, resOSM);
+                            redisClient.set(hashID, JSON.stringify(resOSM));
                         //}
                         callback(null, {
                             latitude: parseFloat(params.lat),
@@ -473,7 +473,7 @@ export default {
                         //console.log(res);
                         let resFlickr = utilObject.parsePointToFlickrAdmin(res, params.country);
                         //if(!resFlickr.error){
-                            redisClient.set(hashID, resFlickr);
+                            redisClient.set(hashID, JSON.stringify(resFlickr));
                         //}
                         callback(null, {
                             latitude: parseFloat(params.lat),
