@@ -11,11 +11,9 @@ let webpackConfig = {
         main: [
             './client.js'
         ],
-        /*
         vendor: [
             'react', 'react-dom', 'async', 'fluxible', 'fluxible-addons-react', 'fluxible-plugin-fetchr', 'fluxible-router'
         ]
-        */
     },
     output: {
         path: path.resolve('./build/js'),
@@ -49,13 +47,11 @@ let webpackConfig = {
                 warnings: false
             }
         }),
-        /*
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',
             minChunks: Infinity,
             filename: '[name].bundle.js'
         }),
-        */
         // Write out stats file to build directory.
         new StatsWriterPlugin({
             filename: 'webpack.stats.json', // Default

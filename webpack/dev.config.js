@@ -11,11 +11,9 @@ let webpackConfig = {
             'webpack/hot/only-dev-server',
             './client.js'
         ],
-        /*
         vendor: [
             'react', 'react-dom', 'async', 'fluxible', 'fluxible-addons-react', 'fluxible-plugin-fetchr', 'fluxible-router'
         ]
-        */
     },
     output: {
         path: path.resolve('./build/js'),
@@ -40,13 +38,11 @@ let webpackConfig = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        /*
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',
             minChunks: Infinity,
             filename: '[name].bundle.js'
         }),
-        */
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
