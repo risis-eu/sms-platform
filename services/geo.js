@@ -615,18 +615,34 @@ export default {
             graphName = 'big-data-endpoint';
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
-            query = queryObject.getPointToOECDFUA(params.lat, params.long, params.country);
-            //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
-                //console.log(res);
-                callback(null, {
-                    latitude: parseFloat(params.lat),
-                    longitude: parseFloat(params.long),
-                    resources: utilObject.parsePointToOECDFUA(res)
-                });
-            }).catch(function (err) {
-                console.log(err);
-                callback(null, {resources: []});
+            let queryFUA = queryObject.getPointToOECDFUA(params.lat, params.long, params.country);
+            let hashID = ['OECDFUA', params.lat, params.long, params.country].join('-');
+            redisClient.get(hashID, function(error, reply) {
+                if(reply){
+                    //console.log('GADM response from cache...', JSON.parse(reply));
+                    callback(null, {
+                        latitude: parseFloat(params.lat),
+                        longitude: parseFloat(params.long),
+                        resources: JSON.parse(reply)
+                    });
+                }else{
+                    //send request
+                    rp.get({uri: getHTTPQuery('read', queryFUA, endpointParameters, outputFormat)}).then(function(res){
+                        //console.log(res);
+                        let resFUA = utilObject.parsePointToOECDFUA(res);
+                        //if(!resGADM.error){
+                            redisClient.set(hashID, JSON.stringify(resFUA));
+                        //}
+                        callback(null, {
+                            latitude: parseFloat(params.lat),
+                            longitude: parseFloat(params.long),
+                            resources: resFUA
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {resources: []});
+                    });
+                }
             });
         }
     }
