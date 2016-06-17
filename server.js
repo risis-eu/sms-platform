@@ -37,11 +37,6 @@ const debug = debugLib('linked-data-reactor');
 const publicRoutes = ['/', '/about', '/demos', '/boundariesMap'];
 
 const server = express();
-//--------statis files----------
-server.use('/public', express.static(path.join(__dirname, '/build')));
-server.use('/bower_components', express.static(path.join(__dirname, '/bower_components')));
-server.use('/assets', express.static(path.join(__dirname, '/assets')));
-server.use('/documentation', express.static(path.join(__dirname, '/documentation')));
 // we need this because "cookie" is true in csrfProtection
 server.use(cookieParser());
 server.use(bodyParser.json());
@@ -67,7 +62,11 @@ server.set('view engine', 'html');
 server.set('view options', { layout: false });
 //server.enable('view cache');
 server.engine('html', hogan);
-
+//------------------
+server.use('/public', express.static(path.join(__dirname, '/build')));
+server.use('/bower_components', express.static(path.join(__dirname, '/bower_components')));
+server.use('/assets', express.static(path.join(__dirname, '/assets')));
+server.use('/documentation', express.static(path.join(__dirname, '/documentation')));
 // Get access to the fetchr plugin instance
 let fetchrPlugin = app.getPlugin('FetchrPlugin');
 // Register our services
