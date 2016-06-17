@@ -656,16 +656,16 @@ module.exports = function handleDemos(server) {
         }
         var longitude, latitude, nCode, mCode, country;
         var apiKey = config.googleKey;
-        var apiURI = 'https://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent(decodeURIComponent(req.body.addr))+'&key=' + apiKey;
+        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.googleGeocode;addr=' + encodeURIComponent(decodeURIComponent(req.body.addr)) + ';apiKey=' + apiKey;
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
             //res.json(parsed);
-            if(parsed.results.length){
+            if(parsed.resources.results.length){
                 //var formatted = parsed.results[0].formatted_address;
-                var location = parsed.results[0].geometry.location;
+                var location = parsed.resources.results[0].geometry.location;
                 latitude = location.lat;
                 longitude = location.lng;
-                country = getCountryFromGoogleAPIResult(parsed.results[0].address_components);
+                country = getCountryFromGoogleAPIResult(parsed.resources.results[0].address_components);
                 res.render('addressToGADM28Admin', {input: req.body.addr, address: encodeURIComponent(req.body.addr), point:{long: longitude, lat: latitude, country: country}});
             }else{
                 res.send('No result!');
@@ -778,16 +778,16 @@ module.exports = function handleDemos(server) {
         }
         var longitude, latitude, nCode, mCode, country;
         var apiKey = config.googleKey;
-        var apiURI = 'https://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent(decodeURIComponent(req.body.addr))+'&key=' + apiKey;
+        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.googleGeocode;addr=' + encodeURIComponent(decodeURIComponent(req.body.addr)) + ';apiKey=' + apiKey;
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
             //res.json(parsed);
-            if(parsed.results.length){
+            if(parsed.resources.results.length){
                 //var formatted = parsed.results[0].formatted_address;
-                var location = parsed.results[0].geometry.location;
+                var location = parsed.resources.results[0].geometry.location;
                 latitude = location.lat;
                 longitude = location.lng;
-                country = getCountryFromGoogleAPIResult(parsed.results[0].address_components);
+                country = getCountryFromGoogleAPIResult(parsed.resources.results[0].address_components);
                 res.render('addressToOSMAdmin', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, input: req.body.addr, address: encodeURIComponent(req.body.addr), point:{long: longitude, lat: latitude, country: country}});
             }else{
                 res.send('No result!');
@@ -809,16 +809,16 @@ module.exports = function handleDemos(server) {
         var longitude, latitude, nCode, mCode, country;
 
         var apiKey = config.googleKey;
-        var apiURI = 'https://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent(decodeURIComponent(req.body.addr))+'&key=' + apiKey;
+        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.googleGeocode;addr=' + encodeURIComponent(decodeURIComponent(req.body.addr)) + ';apiKey=' + apiKey;
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
             //res.json(parsed);
-            if(parsed.results.length){
+            if(parsed.resources.results.length){
                 //var formatted = parsed.results[0].formatted_address;
-                var location = parsed.results[0].geometry.location;
+                var location = parsed.resources.results[0].geometry.location;
                 latitude = location.lat;
                 longitude = location.lng;
-                country = getCountryFromGoogleAPIResult(parsed.results[0].address_components);
+                country = getCountryFromGoogleAPIResult(parsed.resources.results[0].address_components);
                 res.render('addressToFlickrAdmin', {appFullTitle: appFullTitle, input: req.body.addr, address: encodeURIComponent(req.body.addr), point:{long: longitude, lat: latitude, country: country}});
             }else{
                 res.send('No result!');
@@ -880,16 +880,16 @@ module.exports = function handleDemos(server) {
         }
         var longitude, latitude, nCode, mCode, country;
         var apiKey = config.googleKey;
-        var apiURI = 'https://maps.googleapis.com/maps/api/geocode/json?address='+encodeURIComponent(decodeURIComponent(req.body.addr))+'&key=' + apiKey;
+        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.googleGeocode;addr=' + encodeURIComponent(decodeURIComponent(req.body.addr)) + ';apiKey=' + apiKey;
         rp.get({uri: apiURI}).then(function(body){
             var parsed = JSON.parse(body);
             //res.json(parsed);
-            if(parsed.results.length){
+            if(parsed.resources.results.length){
                 //var formatted = parsed.results[0].formatted_address;
-                var location = parsed.results[0].geometry.location;
+                var location = parsed.resources.results[0].geometry.location;
                 latitude = location.lat;
                 longitude = location.lng;
-                country = getCountryFromGoogleAPIResult(parsed.results[0].address_components);
+                country = getCountryFromGoogleAPIResult(parsed.resources.results[0].address_components);
                 res.render('addressToAdmin', {appFullTitle: appFullTitle, input: req.body.addr, address: encodeURIComponent(req.body.addr), point:{long: longitude, lat: latitude, country: country}});
             }else{
                 res.send('No result!');

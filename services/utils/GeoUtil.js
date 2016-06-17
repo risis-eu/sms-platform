@@ -26,6 +26,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parseNUTStoPolygon(res) {
         let parsed = JSON.parse(res);
@@ -36,6 +37,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     MunicipalitiesPerCountry(res) {
         let parsed = JSON.parse(res);
@@ -46,6 +48,7 @@ class GeoUtil{
             });
             return output;
         }
+        return output;
     }
     parseNUTStoMunicipality(res){
         let parsed = JSON.parse(res);
