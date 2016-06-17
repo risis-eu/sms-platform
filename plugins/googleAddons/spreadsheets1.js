@@ -27,8 +27,16 @@ function onOpen() {
     });
     menuEntries.push(null); // line separator
     menuEntries.push({
-        name: "Step 4. Find OECD FUAs",
-        functionName: "findOECDFUAs"
+        name: "Step 4. Find OECD FUAs using GADM",
+        functionName: "findOECDFUAsFromGADM"
+    });
+    menuEntries.push({
+        name: "Step 4. Find OECD FUAs using Flickr",
+        functionName: "findOECDFUAsFromFlickr"
+    });
+     menuEntries.push({
+        name: "Step 4. Find OECD FUAs using OSM",
+        functionName: "findOECDFUAsFromOSM"
     });
     menuEntries.push(null); // line separator
     menuEntries.push({
@@ -531,8 +539,7 @@ function processFUAList(arr) {
         'ids': outputIDs.join(' | ')
     };
 }
-
-function findOECDFUAs() {
+function findOECDFUAsFromOSM() {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var configSheet = ss.getSheetByName('api config');
     var smsAPIKey = configSheet.getRange(3, 2).getValues()[0];
@@ -541,89 +548,6 @@ function findOECDFUAs() {
     var smsAPI, smsResponse, parsedResponse;
     var smsResponses = new Array();
     var processedFUAs = {};
-    var gadmSheet = ss.getSheetByName('GADM boundaries');
-    var gadmInfo = gadmSheet.getRange(2, 1, gadmSheet.getLastRow() - 1, gadmSheet.getLastColumn() - 1).getValues();
-
-    gadmSheet.getRange('Q1:R1').setValues([
-        ['OECD_FUA_name', 'OECD_FUA_id']
-    ]).setFontWeight("bold");
-
-    for (var i = 0; i < gadmInfo.length; i++) {
-        //range of corresponding boundaries
-        smsResponses = new Array();
-        for (var j = 1; j < 5; j++) {
-            //call SMS API
-            if (gadmInfo[i][4 + j - 1] !== 'undefined') {
-                smsAPI = 'http://sms.risis.eu/api/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(gadmInfo[i][(4 + j - 1)].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
-                smsResponse = UrlFetchApp.fetch(smsAPI);
-                //Browser.msgBox(smsResponse);
-                parsedResponse = JSON.parse(smsResponse);
-                if (parsedResponse.resources.length) {
-                    smsResponses.push(parsedResponse.resources[0]);
-                }
-            }
-        }
-        //finalize FUA
-        //Browser.msgBox(smsResponses[0]);
-        processedFUAs = processFUAList(smsResponses);
-        //Browser.msgBox(processedFUAs.names +'  '+ processedFUAs.ids);
-        gadmSheet.getRange(i + 2, 17, 1, 2).setValues([
-            [processedFUAs.names, processedFUAs.ids]
-        ]);
-
-    }
-
-    var flickrSheet = ss.getSheetByName('Flickr boundaries');
-    var flickrInfo = flickrSheet.getRange(2, 1, flickrSheet.getLastRow() - 1, flickrSheet.getLastColumn() - 1).getValues();
-    var ftmp = new Array();
-    var ftmp2 = new Array();
-    flickrSheet.getRange('O1:P1').setValues([
-        ['OECD_FUA_name', 'OECD_FUA_id']
-    ]).setFontWeight("bold");
-
-    for (var i = 0; i < flickrInfo.length; i++) {
-        //range of corresponding boundaries
-        smsResponses = new Array();
-        for (var j = 1; j < 4; j++) {
-            //call SMS API
-            if (flickrInfo[i][4 + j - 1] !== 'undefined') {
-
-                // we have to handle multiple values separated by |
-                ftmp = flickrInfo[i][4 + j - 1].split('|');
-                if (ftmp.length) {
-                    for (var k = 0; k < ftmp.length; k++) {
-                        ftmp2 = ftmp[k].split(',');
-                        smsAPI = 'http://sms.risis.eu/api/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(ftmp2[0].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
-                        smsResponse = UrlFetchApp.fetch(smsAPI);
-                        //Browser.msgBox(smsAPI+ '->'+smsResponse);
-                        parsedResponse = JSON.parse(smsResponse);
-                        if (parsedResponse.resources.length) {
-                            smsResponses.push(parsedResponse.resources[0]);
-                        }
-                    }
-                } else {
-                    //we only have to get the first part for flickr
-                    ftmp = flickrInfo[i][4 + j - 1].split(',');
-
-                    smsAPI = 'http://sms.risis.eu/api/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(ftmp[0].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
-                    smsResponse = UrlFetchApp.fetch(smsAPI);
-                    //Browser.msgBox(smsAPI+ '->'+smsResponse);
-                    parsedResponse = JSON.parse(smsResponse);
-                    if (parsedResponse.resources.length) {
-                        smsResponses.push(parsedResponse.resources[0]);
-                    }
-                }
-            }
-        }
-        //finalize FUA
-        //Browser.msgBox(smsResponses[0]);
-        processedFUAs = processFUAList(smsResponses);
-        //Browser.msgBox(processedFUAs.names +'  '+ processedFUAs.ids);
-        flickrSheet.getRange(i + 2, 15, 1, 2).setValues([
-            [processedFUAs.names, processedFUAs.ids]
-        ]);
-
-    }
 
     var osmSheet = ss.getSheetByName('OSM boundaries');
     var osmInfo = osmSheet.getRange(2, 1, osmSheet.getLastRow() - 1, osmSheet.getLastColumn() - 1).getValues();
@@ -680,6 +604,110 @@ function findOECDFUAs() {
     }
 
 
+}
+function findOECDFUAsFromFlickr() {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var configSheet = ss.getSheetByName('api config');
+    var smsAPIKey = configSheet.getRange(3, 2).getValues()[0];
+    var locSheet = ss.getSheetByName('geocoding');
+    var locationInfo = locSheet.getRange(2, 1, locSheet.getLastRow() - 1, locSheet.getLastColumn() - 1).getValues();
+    var smsAPI, smsResponse, parsedResponse;
+    var smsResponses = new Array();
+    var processedFUAs = {};
+
+
+    var flickrSheet = ss.getSheetByName('Flickr boundaries');
+    var flickrInfo = flickrSheet.getRange(2, 1, flickrSheet.getLastRow() - 1, flickrSheet.getLastColumn() - 1).getValues();
+    var ftmp = new Array();
+    var ftmp2 = new Array();
+    flickrSheet.getRange('O1:P1').setValues([
+        ['OECD_FUA_name', 'OECD_FUA_id']
+    ]).setFontWeight("bold");
+
+    for (var i = 0; i < flickrInfo.length; i++) {
+        //range of corresponding boundaries
+        smsResponses = new Array();
+        for (var j = 1; j < 4; j++) {
+            //call SMS API
+            if (flickrInfo[i][4 + j - 1] !== 'undefined') {
+
+                // we have to handle multiple values separated by |
+                ftmp = flickrInfo[i][4 + j - 1].split('|');
+                if (ftmp.length) {
+                    for (var k = 0; k < ftmp.length; k++) {
+                        ftmp2 = ftmp[k].split(',');
+                        smsAPI = 'http://sms.risis.eu/api/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(ftmp2[0].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
+                        smsResponse = UrlFetchApp.fetch(smsAPI);
+                        //Browser.msgBox(smsAPI+ '->'+smsResponse);
+                        parsedResponse = JSON.parse(smsResponse);
+                        if (parsedResponse.resources.length) {
+                            smsResponses.push(parsedResponse.resources[0]);
+                        }
+                    }
+                } else {
+                    //we only have to get the first part for flickr
+                    ftmp = flickrInfo[i][4 + j - 1].split(',');
+
+                    smsAPI = 'http://sms.risis.eu/api/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(ftmp[0].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
+                    smsResponse = UrlFetchApp.fetch(smsAPI);
+                    //Browser.msgBox(smsAPI+ '->'+smsResponse);
+                    parsedResponse = JSON.parse(smsResponse);
+                    if (parsedResponse.resources.length) {
+                        smsResponses.push(parsedResponse.resources[0]);
+                    }
+                }
+            }
+        }
+        //finalize FUA
+        //Browser.msgBox(smsResponses[0]);
+        processedFUAs = processFUAList(smsResponses);
+        //Browser.msgBox(processedFUAs.names +'  '+ processedFUAs.ids);
+        flickrSheet.getRange(i + 2, 15, 1, 2).setValues([
+            [processedFUAs.names, processedFUAs.ids]
+        ]);
+
+    }
+}
+function findOECDFUAsFromGADM() {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var configSheet = ss.getSheetByName('api config');
+    var smsAPIKey = configSheet.getRange(3, 2).getValues()[0];
+    var locSheet = ss.getSheetByName('geocoding');
+    var locationInfo = locSheet.getRange(2, 1, locSheet.getLastRow() - 1, locSheet.getLastColumn() - 1).getValues();
+    var smsAPI, smsResponse, parsedResponse;
+    var smsResponses = new Array();
+    var processedFUAs = {};
+    var gadmSheet = ss.getSheetByName('GADM boundaries');
+    var gadmInfo = gadmSheet.getRange(2, 1, gadmSheet.getLastRow() - 1, gadmSheet.getLastColumn() - 1).getValues();
+
+    gadmSheet.getRange('Q1:R1').setValues([
+        ['OECD_FUA_name', 'OECD_FUA_id']
+    ]).setFontWeight("bold");
+
+    for (var i = 0; i < gadmInfo.length; i++) {
+        //range of corresponding boundaries
+        smsResponses = new Array();
+        for (var j = 1; j < 5; j++) {
+            //call SMS API
+            if (gadmInfo[i][4 + j - 1] !== 'undefined') {
+                smsAPI = 'http://sms.risis.eu/api/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(gadmInfo[i][(4 + j - 1)].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
+                smsResponse = UrlFetchApp.fetch(smsAPI);
+                //Browser.msgBox(smsResponse);
+                parsedResponse = JSON.parse(smsResponse);
+                if (parsedResponse.resources.length) {
+                    smsResponses.push(parsedResponse.resources[0]);
+                }
+            }
+        }
+        //finalize FUA
+        //Browser.msgBox(smsResponses[0]);
+        processedFUAs = processFUAList(smsResponses);
+        //Browser.msgBox(processedFUAs.names +'  '+ processedFUAs.ids);
+        gadmSheet.getRange(i + 2, 17, 1, 2).setValues([
+            [processedFUAs.names, processedFUAs.ids]
+        ]);
+
+    }
 }
 
 function showAbout() {
