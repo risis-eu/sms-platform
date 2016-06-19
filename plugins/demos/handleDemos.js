@@ -30,7 +30,9 @@ module.exports = function handleDemos(server) {
             if(parsed.resources.results.length){
                 var formatted = parsed.resources.results[0].formatted_address;
                 var location = parsed.resources.results[0].geometry.location;
-                res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> geocode</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/geocode/'+encodeURIComponent(req.params.addr)+'">Address to Coordinates</a></h3> </div> <div class="ui segment"> <div class="content"> <div class="description"> <form method="post" class="ui form fields"><div class="field success"> <label>Fomatted Address</label> <div class="ui icon input"> <textarea rows="4">'+formatted+'</textarea> </div> </div> <div class="field success"> <label>Latitude</label> <div class="ui icon input"> <input type="text" value="'+location.lat+'" /> </div> </div> <div class="field success"> <label>Longitude</label> <div class="ui icon input"> <input type="text" value="'+location.lng+'" /> </div> </div> <div class="field"> </div></form></div> </div> </div> </div> </div></div> <div style="display:none">'+JSON.stringify(parsed)+'</div></body></html>');
+                var locality = getLocalityFromGoogleAPIResult(parsed.resources.results[0].address_components);
+                var country = getCountryFromGoogleAPIResult(parsed.resources.results[0].address_components);
+                res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> geocode</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/geocode/'+encodeURIComponent(req.params.addr)+'">Address to Coordinates</a></h3> </div> <div class="ui segment"> <div class="content"> <div class="description"> <form method="post" class="ui form fields"><div class="field success"> <label>Fomatted Address</label> <div class="ui icon input"> <textarea rows="4">'+formatted+'</textarea> </div> </div> <div class="field success"> <label>Latitude</label> <div class="ui icon input"> <input type="text" value="'+location.lat+'" /> </div> </div> <div class="field success"> <label>Longitude</label> <div class="ui icon input"> <input type="text" value="'+location.lng+'" /> </div> </div> <div class="field success"> <label>Country/Locality</label> <div class="ui icon input"> <input type="text" value="'+ country.shortName+'/'+(locality? locality.longName : '')+'" /> </div> </div><div class="field"> </div></form><div class="ui segment"> <iframe src=\'/demos/geo/DetectOECDFUAs/'+country.shortName+'/'+JSON.stringify([locality? locality.longName : ''])+'\' height="150" width="100%" style="border:none;overflow: scroll;"></iframe></div></div> </div> </div> </div> </div></div> <div style="display:none">'+JSON.stringify(parsed)+'</div></body></html>');
             }else{
                 res.send('No result!');
             }
@@ -636,6 +638,16 @@ module.exports = function handleDemos(server) {
             return 0;
         });
     });
+    var getLocalityFromGoogleAPIResult = function(address_components){
+        let shortName='',longName='';
+        address_components.forEach(function(el){
+            if(el.types.indexOf('locality') !== -1){
+                shortName = el.short_name;
+                longName = el.long_name;
+            }
+        });
+        return {shortName: shortName, longName: longName};
+    }
     var getCountryFromGoogleAPIResult = function(address_components){
         let shortName='',longName='';
         address_components.forEach(function(el){
