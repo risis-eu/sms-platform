@@ -369,23 +369,48 @@ export default {
                         resources: JSON.parse(reply)
                     });
                 }else{
-                    //send request
-                    //console.log(queryOSM);
-                    rp.get({uri: getHTTPQuery('read', queryOSM, endpointParameters, outputFormat)}).then(function(res){
-                        //console.log(res);
-                        let resOSM = utilObject.parsePointToOSMAdmin(res, params.country);
-                        //if(!resOSM.error){
-                            redisClient.set(hashID, JSON.stringify(resOSM));
-                        //}
-                        callback(null, {
-                            latitude: parseFloat(params.lat),
-                            longitude: parseFloat(params.long),
-                            resources: resOSM
+                    if(params.useExternal){
+                        if(params.useExternal === 'MapIt'){
+                            //send request
+                            let externalURI = 'http://global.mapit.mysociety.org/point/4326/'+params.long+','+ params.lat;
+                            //console.log(externalURI);
+                            rp.get({uri: externalURI}).then(function(res){
+                                //console.log(res);
+                                let resOSM = utilObject.parsePointToOSMAdminMapIt(res, params.country);
+                                //if(!resOSM.error){
+                                    redisClient.set(hashID, JSON.stringify(resOSM));
+                                //}
+                                callback(null, {
+                                    latitude: parseFloat(params.lat),
+                                    longitude: parseFloat(params.long),
+                                    resources: resOSM
+                                });
+                            }).catch(function (err) {
+                                console.log(err);
+                                callback(null, {resources: []});
+                            });
+                        }else{
+                            callback(null, {resources: []});
+                        }
+                    }else{
+                        //send request
+                        //console.log(queryOSM);
+                        rp.get({uri: getHTTPQuery('read', queryOSM, endpointParameters, outputFormat)}).then(function(res){
+                            //console.log(res);
+                            let resOSM = utilObject.parsePointToOSMAdmin(res, params.country);
+                            //if(!resOSM.error){
+                                redisClient.set(hashID, JSON.stringify(resOSM));
+                            //}
+                            callback(null, {
+                                latitude: parseFloat(params.lat),
+                                longitude: parseFloat(params.long),
+                                resources: resOSM
+                            });
+                        }).catch(function (err) {
+                            console.log(err);
+                            callback(null, {resources: []});
                         });
-                    }).catch(function (err) {
-                        console.log(err);
-                        callback(null, {resources: []});
-                    });
+                    }
                 }
             });
 

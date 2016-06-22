@@ -127,6 +127,24 @@ class GeoUtil{
         }
         return output;
     }
+    parsePointToOSMAdminMapIt(res, country){
+        let self = this;
+        let parsed = JSON.parse(res);
+        //console.log(parsed);
+        let output=[];
+        let cISO = '';
+        if(country){
+            cISO = convertToISO3(country);
+        }
+        let tmp;
+        for(let prop in parsed){
+            tmp = parsed[prop].type_name.split('OSM Administrative Boundary Level ');
+            if(tmp.length > 1){
+                output.push({id: 'relation_'+parsed[prop].codes.osm_rel, title: parsed[prop].name, level: tmp[1], country: cISO});
+            }
+        }
+        return output;
+    }
     parsePointToFlickrAdmin(res, country){
         let self = this;
         let parsed = JSON.parse(res);
