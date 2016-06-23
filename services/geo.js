@@ -503,7 +503,7 @@ export default {
                     rp.get({uri: getHTTPQuery('read', queryFlickr, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
                         let resFlickr = utilObject.parsePointToFlickrAdmin(res, params.country);
-                        if(!resFlickr.){
+                        if(resFlickr.length){
                             redisClient.set(hashID, JSON.stringify(resFlickr));
                         }
                         callback(null, {
