@@ -34,7 +34,7 @@ export default {
             let apiURI = 'https://maps.googleapis.com/maps/api/geocode/json?address='+address+'&key=' + params.apiKey;
             //start to get it from the cache
             redisClient.get(['googleGeocode', address].join('-'), function(err, reply) {
-                if(reply){
+                if(reply && !params.nocache){
                     //console.log('GoogleGeocode response from cache...');
                     callback(null, {
                         address: decodeURIComponent(params.addr),
@@ -285,7 +285,7 @@ export default {
             //start to get it from the cache
             let hashID = ['GADM', params.lat, params.long, params.country, params.level].join('-');
             redisClient.get(hashID, function(error, reply) {
-                if(reply){
+                if(reply && !params.nocache){
                     //console.log('GADM response from cache...');
                     callback(null, {
                         latitude: parseFloat(params.lat),
@@ -298,9 +298,9 @@ export default {
                     rp.get({uri: getHTTPQuery('read', queryGADM, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
                         let resGADM = utilObject.parsePointToGADM28Admin(res, params.country);
-                        if(resGADM.length){
+                        //if(!resGADM.error){
                             redisClient.set(hashID, JSON.stringify(resGADM));
-                        }
+                        //}
                         callback(null, {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
@@ -363,7 +363,7 @@ export default {
             //start to get it from the cache
             let hashID = ['OSM',params.lat, params.long, params.country, params.level].join('-');
             redisClient.get(hashID, function(error, reply) {
-                if(reply){
+                if(reply && !params.nocache){
                     //console.log('OSM response from cache...');
                     callback(null, {
                         latitude: parseFloat(params.lat),
@@ -490,7 +490,7 @@ export default {
             //start to get it from the cache
             let hashID = ['Flickr', params.lat, params.long, params.country, params.level].join('-');
             redisClient.get(hashID, function(error, reply) {
-                if(reply){
+                if(reply && !params.nocache){
                     //console.log('Flickr response from cache...');
                     callback(null, {
                         latitude: parseFloat(params.lat),
@@ -503,7 +503,7 @@ export default {
                     rp.get({uri: getHTTPQuery('read', queryFlickr, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
                         let resFlickr = utilObject.parsePointToFlickrAdmin(res, params.country);
-                        if(resFlickr.length){
+                        if(!resFlickr.){
                             redisClient.set(hashID, JSON.stringify(resFlickr));
                         }
                         callback(null, {
@@ -649,7 +649,7 @@ export default {
             let queryFUA = queryObject.getPointToOECDFUA(params.lat, params.long, params.country);
             let hashID = ['OECDFUA', params.lat, params.long, params.country].join('-');
             redisClient.get(hashID, function(error, reply) {
-                if(reply){
+                if(reply && !params.nocache){
                     //console.log('GADM response from cache...', JSON.parse(reply));
                     callback(null, {
                         latitude: parseFloat(params.lat),
@@ -662,9 +662,9 @@ export default {
                     rp.get({uri: getHTTPQuery('read', queryFUA, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
                         let resFUA = utilObject.parsePointToOECDFUA(res);
-                        if(resGADM.length){
+                        //if(!resGADM.error){
                             redisClient.set(hashID, JSON.stringify(resFUA));
-                        }
+                        //}
                         callback(null, {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
