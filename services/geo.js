@@ -42,34 +42,23 @@ export default {
                         resources: JSON.parse(reply)
                     });
                 }else{
-                    //try again in the old cache: I didn't want to remove it!
-                    redisClient.get(['googleGeocode', address].join('-'), function(err2, reply2) {
-                        if(reply2 && !params.nocache){
-                            callback(null, {
-                                address: decodeURIComponent(params.addr),
-                                cached: true,
-                                resources: JSON.parse(reply2)
-                            });
-                        }else{
-                            //send request
-                            rp.get({uri: apiURI}).then(function(res){
-                                //console.log(res);
-                                let gres = JSON.parse(res);
-                                if(!gres.error_message){
-                                    redisClient.set(['googleGeocode', address.toLowerCase()].join('-'), res);
-                                }
-                                callback(null, {
-                                    address: params.addr,
-                                    resources: gres
-                                });
-                            }).catch(function (err) {
-                                console.log(err);
-                                callback(null, {
-                                    address: params.addr,
-                                    resources: {results: []}
-                                });
-                            });
+                    //send request
+                    rp.get({uri: apiURI}).then(function(res){
+                        //console.log(res);
+                        let gres = JSON.parse(res);
+                        if(!gres.error_message){
+                            redisClient.set(['googleGeocode', address.toLowerCase()].join('-'), res);
                         }
+                        callback(null, {
+                            address: params.addr,
+                            resources: gres
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {
+                            address: params.addr,
+                            resources: {results: []}
+                        });
                     });
                 }
             });
@@ -294,7 +283,7 @@ export default {
             let queryGADM = queryObject.getPointToGADM28Admin(params.lat, params.long, params.country, params.level);
             //console.log(query);
             //start to get it from the cache
-            let hashID = ['GADM', params.lat, params.long, params.country, params.level].join('-');
+            let hashID = ['GADM', params.lat, params.long, params.level].join('-');
             redisClient.get(hashID, function(error, reply) {
                 if(reply && !params.nocache){
                     //console.log('GADM response from cache...');
@@ -372,7 +361,7 @@ export default {
             //SPARQL QUERY
             let queryOSM = queryObject.getPointToOSMAdmin(params.lat, params.long, params.country, params.level);
             //start to get it from the cache
-            let hashID = ['OSM',params.lat, params.long, params.country, params.level].join('-');
+            let hashID = ['OSM',params.lat, params.long, params.level].join('-');
             redisClient.get(hashID, function(error, reply) {
                 if(reply && !params.nocache){
                     //console.log('OSM response from cache...');
@@ -499,7 +488,7 @@ export default {
             //SPARQL QUERY
             let queryFlickr = queryObject.getPointToFlickrAdmin(params.lat, params.long, params.country, params.level);
             //start to get it from the cache
-            let hashID = ['Flickr', params.lat, params.long, params.country, params.level].join('-');
+            let hashID = ['Flickr', params.lat, params.long, params.level].join('-');
             redisClient.get(hashID, function(error, reply) {
                 if(reply && !params.nocache){
                     //console.log('Flickr response from cache...');
@@ -658,7 +647,7 @@ export default {
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
             let queryFUA = queryObject.getPointToOECDFUA(params.lat, params.long, params.country);
-            let hashID = ['OECDFUA', params.lat, params.long, params.country].join('-');
+            let hashID = ['OECDFUA', params.lat, params.long].join('-');
             redisClient.get(hashID, function(error, reply) {
                 if(reply && !params.nocache){
                     //console.log('GADM response from cache...', JSON.parse(reply));
