@@ -383,6 +383,7 @@ export default {
                                 callback(null, {
                                     latitude: parseFloat(params.lat),
                                     longitude: parseFloat(params.long),
+                                    usedExternalService: 'MapIt',
                                     resources: resOSM
                                 });
                             }).catch(function (err) {
