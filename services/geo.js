@@ -33,7 +33,7 @@ export default {
             let address = encodeURIComponent(decodeURIComponent(params.addr));
             let apiURI = 'https://maps.googleapis.com/maps/api/geocode/json?address='+address+'&key=' + params.apiKey;
             //start to get it from the cache
-            redisClient.get(['googleGeocode', address].join('-'), function(err, reply) {
+            redisClient.get(['googleGeocode', address.toLowerCase()].join('-'), function(err, reply) {
                 if(reply && !params.nocache){
                     //console.log('GoogleGeocode response from cache...');
                     callback(null, {
@@ -42,23 +42,34 @@ export default {
                         resources: JSON.parse(reply)
                     });
                 }else{
-                    //send request
-                    rp.get({uri: apiURI}).then(function(res){
-                        //console.log(res);
-                        let gres = JSON.parse(res);
-                        if(!gres.error_message){
-                            redisClient.set(['googleGeocode', address].join('-'), res);
+                    //try again in the old cache: I didn't want to remove it!
+                    redisClient.get(['googleGeocode', address].join('-'), function(err2, reply2) {
+                        if(reply2 && !params.nocache){
+                            callback(null, {
+                                address: decodeURIComponent(params.addr),
+                                cached: true,
+                                resources: JSON.parse(reply2)
+                            });
+                        }else{
+                            //send request
+                            rp.get({uri: apiURI}).then(function(res){
+                                //console.log(res);
+                                let gres = JSON.parse(res);
+                                if(!gres.error_message){
+                                    redisClient.set(['googleGeocode', address.toLowerCase()].join('-'), res);
+                                }
+                                callback(null, {
+                                    address: params.addr,
+                                    resources: gres
+                                });
+                            }).catch(function (err) {
+                                console.log(err);
+                                callback(null, {
+                                    address: params.addr,
+                                    resources: {results: []}
+                                });
+                            });
                         }
-                        callback(null, {
-                            address: params.addr,
-                            resources: gres
-                        });
-                    }).catch(function (err) {
-                        console.log(err);
-                        callback(null, {
-                            address: params.addr,
-                            resources: {results: []}
-                        });
                     });
                 }
             });
@@ -298,9 +309,9 @@ export default {
                     rp.get({uri: getHTTPQuery('read', queryGADM, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
                         let resGADM = utilObject.parsePointToGADM28Admin(res, params.country);
-                        //if(!resGADM.error){
+                        if(resGADM.length){
                             redisClient.set(hashID, JSON.stringify(resGADM));
-                        //}
+                        }
                         callback(null, {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
