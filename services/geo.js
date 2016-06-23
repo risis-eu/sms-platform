@@ -38,6 +38,7 @@ export default {
                     //console.log('GoogleGeocode response from cache...');
                     callback(null, {
                         address: decodeURIComponent(params.addr),
+                        cached: true,
                         resources: JSON.parse(reply)
                     });
                 }else{
@@ -289,6 +290,7 @@ export default {
                     callback(null, {
                         latitude: parseFloat(params.lat),
                         longitude: parseFloat(params.long),
+                        cached: true,
                         resources: JSON.parse(reply)
                     });
                 }else{
@@ -296,9 +298,9 @@ export default {
                     rp.get({uri: getHTTPQuery('read', queryGADM, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
                         let resGADM = utilObject.parsePointToGADM28Admin(res, params.country);
-                        //if(!resGADM.error){
+                        if(resGADM.length){
                             redisClient.set(hashID, JSON.stringify(resGADM));
-                        //}
+                        }
                         callback(null, {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
@@ -366,6 +368,7 @@ export default {
                     callback(null, {
                         latitude: parseFloat(params.lat),
                         longitude: parseFloat(params.long),
+                        cached: true,
                         resources: JSON.parse(reply)
                     });
                 }else{
@@ -400,9 +403,9 @@ export default {
                         rp.get({uri: getHTTPQuery('read', queryOSM, endpointParameters, outputFormat)}).then(function(res){
                             //console.log(res);
                             let resOSM = utilObject.parsePointToOSMAdmin(res, params.country);
-                            //if(!resOSM.error){
+                            if(resOSM.length){
                                 redisClient.set(hashID, JSON.stringify(resOSM));
-                            //}
+                            }
                             callback(null, {
                                 latitude: parseFloat(params.lat),
                                 longitude: parseFloat(params.long),
@@ -492,6 +495,7 @@ export default {
                     callback(null, {
                         latitude: parseFloat(params.lat),
                         longitude: parseFloat(params.long),
+                        cached: true,
                         resources: JSON.parse(reply)
                     });
                 }else{
@@ -499,9 +503,9 @@ export default {
                     rp.get({uri: getHTTPQuery('read', queryFlickr, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
                         let resFlickr = utilObject.parsePointToFlickrAdmin(res, params.country);
-                        //if(!resFlickr.error){
+                        if(resFlickr.length){
                             redisClient.set(hashID, JSON.stringify(resFlickr));
-                        //}
+                        }
                         callback(null, {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
@@ -650,6 +654,7 @@ export default {
                     callback(null, {
                         latitude: parseFloat(params.lat),
                         longitude: parseFloat(params.long),
+                        cached: true,
                         resources: JSON.parse(reply)
                     });
                 }else{
@@ -657,9 +662,9 @@ export default {
                     rp.get({uri: getHTTPQuery('read', queryFUA, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
                         let resFUA = utilObject.parsePointToOECDFUA(res);
-                        //if(!resGADM.error){
+                        if(resGADM.length){
                             redisClient.set(hashID, JSON.stringify(resFUA));
-                        //}
+                        }
                         callback(null, {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
