@@ -65,10 +65,13 @@ function createSpreadsheets() {
         ['parameter', 'value']
     ]).setFontWeight("bold");
     configSheet.getRange('A2:B2').setValues([
-        ['googleAPIKey', 'enter your Google Geocoding API key here']
+        ['googleAPIKey', 'replace this with your Google Geocoding API key']
     ]).setWrap(true);
     configSheet.getRange('A3:B3').setValues([
-        ['smsKey', 'enter your SMS API key here']
+        ['smsKey', 'replace this with your SMS API key']
+    ]).setWrap(true);
+    configSheet.getRange('A4:B4').setValues([
+        ['osmExternalService', 'none']
     ]).setWrap(true);
 
     ss.insertSheet('geocoding', 1);
@@ -184,8 +187,10 @@ function geoCodeAddresses() {
 
 function parseLevels(source, arr) {
     var output = new Array();
+    var appLink = '';
 
     if (source == 'GADM') {
+        appLink = 'http://sms.risis.eu/demos/geo/GADM28Admin';
         output[0] = [];
         output[1] = [];
         output[2] = [];
@@ -193,12 +198,14 @@ function parseLevels(source, arr) {
         output[4] = [];
         output[5] = [];
     } else if (source == 'Flickr') {
+        appLink = 'http://sms.risis.eu/demos/geo/FlickrAdmin';
         output[1] = [];
         output[2] = [];
         output[3] = [];
         output[4] = [];
         output[5] = [];
     } else if (source == 'OSM') {
+        appLink = 'http://sms.risis.eu/demos/geo/OSMAdmin';
         output[1] = [];
         output[2] = [];
         output[3] = [];
@@ -212,23 +219,28 @@ function parseLevels(source, arr) {
         output[11] = [];
     }
     for (var i = 0; i < arr.length; i++) {
-        output[arr[i].level].push({
-            'id': arr[i].id,
-            'title': arr[i].title
-        });
+        if (output[arr[i].level]) {
+            output[arr[i].level].push({
+                'id': arr[i].id,
+                'lid': '=HYPERLINK("'+appLink+'/'+arr[i].id+'","'+arr[i].id+'")',
+                'title': arr[i].title
+            });
+        }
     }
     return output;
 }
 //name = title
 function joinSameAdminLevels(levelArr) {
     var outputIDs = new Array();
+    var outputLIDs = new Array();
     var outputNames = new Array();
     for (var i = 0; i < levelArr.length; i++) {
         outputIDs.push(levelArr[i].id);
         outputNames.push(levelArr[i].title);
+        outputLIDs.push(levelArr[i].lid);
     }
     return {
-        'ids': outputIDs.join(' | '),
+      'ids': outputIDs.length>1 ? outputIDs.join(' | ') : outputLIDs.join(' | '),
         'names': outputNames.join(' | ')
     };
 }
@@ -347,6 +359,7 @@ function generateOSMMetadata() {
 function findOSMBoundaries() {
     var configSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('api config');
     var smsAPIKey = configSheet.getRange(3, 2).getValues()[0];
+    var osmExternalService = configSheet.getRange(4, 2).getValues()[0];
     var locSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('geocoding');
     // Select the sheet
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('OSM boundaries');
@@ -373,6 +386,10 @@ function findOSMBoundaries() {
 
         //call SMS API
         smsAPI = 'http://sms.risis.eu/api/geo.PointToOSMAdmin;lat=' + locationInfo[i][3] + ';long=' + locationInfo[i][2] + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
+        if (osmExternalService !== 'undefined' && osmExternalService !== '' && osmExternalService !== 'none') {
+            smsAPI = smsAPI + ';useExternal=' + osmExternalService;
+        }
+
         smsResponse = UrlFetchApp.fetch(smsAPI);
 
         parsedResponse = JSON.parse(smsResponse);
@@ -392,19 +409,28 @@ function processFUAList(arr) {
     var out = {};
     for (var i = 0; i < arr.length; i++) {
         if (!out[arr[i].funactionalUrbanArea.code]) {
-            out[arr[i].funactionalUrbanArea.code] = arr[i].funactionalUrbanArea;
+          out[arr[i].funactionalUrbanArea.code] = arr[i];
         }
     }
 
     var outputNames = new Array();
     var outputIDs = new Array();
+    var mcpIDs = new Array();
+    var mcpNames = new Array();
+    var isCoreArrs = new Array();
     for (var prop in out) {
-        outputNames.push(out[prop].name);
-        outputIDs.push(out[prop].code);
+        outputNames.push(out[prop].funactionalUrbanArea.name);
+        outputIDs.push(out[prop].funactionalUrbanArea.code);
+        mcpIDs.push(out[prop].id);
+        mcpNames.push(out[prop].name);
+        isCoreArrs.push(out[prop].isCore);
     }
     return {
         'names': outputNames.join(' | '),
-        'ids': outputIDs.join(' | ')
+        'ids': outputIDs.join(' | '),
+        'mapIDs': mcpIDs.join(' | '),
+        'mcpNames': mcpNames.join(' | '),
+        'isCoreArrs': isCoreArrs.join(' | ')
     };
 }
 
@@ -422,15 +448,15 @@ function findOECDFUAsFromOSM() {
     var osmInfo = osmSheet.getRange(2, 1, osmSheet.getLastRow() - 1, osmSheet.getLastColumn() - 1).getValues();
     var ftmp = new Array();
     var ftmp2 = new Array();
-    osmSheet.getRange('AA1:AB1').setValues([
-        ['OECD_FUA_name', 'OECD_FUA_id']
+    osmSheet.getRange('AA1:AE1').setValues([
+        ['OECD_FUA_name', 'OECD_FUA_id', 'Municipality_name', 'Municipality_id', 'is_core?']
     ]).setFontWeight("bold");
 
     for (var i = 0; i < osmInfo.length; i++) {
-        checkIfValue=osmSheet.getRange(i+2, 27, 1, 2).getValues();
+        checkIfValue = osmSheet.getRange(i + 2, 27, 1, 2).getValues();
         //only send requests for the ones which are not processed yet
-        if(checkIfValue[0][1] != ''){
-          continue;
+        if (checkIfValue[0][1] != '') {
+            continue;
         }
         //range of corresponding boundaries
         smsResponses = new Array();
@@ -472,8 +498,8 @@ function findOECDFUAsFromOSM() {
         //Browser.msgBox(smsResponses[0]);
         processedFUAs = processFUAList(smsResponses);
         //Browser.msgBox(processedFUAs.names +'  '+ processedFUAs.ids);
-        osmSheet.getRange(i + 2, 27, 1, 2).setValues([
-            [processedFUAs.names, processedFUAs.ids]
+        osmSheet.getRange(i + 2, 27, 1, 5).setValues([
+            [processedFUAs.names, processedFUAs.ids, processedFUAs.mcpNames, processedFUAs.mapIDs, processedFUAs.isCoreArrs]
         ]);
     }
 
@@ -495,15 +521,15 @@ function findOECDFUAsFromFlickr() {
     var flickrInfo = flickrSheet.getRange(2, 1, flickrSheet.getLastRow() - 1, flickrSheet.getLastColumn() - 1).getValues();
     var ftmp = new Array();
     var ftmp2 = new Array();
-    flickrSheet.getRange('O1:P1').setValues([
-        ['OECD_FUA_name', 'OECD_FUA_id']
+    flickrSheet.getRange('O1:S1').setValues([
+        ['OECD_FUA_name', 'OECD_FUA_id', 'Municipality_name', 'Municipality_id', 'is_core?']
     ]).setFontWeight("bold");
 
     for (var i = 0; i < flickrInfo.length; i++) {
-        checkIfValue=flickrSheet.getRange(i+2, 15, 1, 2).getValues();
+        checkIfValue = flickrSheet.getRange(i + 2, 15, 1, 2).getValues();
         //only send requests for the ones which are not processed yet
-        if(checkIfValue[0][1] != ''){
-          continue;
+        if (checkIfValue[0][1] != '') {
+            continue;
         }
         //range of corresponding boundaries
         smsResponses = new Array();
@@ -542,8 +568,8 @@ function findOECDFUAsFromFlickr() {
         //Browser.msgBox(smsResponses[0]);
         processedFUAs = processFUAList(smsResponses);
         //Browser.msgBox(processedFUAs.names +'  '+ processedFUAs.ids);
-        flickrSheet.getRange(i + 2, 15, 1, 2).setValues([
-            [processedFUAs.names, processedFUAs.ids]
+        flickrSheet.getRange(i + 2, 15, 1, 5).setValues([
+            [processedFUAs.names, processedFUAs.ids, processedFUAs.mcpNames, processedFUAs.mapIDs, processedFUAs.isCoreArrs]
         ]);
 
     }
@@ -561,15 +587,15 @@ function findOECDFUAsFromGADM() {
     var gadmSheet = ss.getSheetByName('GADM boundaries');
     var gadmInfo = gadmSheet.getRange(2, 1, gadmSheet.getLastRow() - 1, gadmSheet.getLastColumn() - 1).getValues();
     var checkIfValue;
-    gadmSheet.getRange('Q1:R1').setValues([
-        ['OECD_FUA_name', 'OECD_FUA_id']
+    gadmSheet.getRange('Q1:U1').setValues([
+        ['OECD_FUA_name', 'OECD_FUA_id', 'Municipality_name', 'Municipality_id', 'is_core?']
     ]).setFontWeight("bold");
 
     for (var i = 0; i < gadmInfo.length; i++) {
-        checkIfValue=gadmSheet.getRange(i+2, 17, 1, 2).getValues();
+        checkIfValue = gadmSheet.getRange(i + 2, 17, 1, 2).getValues();
         //only send requests for the ones which are not processed yet
-        if(checkIfValue[0][1] != ''){
-          continue;
+        if (checkIfValue[0][1] != '') {
+            continue;
         }
         //range of corresponding boundaries
         smsResponses = new Array();
@@ -589,8 +615,8 @@ function findOECDFUAsFromGADM() {
         //Browser.msgBox(smsResponses[0]);
         processedFUAs = processFUAList(smsResponses);
         //Browser.msgBox(processedFUAs.names +'  '+ processedFUAs.ids);
-        gadmSheet.getRange(i + 2, 17, 1, 2).setValues([
-            [processedFUAs.names, processedFUAs.ids]
+        gadmSheet.getRange(i + 2, 17, 1, 5).setValues([
+            [processedFUAs.names, processedFUAs.ids, processedFUAs.mcpNames, processedFUAs.mapIDs, processedFUAs.isCoreArrs]
         ]);
 
     }
@@ -606,14 +632,14 @@ function findOECDFUAsFromGoogle() {
     var smsResponses = new Array();
     var processedFUAs = {};
     var checkIfValue;
-    locSheet.getRange('J1:K1').setValues([
-        ['OECD_FUA_name', 'OECD_FUA_id']
+    locSheet.getRange('J1:N1').setValues([
+        ['OECD_FUA_name', 'OECD_FUA_id', 'Municipality_name', 'Municipality_id', 'is_core?']
     ]).setFontWeight("bold");
 
     for (var i = 0; i < locationInfo.length; i++) {
-        checkIfValue=locSheet.getRange(i+2, 10, 1, 2).getValues();
-        if(checkIfValue[0][1] != ''){
-          continue;
+        checkIfValue = locSheet.getRange(i + 2, 10, 1, 2).getValues();
+        if (checkIfValue[0][1] != '') {
+            continue;
         }
         smsResponses = new Array();
         if (locationInfo[i][6] !== 'undefined') {
@@ -627,8 +653,8 @@ function findOECDFUAsFromGoogle() {
         }
 
         processedFUAs = processFUAList(smsResponses);
-        locSheet.getRange(i + 2, 10, 1, 2).setValues([
-            [processedFUAs.names, processedFUAs.ids]
+        locSheet.getRange(i + 2, 10, 1, 5).setValues([
+            [processedFUAs.names, processedFUAs.ids, processedFUAs.mcpNames, processedFUAs.mapIDs, processedFUAs.isCoreArrs]
         ]);
 
     }

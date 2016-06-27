@@ -283,6 +283,46 @@ module.exports = function handleDemos(server) {
             return 0;
         });
     });
+    server.get('/demos/geo/Municipality/:id', function(req, res) {
+        if(!req.params.id){
+            res.send('a parameter is missing: id');
+            return 0;
+        }
+        var apiURI = 'http://' + req.headers.host + smsAPI +  '/geo.Municipality;smsKey='+demoSMSKey+';code=' + req.params.id;
+        //console.log(apiURI);
+        rp.get({uri: apiURI}).then(function(body){
+            var parsed = JSON.parse(body);
+            //list of properties
+            var props = parsed.resources;
+            var out = '<div class="ui divided list">';
+            out = out + '<span class="ui item">Municipality ID: <b>'+req.params.id+'</b></span>';
+            out = out + '<span class="ui item">Name'+': <b>'+props[0]['name']+'</b></span>';
+            out = out + '<span class="ui item">is Core'+': <b>'+props[0]['isCore']+'</b></span>';
+            out = out + '<span class="ui item"> <b>Functional Urban Area</b>:</span>';
+            out = out + '<span class="ui item">FUA Name'+': <b>'+props[0].funactionalUrbanArea['name']+'</b></span>';
+            out = out + '<span class="ui item">FUA Code'+': <b>'+props[0].funactionalUrbanArea['code']+'</b></span>';
+            out = out + '<span class="ui item">FUA Population'+': <b>'+props[0].funactionalUrbanArea['population']+'</b></span>';
+
+            res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>'+appShortTitle+': demos/geo -> Municipality</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column"><div class="ui orange segment"><h3><a target="_blank" href="/demos/geo/Municipality/'+req.params.id+'">Municipality Properties</a></h3> </div> <div class="ui segment"> '+out+' </div></div></div></div></body></html>');
+        }).catch(function (err) {
+            console.log(err);
+            res.send('');
+            return 0;
+        });
+    });
+    server.get('/demos/geo/GADM28Admin/multi/:ids', function(req, res) {
+        if(!req.params.ids){
+            res.send('a parameter is missing: ids');
+            return 0;
+        }
+        var tmp = decodeURIComponent(req.params.ids);
+        var ids= tmp.split('|');
+        var iframes = '';
+        ids.forEach(function(id){
+            iframes = iframes + '<iframe src=\'/demos/geo/GADM28Admin/'+id+'\' height="400" width="100%" style="border:none;overflow: scroll;"></iframe>';
+        });
+        res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>Multiple GADM boundaries</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column">'+iframes+'</div></div></div></body></html>');
+    });
     server.get('/demos/geo/GADM28Admin/:id', function(req, res) {
         if(!req.params.id){
             res.send('a parameter is missing: id');
@@ -311,6 +351,19 @@ module.exports = function handleDemos(server) {
             res.send('');
             return 0;
         });
+    });
+    server.get('/demos/geo/FlickrAdmin/multi/:ids', function(req, res) {
+        if(!req.params.ids){
+            res.send('a parameter is missing: ids');
+            return 0;
+        }
+        var tmp = decodeURIComponent(req.params.ids);
+        var ids= tmp.split('|');
+        var iframes = '';
+        ids.forEach(function(id){
+            iframes = iframes + '<iframe src=\'/demos/geo/FlickrAdmin/'+id+'\' height="400" width="100%" style="border:none;overflow: scroll;"></iframe>';
+        });
+        res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>Multiple FlickrAdmin boundaries</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column">'+iframes+'</div></div></div></body></html>');
     });
     server.get('/demos/geo/FlickrAdmin/:id', function(req, res) {
         if(!req.params.id){
@@ -687,6 +740,19 @@ module.exports = function handleDemos(server) {
             res.send('');
             return 0;
         });
+    });
+    server.get('/demos/geo/OSMAdmin/multi/:ids', function(req, res) {
+        if(!req.params.ids){
+            res.send('a parameter is missing: ids');
+            return 0;
+        }
+        var tmp = decodeURIComponent(req.params.ids);
+        var ids= tmp.split('|');
+        var iframes = '';
+        ids.forEach(function(id){
+            iframes = iframes + '<iframe src=\'/demos/geo/OSMAdmin/'+id+'\' height="400" width="100%" style="border:none;overflow: scroll;"></iframe>';
+        });
+        res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>Multiple OSMAdmin boundaries</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column">'+iframes+'</div></div></div></body></html>');
     });
     server.get('/demos/geo/OSMAdmin/:id', function(req, res) {
         if(!req.params.id){
