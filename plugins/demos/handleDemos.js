@@ -283,6 +283,19 @@ module.exports = function handleDemos(server) {
             return 0;
         });
     });
+    server.get('/demos/geo/Municipality/multi/:ids', function(req, res) {
+        if(!req.params.ids){
+            res.send('a parameter is missing: ids');
+            return 0;
+        }
+        var tmp = decodeURIComponent(req.params.ids);
+        var ids= tmp.split('|');
+        var iframes = '';
+        ids.forEach(function(id){
+            iframes = iframes + '<iframe src=\'/demos/geo/Municipality/'+id+'\' height="400" width="100%" style="border:none;overflow: scroll;"></iframe>';
+        });
+        res.send('<!DOCTYPE html><html><head><meta charset="utf-8"><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><title>Multiple Municipalities</title></head><body><div class="ui page grid"> <div class="row"> <div class="ui segments column">'+iframes+'</div></div></div></body></html>');
+    });
     server.get('/demos/geo/Municipality/:id', function(req, res) {
         if(!req.params.id){
             res.send('a parameter is missing: id');
