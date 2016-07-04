@@ -42,23 +42,34 @@ export default {
                         resources: JSON.parse(reply)
                     });
                 }else{
-                    //send request
-                    rp.get({uri: apiURI}).then(function(res){
-                        //console.log(res);
-                        let gres = JSON.parse(res);
-                        if(!gres.error_message){
-                            redisClient.set(['googleGeocode', address.toLowerCase()].join('-'), res);
+                    //try again in the old cache: I didn't want to remove it!
+                    redisClient.get(['googleGeocode', address].join('-'), function(err2, reply2) {
+                        if(reply2 && !params.nocache){
+                            callback(null, {
+                                address: decodeURIComponent(params.addr),
+                                cached: true,
+                                resources: JSON.parse(reply2)
+                            });
+                        }else{
+                            //send request
+                            rp.get({uri: apiURI}).then(function(res){
+                                //console.log(res);
+                                let gres = JSON.parse(res);
+                                if(!gres.error_message){
+                                    redisClient.set(['googleGeocode', address.toLowerCase()].join('-'), res);
+                                }
+                                callback(null, {
+                                    address: params.addr,
+                                    resources: gres
+                                });
+                            }).catch(function (err) {
+                                console.log(err);
+                                callback(null, {
+                                    address: params.addr,
+                                    resources: {results: []}
+                                });
+                            });
                         }
-                        callback(null, {
-                            address: params.addr,
-                            resources: gres
-                        });
-                    }).catch(function (err) {
-                        console.log(err);
-                        callback(null, {
-                            address: params.addr,
-                            resources: {results: []}
-                        });
                     });
                 }
             });
@@ -283,7 +294,7 @@ export default {
             let queryGADM = queryObject.getPointToGADM28Admin(params.lat, params.long, params.country, params.level);
             //console.log(query);
             //start to get it from the cache
-            let hashID = ['GADM', params.lat, params.long, params.level].join('-');
+            let hashID = ['GADM', params.lat, params.long, params.country, params.level].join('-');
             redisClient.get(hashID, function(error, reply) {
                 if(reply && !params.nocache){
                     //console.log('GADM response from cache...');
@@ -298,7 +309,7 @@ export default {
                     rp.get({uri: getHTTPQuery('read', queryGADM, endpointParameters, outputFormat)}).then(function(res){
                         //console.log(res);
                         let resGADM = utilObject.parsePointToGADM28Admin(res, params.country);
-                        if(resGADM.length){
+                        if(!resGADM.length){
                             redisClient.set(hashID, JSON.stringify(resGADM));
                         }
                         callback(null, {
@@ -361,7 +372,7 @@ export default {
             //SPARQL QUERY
             let queryOSM = queryObject.getPointToOSMAdmin(params.lat, params.long, params.country, params.level);
             //start to get it from the cache
-            let hashID = ['OSM',params.lat, params.long, params.level].join('-');
+            let hashID = ['OSM',params.lat, params.long, params.country, params.level].join('-');
             redisClient.get(hashID, function(error, reply) {
                 if(reply && !params.nocache){
                     //console.log('OSM response from cache...');
@@ -488,7 +499,7 @@ export default {
             //SPARQL QUERY
             let queryFlickr = queryObject.getPointToFlickrAdmin(params.lat, params.long, params.country, params.level);
             //start to get it from the cache
-            let hashID = ['Flickr', params.lat, params.long, params.level].join('-');
+            let hashID = ['Flickr', params.lat, params.long, params.country, params.level].join('-');
             redisClient.get(hashID, function(error, reply) {
                 if(reply && !params.nocache){
                     //console.log('Flickr response from cache...');
@@ -619,6 +630,60 @@ export default {
                 console.log(err);
                 callback(null, {resources: []});
             });
+            //retrievs the container of an admin boundary
+        } else if (resource === 'geo.AdminToContainer') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
+            }
+            if(!params.source || !params.id){
+                callback(null, {resources: [], error: {'type':'parameter', 'msg': 'id and source parameters are required!'}}); return 0;
+            }
+            graphName = 'big-data-endpoint';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getAdminToContainer(params.source, params.id, params.country, params.depth);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    source: params.source,
+                    id: params.id,
+                    country: params.country,
+                    depth: params.depth,
+                    resources: utilObject.getAdminToContainer(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
+            //retrievs admin boundaries inside a given container
+        } else if (resource === 'geo.ContainerAdmins') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
+            }
+            if(!params.source || !params.id){
+                callback(null, {resources: [], error: {'type':'parameter', 'msg': 'id and source parameters are required!'}}); return 0;
+            }
+            graphName = 'big-data-endpoint';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getContainerAdmins(params.source, params.id, params.country, params.depth);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                callback(null, {
+                    source: params.source,
+                    id: params.id,
+                    country: params.country,
+                    depth: params.depth,
+                    resources: utilObject.getContainerAdmins(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
         } else if (resource === 'geo.OECDFUA') {
             if(!params.smsKey || !isValidAPIToken(params.smsKey)){
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
@@ -647,7 +712,7 @@ export default {
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
             let queryFUA = queryObject.getPointToOECDFUA(params.lat, params.long, params.country);
-            let hashID = ['OECDFUA', params.lat, params.long].join('-');
+            let hashID = ['OECDFUA', params.lat, params.long, params.country].join('-');
             redisClient.get(hashID, function(error, reply) {
                 if(reply && !params.nocache){
                     //console.log('GADM response from cache...', JSON.parse(reply));

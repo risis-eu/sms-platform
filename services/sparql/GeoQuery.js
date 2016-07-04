@@ -418,5 +418,85 @@ class GeoQuery{
         ';
         return this.prefixes + this.query;
     }
+    getAdminToContainer(source, id, country, depth) {
+        let graph, vocab, depthL, countryC = '';
+        depthL = 1;
+        switch (source) {
+        case 'osm':
+            graph =  'http://geo.risis.eu/osm';
+            vocab = 'risisOSMV';
+            break;
+        case 'gadm':
+            graph =  'http://geo.risis.eu/gadm';
+            vocab = 'risisGADMV';
+            break;
+        case 'flickr':
+            graph =  'http://geo.risis.eu/flickr';
+            vocab = 'risisFlickrV';
+            break;
+        }
+        if(depth){
+            depthL = depth;
+        }
+        if(country){
+            countryC = vocab+':ISO "'+convertToISO3(country)+'" ; ' ;
+        }
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?parent ?ptitle WHERE { \
+          graph <'+graph+'> { \
+            <'+graph+'/'+id+'> \
+              '+vocab+':level ?level ;\
+              geo:geometry ?polygon . \
+            ?parent a '+vocab+':AdministrativeArea ; \
+                    '+vocab+':level ?plevel ; '+countryC+' \
+                    dcterms:title ?ptitle ; \
+                    geo:geometry ?polygonParent . \
+            FILTER (bif:st_contains (?polygonParent, ?polygon) && (xsd:int(?level)=xsd:int(?plevel)+'+depthL+')) \
+          } \
+        } \
+        ';
+        return this.prefixes + this.query;
+    }
+    getContainerAdmins(source, id, country, depth) {
+        let graph, vocab, depthL, countryC = '';
+        depthL = 1;
+        switch (source) {
+        case 'osm':
+            graph =  'http://geo.risis.eu/osm';
+            vocab = 'risisOSMV';
+            break;
+        case 'gadm':
+            graph =  'http://geo.risis.eu/gadm';
+            vocab = 'risisGADMV';
+            break;
+        case 'flickr':
+            graph =  'http://geo.risis.eu/flickr';
+            vocab = 'risisFlickrV';
+            break;
+        }
+        if(depth){
+            depthL = depth;
+        }
+        if(country){
+            countryC = vocab+':ISO "'+convertToISO3(country)+'" ; ' ;
+        }
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?child ?ctitle WHERE { \
+          graph <'+graph+'> { \
+            <'+graph+'/'+id+'> \
+              '+vocab+':level ?level ;\
+              geo:geometry ?polygon . \
+            ?child a '+vocab+':AdministrativeArea ; \
+                    '+vocab+':level ?clevel ; '+countryC+' \
+                    dcterms:title ?ctitle ; \
+                    geo:geometry ?polygonChild . \
+            FILTER (bif:st_intersects (?polygon, ?polygonChild) && (xsd:int(?level)=xsd:int(?clevel)-'+depthL+')) \
+          } \
+        } \
+        ';
+        return this.prefixes + this.query;
+    }
 }
 export default GeoQuery;

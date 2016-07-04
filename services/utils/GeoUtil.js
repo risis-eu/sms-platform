@@ -317,5 +317,29 @@ class GeoUtil{
         }
         return output;
     }
+    getAdminToContainer(res){
+        let self = this;
+        let parsed = JSON.parse(res);
+        let output=[];
+        if(parsed.results.bindings.length){
+            parsed.results.bindings.forEach(function(el) {
+                output.push({name: el.ptitle.value, id: self.getPropertyLabel(el.parent.value)});
+            });
+            return output;
+        }
+        return output;
+    }
+    getContainerAdmins(res){
+        let self = this;
+        let parsed = JSON.parse(res);
+        let output=[];
+        if(parsed.results.bindings.length){
+            parsed.results.bindings.forEach(function(el) {
+                output.push({name: el.ctitle.value, id: self.getPropertyLabel(el.child.value)});
+            });
+            return output;
+        }
+        return output;
+    }
 }
 export default GeoUtil;
