@@ -13,6 +13,14 @@ export default {
             'http://rdf.risis.eu/sms/users.ttl#': {
                 readOnly: 0,
                 usePropertyCategories: 0
+            },
+            'http://geo.risis.eu/rvo-nl': {
+                readOnly: 0,
+                usePropertyCategories: 0
+            },
+            'http://geo.risis.eu/cbs-nl': {
+                readOnly: 0,
+                usePropertyCategories: 0
             }
         },
         resource: {
