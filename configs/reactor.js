@@ -15,11 +15,11 @@ export default {
                 usePropertyCategories: 0
             },
             'http://geo.risis.eu/rvo-nl': {
-                readOnly: 0,
+                readOnly: 1,
                 usePropertyCategories: 0
             },
             'http://geo.risis.eu/cbs-nl': {
-                readOnly: 0,
+                readOnly: 1,
                 usePropertyCategories: 0
             }
         },
