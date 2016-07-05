@@ -50,6 +50,7 @@
     "request-promise": "^3.0.0",
     "serialize-javascript": "^1.2.0",
     "serve-favicon": "^2.3.0",
+    "simple-oauth2": "^0.7.0",
     "valid-url": "^1.0.9"
   },
   "devDependencies": {

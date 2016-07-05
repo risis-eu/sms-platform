@@ -10,5 +10,15 @@ export default {
     dbpediaLookupService: [
         { host: 'lookup.dbpedia.org' }
     ],
-    apiTokens: ['wefHWDFWF$$235EFGWFGle']
+    apiTokens: ['wefHWDFWF$$235EFGWFGle'],
+    OAuth: {
+        'risis': {
+            'clientID': 'sms',
+            'clientSecret': 'put your secret key here...',
+            'site': 'https://auth-risis.cortext.net',
+            'tokenPath': '/auth/grant',
+            'authorizationPath': '/auth/authorize',
+            'redirectURI': 'http://localhost:3000/callback'
+        }
+    }
 };
