@@ -1281,13 +1281,13 @@ module.exports = function handleDemos(server) {
                 var fileName = '/geojsonDump/'+req.body.source+'_'+rnd+'_'+'.geojson';
                 fs.writeFile('.'+fileName, JSON.stringify(output) , function(err) {
                     if(err) {
-                        res.send(err);
+                        res.send('Error! '+err);
                         return console.log(err);
                     }
                     res.send(fileName);
                 });
             }else{
-                res.send(features);
+                res.send('Error!');
             }
         });
     });
