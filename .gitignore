@@ -9,3 +9,4 @@ configs/server.js
 plugins/email/config.js
 plugins/demos/config.js
 *.rdb
+.DS_Store
