@@ -992,6 +992,33 @@ module.exports = function handleDemos(server) {
         });
     });
 
+    function virtToGeoJSONCoordinates(geometry) {
+        var polygons2 = parseVirtPolygon(geometry);
+        var multiPLG = [];
+        var polgArr = [];
+        polygons2.forEach(function(plg){
+            polgArr = [];
+            plg.forEach(function(el){
+                if(typeof el == 'string'){
+                    var tmp = el.split(' ');
+                    polgArr.push([parseFloat(tmp[0]), parseFloat(tmp[1])]);
+                }
+            });
+            if(polgArr.length){
+                multiPLG.push(polgArr);
+            }
+        });
+        var shapeType, coordinatesArr;
+        if(multiPLG.length > 1){
+            shapeType = 'MultiPolygon';
+            coordinatesArr = multiPLG;
+
+        }else{
+            shapeType = 'Polygon';
+            coordinatesArr = multiPLG[0];
+        }
+        return {shapeType: shapeType, coordinatesArr: coordinatesArr};
+    }
 
     function get_random_color() {var letters = "ABCDE".split("");var color = "#";for (var i=0; i<3; i++ ) {color += letters[Math.floor(Math.random() * letters.length)];}return color;}
 
@@ -1071,33 +1098,8 @@ module.exports = function handleDemos(server) {
                 polygons.forEach(function(input, i){
                     //console.log(input.name, input.id);
                     //handling each polygon in the list
-                    var polygons2 = parseVirtPolygon(input.geometry);
-                    var multiPLG = [];
-                    var polgArr = [];
-                    polygons2.forEach(function(plg){
-                        polgArr = [];
-                        plg.forEach(function(el){
-                            if(typeof el == 'string'){
-                                var tmp = el.split(' ');
-                                polgArr.push([parseFloat(tmp[0]), parseFloat(tmp[1])]);
-                            }
-                        });
-                        if(polgArr.length){
-                            multiPLG.push(polgArr);
-                        }
-                    });
-                    var shapeType, coordinatesArr;
-                    if(multiPLG.length > 1){
-                        shapeType = 'MultiPolygon';
-                        coordinatesArr = multiPLG;
-
-                    }else{
-                        shapeType = 'Polygon';
-                        coordinatesArr = multiPLG[0];
-
-                    }
-
-                    features.push({'type': 'Feature', 'id': input.id, 'properties': {'name': input.name}, 'geometry': {'type': shapeType, coordinates: [coordinatesArr]}});
+                    var parsedC = virtToGeoJSONCoordinates(input.geometry);
+                    features.push({'type': 'Feature', 'id': input.id, 'properties': {'name': input.name}, 'geometry': {'type': parsedC.shapeType, coordinates: [parsedC.coordinatesArr]}});
                 });
                 var focusPoint;
                 if(features[0].geometry.type == 'Polygon'){
@@ -1139,129 +1141,33 @@ module.exports = function handleDemos(server) {
 
         nl_unis_osm_polygons.forEach((uni)=>{
             if(!flagID[uni.processed.id]){
-                var polygons2 = parseVirtPolygon(uni.processed.resources[0].polygon);
-                var multiPLG = [];
-                var polgArr = [];
-                polygons2.forEach(function(plg){
-                    polgArr = [];
-                    plg.forEach(function(el){
-                        if(typeof el == 'string'){
-                            var tmp = el.split(' ');
-                            polgArr.push([parseFloat(tmp[0]), parseFloat(tmp[1])]);
-                        }
-                    });
-                    if(polgArr.length){
-                        multiPLG.push(polgArr);
-                    }
-                });
-                var shapeType, coordinatesArr;
-                if(multiPLG.length > 1){
-                    shapeType = 'MultiPolygon';
-                    coordinatesArr = multiPLG;
-
-                }else{
-                    shapeType = 'Polygon';
-                    coordinatesArr = multiPLG[0];
-
-                }
+                var parsedC = virtToGeoJSONCoordinates(uni.processed.resources[0].polygon);
                 flagID[uni.processed.id]=1;
-                features.push({'type': 'Feature', 'id': uni.processed.id, 'properties': {'name': uni.processed.resources[0].name, source: 'osm'}, 'geometry': {'type': shapeType, coordinates: [coordinatesArr]}});
+                features.push({'type': 'Feature', 'id': uni.processed.id, 'properties': {'name': uni.processed.resources[0].name, source: 'osm'}, 'geometry': {'type': parsedC.shapeType, coordinates: [parsedC.coordinatesArr]}});
             }
 
         });
         nl_unis_gadm_polygons.forEach((uni)=>{
             if(!flagID[uni.processed.id]){
-                var polygons2 = parseVirtPolygon(uni.processed.resources[0].polygon);
-                var multiPLG = [];
-                var polgArr = [];
-                polygons2.forEach(function(plg){
-                    polgArr = [];
-                    plg.forEach(function(el){
-                        if(typeof el == 'string'){
-                            var tmp = el.split(' ');
-                            polgArr.push([parseFloat(tmp[0]), parseFloat(tmp[1])]);
-                        }
-                    });
-                    if(polgArr.length){
-                        multiPLG.push(polgArr);
-                    }
-                });
-                var shapeType, coordinatesArr;
-                if(multiPLG.length > 1){
-                    shapeType = 'MultiPolygon';
-                    coordinatesArr = multiPLG;
-
-                }else{
-                    shapeType = 'Polygon';
-                    coordinatesArr = multiPLG[0];
-
-                }
+                var parsedC = virtToGeoJSONCoordinates(uni.processed.resources[0].polygon);
                 flagID[uni.processed.id]=1;
-                features.push({'type': 'Feature', 'id': uni.processed.id, 'properties': {'name': uni.processed.resources[0].name, source: 'gadm'}, 'geometry': {'type': shapeType, coordinates: [coordinatesArr]}});
+                features.push({'type': 'Feature', 'id': uni.processed.id, 'properties': {'name': uni.processed.resources[0].name, source: 'gadm'}, 'geometry': {'type': parsedC.shapeType, coordinates: [parsedC.coordinatesArr]}});
             }
 
         });
         nl_unis_flickr_polygons.forEach((uni)=>{
             if(!flagID[uni.processed.id]){
-                var polygons2 = parseVirtPolygon(uni.processed.resources[0].polygon);
-                var multiPLG = [];
-                var polgArr = [];
-                polygons2.forEach(function(plg){
-                    polgArr = [];
-                    plg.forEach(function(el){
-                        if(typeof el == 'string'){
-                            var tmp = el.split(' ');
-                            polgArr.push([parseFloat(tmp[0]), parseFloat(tmp[1])]);
-                        }
-                    });
-                    if(polgArr.length){
-                        multiPLG.push(polgArr);
-                    }
-                });
-                var shapeType, coordinatesArr;
-                if(multiPLG.length > 1){
-                    shapeType = 'MultiPolygon';
-                    coordinatesArr = multiPLG;
-
-                }else{
-                    shapeType = 'Polygon';
-                    coordinatesArr = multiPLG[0];
-
-                }
+                var parsedC = virtToGeoJSONCoordinates(uni.processed.resources[0].polygon);
                 flagID[uni.processed.id]=1;
-                features.push({'type': 'Feature', 'id': uni.processed.id, 'properties': {'name': uni.processed.resources[0].name, source: 'flickr'}, 'geometry': {'type': shapeType, coordinates: [coordinatesArr]}});
+                features.push({'type': 'Feature', 'id': uni.processed.id, 'properties': {'name': uni.processed.resources[0].name, source: 'flickr'}, 'geometry': {'type': parsedC.shapeType, coordinates: [parsedC.coordinatesArr]}});
             }
 
         });
         nl_unis_oecd_polygons.forEach((uni)=>{
             if(!flagID[uni.processed.id]){
-                var polygons2 = parseVirtPolygon(uni.processed.resources[0].polygon);
-                var multiPLG = [];
-                var polgArr = [];
-                polygons2.forEach(function(plg){
-                    polgArr = [];
-                    plg.forEach(function(el){
-                        if(typeof el == 'string'){
-                            var tmp = el.split(' ');
-                            polgArr.push([parseFloat(tmp[0]), parseFloat(tmp[1])]);
-                        }
-                    });
-                    if(polgArr.length){
-                        multiPLG.push(polgArr);
-                    }
-                });
-                var shapeType, coordinatesArr;
-                if(multiPLG.length > 1){
-                    shapeType = 'MultiPolygon';
-                    coordinatesArr = multiPLG;
-
-                }else{
-                    shapeType = 'Polygon';
-                    coordinatesArr = multiPLG[0];
-
-                }
+                var parsedC = virtToGeoJSONCoordinates(uni.processed.resources[0].polygon);
                 flagID[uni.processed.id]=1;
-                features.push({'type': 'Feature', 'id': uni.processed.id, 'properties': {'name': uni.processed.resources[0].name, source: 'oecd'}, 'geometry': {'type': shapeType, coordinates: [coordinatesArr]}});
+                features.push({'type': 'Feature', 'id': uni.processed.id, 'properties': {'name': uni.processed.resources[0].name, source: 'oecd'}, 'geometry': {'type': parsedC.shapeType, coordinates: [parsedC.coordinatesArr]}});
             }
 
         });
@@ -1319,6 +1225,70 @@ module.exports = function handleDemos(server) {
             });
             finalScript = finalScript +  '</head><body><div class="ui segments"><div class="ui segment"><h3><a target="_blank" href=\'/demos/geo/DetectOECDFUAs/'+country+'/'+JSON.stringify(list)+'/'+'\'>Boundaries to OECD FUAs</a></h3></div><div class="ui segment"><div class="ui list">'+outputItems.join(' ')+'</div></div></body></html>';
             res.send(finalScript);
+        });
+    });
+    server.post('/demos/geo/exportToGeoJSON', function(req, res) {
+        if((!req.body.source || !req.body.data)){
+            res.send('source and boundaries are missing!');
+            return 0;
+        }
+        var apiSource;
+        if(req.body.source=='GADM'){
+            apiSource = 'GADM28AdminToPolygon';
+        } else if(req.body.source=='OSM'){
+            apiSource = 'OSMAdminToPolygon';
+        } else if(req.body.source=='Flickr'){
+            apiSource = 'FlickrAdminToPolygon';
+        }
+        var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.'+apiSource+';smsKey=' + demoSMSKey + ';id=';
+        var data = JSON.parse(req.body.data);
+        var features = [];
+        var asyncTasks = [];
+        var flags={};
+        if(data.boundaries.length > 500){
+            res.send('Maximum boundary size of 500 reached!');
+            return 0;
+        }
+        data.boundaries.forEach(function(boundary, i){
+            if(flags[boundary.id]){
+                flags[boundary.id]++;
+            }else{
+                flags[boundary.id] = 1;
+                // We add a function containing it to an array of "tasks"
+                  asyncTasks.push(function(callback){
+                      rp.get({uri: apiURI+boundary.id}).then(function(body){
+                          var parsed = JSON.parse(body);
+                          if(parsed.resources.length){
+                              var input = parsed.resources[0].polygon;
+                              var parsedC = virtToGeoJSONCoordinates(input);
+                              features.push({'type': 'Feature', 'id': boundary.id, 'properties': {'name': parsed.resources[0].name, frequency: 1}, 'geometry': {'type': parsedC.shapeType, coordinates: [parsedC.coordinatesArr]}});
+                          }
+                          callback();
+                      }).catch(function (err) {
+                          console.log(err);
+                          callback();
+                      });
+                  });
+            }
+        });
+        async.parallelLimit(asyncTasks, 2, function(){
+            if(features.length){
+                features.forEach(function(feature, i){
+                    features[i].properties.frequency = flags[features[i].id];
+                });
+                var output = {'type':'FeatureCollection','features': features};
+                var rnd = Math.round(+new Date() / 1000);;
+                var fileName = '/geojsonDump/'+req.body.source+'_'+rnd+'_'+'.geojson';
+                fs.writeFile('.'+fileName, JSON.stringify(output) , function(err) {
+                    if(err) {
+                        res.send(err);
+                        return console.log(err);
+                    }
+                    res.send(fileName);
+                });
+            }else{
+                res.send(features);
+            }
         });
     });
 };
