@@ -47,6 +47,11 @@ function onOpen() {
         name: "Add Metadata for OSM levels",
         functionName: "generateOSMMetadata"
     });
+    menuEntries.push({
+        name: "Export Boundaries as GeoJSON",
+        functionName: "exportBoundariesGeoJSON"
+    });
+
     menuEntries.push(null); // line separator
     menuEntries.push({
         name: "About SMS Platform",
@@ -72,6 +77,12 @@ function createSpreadsheets() {
     ]).setWrap(true);
     configSheet.getRange('A4:B4').setValues([
         ['osmExternalService', 'none']
+    ]).setWrap(true);
+    configSheet.getRange('A5:B5').setValues([
+        ['geojsonExportSource', 'none']
+    ]).setWrap(true);
+    configSheet.getRange('A6:B6').setValues([
+        ['geojsonExportLevel', 'none']
     ]).setWrap(true);
 
     ss.insertSheet('geocoding', 1);
@@ -222,8 +233,8 @@ function parseLevels(source, arr) {
         if (output[arr[i].level]) {
             output[arr[i].level].push({
                 'id': arr[i].id,
-                'lid': '=HYPERLINK("'+appLink+'/'+arr[i].id+'","'+arr[i].id+'")',
-                'title': arr[i].title
+                'title': arr[i].title,
+                'appLink': appLink
             });
         }
     }
@@ -232,15 +243,15 @@ function parseLevels(source, arr) {
 //name = title
 function joinSameAdminLevels(levelArr) {
     var outputIDs = new Array();
-    var outputLIDs = new Array();
+    var outputAppLinks = new Array();
     var outputNames = new Array();
     for (var i = 0; i < levelArr.length; i++) {
         outputIDs.push(levelArr[i].id);
         outputNames.push(levelArr[i].title);
-        outputLIDs.push(levelArr[i].lid);
+        outputAppLinks.push(levelArr[i].appLink);
     }
     return {
-      'ids': outputIDs.length>1 ? outputIDs.join(' | ') : outputLIDs.join(' | '),
+        'ids': outputIDs.length > 1 ? '=HYPERLINK("' + outputAppLinks[0] + '/multi/' + encodeURIComponent(outputIDs.join('|')) + '","' + outputIDs.join(' | ') + '")' : (outputIDs[0] ? '=HYPERLINK("' + outputAppLinks[0] + '/' + outputIDs[0] + '","' + outputIDs[0] + '")' : ''),
         'names': outputNames.join(' | ')
     };
 }
@@ -409,7 +420,7 @@ function processFUAList(arr) {
     var out = {};
     for (var i = 0; i < arr.length; i++) {
         if (!out[arr[i].funactionalUrbanArea.code]) {
-          out[arr[i].funactionalUrbanArea.code] = arr[i];
+            out[arr[i].funactionalUrbanArea.code] = arr[i];
         }
     }
 
@@ -425,10 +436,12 @@ function processFUAList(arr) {
         mcpNames.push(out[prop].name);
         isCoreArrs.push(out[prop].isCore);
     }
+    var appLink = 'http://sms.risis.eu/demos/geo/Municipality';
     return {
+
         'names': outputNames.join(' | '),
         'ids': outputIDs.join(' | '),
-        'mapIDs': mcpIDs.join(' | '),
+        'mapIDs': mcpIDs.length > 1 ? '=HYPERLINK("' + appLink + '/multi/' + encodeURIComponent(mcpIDs.join('|')) + '","' + mcpIDs.join(' | ') + '")' : (mcpIDs[0] ? '=HYPERLINK("' + appLink + '/' + mcpIDs[0] + '","' + mcpIDs[0] + '")' : ''),
         'mcpNames': mcpNames.join(' | '),
         'isCoreArrs': isCoreArrs.join(' | ')
     };
@@ -658,6 +671,73 @@ function findOECDFUAsFromGoogle() {
         ]);
 
     }
+}
+
+function exportBoundariesGeoJSON() {
+    var configSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('api config');
+    var smsAPIKey = configSheet.getRange(3, 2).getValues()[0];
+    var geojsonExportSource = configSheet.getRange(5, 2).getValues()[0];
+    var geojsonExportLevel = configSheet.getRange(6, 2).getValues()[0];
+    if (geojsonExportSource == 'undefined' || geojsonExportSource == '' || geojsonExportSource == 'none' || geojsonExportLevel == 'undefined' || geojsonExportLevel == '' || geojsonExportLevel == 'none') {
+        Browser.msgBox("Go to api config sheet and set the right paramter values for geojsonExportSource and geojsonExportLevel e.g. GADM and 2");
+        return 0;
+    }
+    var data = new Array();
+    if (geojsonExportSource == "GADM") {
+        var gadmSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('GADM boundaries');
+        var gadmInfo = gadmSheet.getRange(2, 1, gadmSheet.getLastRow() - 1, gadmSheet.getLastColumn() - 1).getValues();
+        for (var i = 0; i < gadmInfo.length; i++) {
+            checkIfValue = gadmSheet.getRange(i + 2, 10, 1, 6).getValues();
+            //only send requests for the ones which are not processed yet
+            if (checkIfValue[0][geojsonExportLevel] == '') {
+                continue;
+            };
+            data.push({
+                "id": checkIfValue[0][geojsonExportLevel]
+            })
+        }
+    }
+    if (geojsonExportSource == "OSM") {
+        var osmSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('OSM boundaries');
+        var osmInfo = osmSheet.getRange(2, 1, osmSheet.getLastRow() - 1, osmSheet.getLastColumn() - 1).getValues();
+        for (var i = 0; i < osmInfo.length; i++) {
+            checkIfValue = osmSheet.getRange(i + 2, 15, 1, 11).getValues();
+            //only send requests for the ones which are not processed yet
+            if (checkIfValue[0][parseInt(geojsonExportLevel) - 1] == '') {
+                continue;
+            };
+            data.push({
+                "id": checkIfValue[0][parseInt(geojsonExportLevel) - 1]
+            })
+        }
+    }
+    if (geojsonExportSource == "Flickr") {
+        var flickrSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Flickr boundaries');
+        var flickrInfo = flickrSheet.getRange(2, 1, flickrSheet.getLastRow() - 1, flickrSheet.getLastColumn() - 1).getValues();
+        for (var i = 0; i < flickrInfo.length; i++) {
+            checkIfValue = flickrSheet.getRange(i + 2, 9, 1, 5).getValues();
+            //only send requests for the ones which are not processed yet
+            if (checkIfValue[0][parseInt(geojsonExportLevel) - 1] == '') {
+                continue;
+            };
+            data.push({
+                "id": checkIfValue[0][parseInt(geojsonExportLevel) - 1]
+            })
+        }
+    }
+    var smsAPI = 'http://sms.risis.eu/demos/geo/exportToGeoJSON';
+    var options = {
+        "muteHttpExceptions": true,
+        "method": "post",
+        "payload": {
+            "source": geojsonExportSource[0],
+            "boundaries": JSON.stringify(data)
+        }
+    };
+    //Browser.msgBox(JSON.stringify(options.payload));
+    var smsResponse = UrlFetchApp.fetch(smsAPI, options);
+    //Browser.msgBox(JSON.stringify(options.payload));
+    Browser.msgBox(smsResponse);
 }
 
 function showAbout() {
