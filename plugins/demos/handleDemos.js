@@ -1248,8 +1248,8 @@ module.exports = function handleDemos(server) {
         var features = [];
         var asyncTasks = [];
         var flags={};
-        if(boundaries.length > 500){
-            res.send('Maximum boundary size of 500 reached!');
+        if(boundaries.length > 2000){
+            res.send('Maximum boundary size of 2000 reached!');
             return 0;
         }
         boundaries.forEach(function(boundary, i){
