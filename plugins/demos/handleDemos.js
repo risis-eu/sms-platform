@@ -1260,7 +1260,7 @@ module.exports = function handleDemos(server) {
                 }
 
             }else{
-                flags[boundary.id] = {'frequency': 1, 'relations': boundary.relation ? [boundary.relation] : []};
+                flags[boundary.id] = {'frequency': 1, 'relations': (boundary.relation ? [boundary.relation] : [])};
                 // We add a function containing it to an array of "tasks"
                   asyncTasks.push(function(callback){
                       rp.get({uri: apiURI+boundary.id}).then(function(body){
@@ -1268,7 +1268,7 @@ module.exports = function handleDemos(server) {
                           if(parsed.resources.length){
                               var input = parsed.resources[0].polygon;
                               var parsedC = virtToGeoJSONCoordinates(input);
-                              features.push({'type': 'Feature', 'id': boundary.id, 'properties': {'name': parsed.resources[0].name, frequency: 1, relations: [], 'geometry': {'type': parsedC.shapeType, coordinates: [parsedC.coordinatesArr]}});
+                              features.push({'type': 'Feature', 'id': boundary.id, 'properties': {'name': parsed.resources[0].name, frequency: 1, relations: []}, 'geometry': {'type': parsedC.shapeType, coordinates: [parsedC.coordinatesArr]}});
                           }
                           callback();
                       }).catch(function (err) {
