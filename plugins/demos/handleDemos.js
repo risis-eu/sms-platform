@@ -1230,6 +1230,7 @@ module.exports = function handleDemos(server) {
     server.post('/demos/geo/exportToGeoJSON', function(req, res) {
         //console.log(req.body);
         var dataObj = req.body;
+        var boundaries = JSON.parse(dataObj.boundaries);
         if((!dataObj.source || !dataObj.boundaries)){
             res.send('source and boundaries are missing!');
             return 0;
@@ -1247,11 +1248,11 @@ module.exports = function handleDemos(server) {
         var features = [];
         var asyncTasks = [];
         var flags={};
-        if(dataObj.boundaries.length > 500){
+        if(boundaries.length > 500){
             res.send('Maximum boundary size of 500 reached!');
             return 0;
         }
-        dataObj.boundaries.forEach(function(boundary, i){
+        boundaries.forEach(function(boundary, i){
             if(flags[boundary.id]){
                 flags[boundary.id]++;
             }else{
