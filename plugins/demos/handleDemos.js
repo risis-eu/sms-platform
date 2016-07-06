@@ -1280,7 +1280,7 @@ module.exports = function handleDemos(server) {
                 });
                 var output = {'type':'FeatureCollection','features': features};
                 var rnd = Math.round(+new Date() / 1000);;
-                var fileName = '/geojsonDump/'+dataObj.source+'_'+rnd+'_'+'.geojson';
+                var fileName = '/geojsonDump/'+dataObj.source+'_'+rnd+'.geojson';
                 fs.writeFile('.'+fileName, JSON.stringify(output) , function(err) {
                     if(err) {
                         res.send('Error! '+err);
