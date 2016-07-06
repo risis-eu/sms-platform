@@ -1228,28 +1228,30 @@ module.exports = function handleDemos(server) {
         });
     });
     server.post('/demos/geo/exportToGeoJSON', function(req, res) {
-        if((!req.body.source || !req.body.data)){
+        //console.log(req.body);
+        var dataObj = req.body;
+        if((!dataObj.source || !dataObj.boundaries)){
             res.send('source and boundaries are missing!');
             return 0;
         }
         var apiSource;
-        if(req.body.source=='GADM'){
+        if(dataObj.source=='GADM'){
             apiSource = 'GADM28AdminToPolygon';
-        } else if(req.body.source=='OSM'){
+        } else if(dataObj.source=='OSM'){
             apiSource = 'OSMAdminToPolygon';
-        } else if(req.body.source=='Flickr'){
+        } else if(dataObj.source=='Flickr'){
             apiSource = 'FlickrAdminToPolygon';
         }
         var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.'+apiSource+';smsKey=' + demoSMSKey + ';id=';
-        var data = JSON.parse(req.body.data);
+
         var features = [];
         var asyncTasks = [];
         var flags={};
-        if(data.boundaries.length > 500){
+        if(dataObj.boundaries.length > 500){
             res.send('Maximum boundary size of 500 reached!');
             return 0;
         }
-        data.boundaries.forEach(function(boundary, i){
+        dataObj.boundaries.forEach(function(boundary, i){
             if(flags[boundary.id]){
                 flags[boundary.id]++;
             }else{
@@ -1278,13 +1280,13 @@ module.exports = function handleDemos(server) {
                 });
                 var output = {'type':'FeatureCollection','features': features};
                 var rnd = Math.round(+new Date() / 1000);;
-                var fileName = '/geojsonDump/'+req.body.source+'_'+rnd+'_'+'.geojson';
+                var fileName = '/geojsonDump/'+dataObj.source+'_'+rnd+'_'+'.geojson';
                 fs.writeFile('.'+fileName, JSON.stringify(output) , function(err) {
                     if(err) {
                         res.send('Error! '+err);
                         return console.log(err);
                     }
-                    res.send(fileName);
+                    res.send('http://' + req.headers.host+fileName);
                 });
             }else{
                 res.send('Error!');
