@@ -405,7 +405,28 @@ export default {
                                 console.log(err);
                                 callback(null, {resources: []});
                             });
-                        }else{
+                        }else if(params.useExternal === 'RISISMapIt'){
+                            //send request
+                            let externalURI = 'http://mapit.cortext.net/point/4326/'+params.long+','+ params.lat;
+                            //console.log(externalURI);
+                            rp.get({uri: externalURI}).then(function(res){
+                                //console.log(res);
+                                let resOSM = utilObject.parsePointToOSMAdminMapIt(res, params.country);
+                                //only cache if there is a result returned
+                                if(resOSM.length){
+                                    //redisClient.set(hashID, JSON.stringify(resOSM));
+                                }
+                                callback(null, {
+                                    latitude: parseFloat(params.lat),
+                                    longitude: parseFloat(params.long),
+                                    usedExternalService: 'RISISMapIt',
+                                    resources: resOSM
+                                });
+                            }).catch(function (err) {
+                                console.log(err);
+                                callback(null, {resources: []});
+                            });
+                        } else {
                             callback(null, {resources: []});
                         }
                     }else{
