@@ -693,7 +693,8 @@ function exportBoundariesGeoJSON() {
                 continue;
             };
             data.push({
-                "id": checkIfValue[0][geojsonExportLevel]
+                "id": checkIfValue[0][geojsonExportLevel],
+                "relation":{"address_id": gadmSheet.getRange(i + 2, 1, 1, 1).getValue(), "address": gadmSheet.getRange(i + 2, 2, 1, 1).getValue()}
             })
         }
     }
@@ -707,7 +708,8 @@ function exportBoundariesGeoJSON() {
                 continue;
             };
             data.push({
-                "id": checkIfValue[0][parseInt(geojsonExportLevel) - 1]
+                "id": checkIfValue[0][parseInt(geojsonExportLevel) - 1],
+                "relation":{"address_id": osmSheet.getRange(i + 2, 1, 1, 1).getValue(), "address": osmSheet.getRange(i + 2, 2, 1, 1).getValue()}
             })
         }
     }
@@ -721,7 +723,8 @@ function exportBoundariesGeoJSON() {
                 continue;
             };
             data.push({
-                "id": checkIfValue[0][parseInt(geojsonExportLevel) - 1]
+              "id": checkIfValue[0][parseInt(geojsonExportLevel) - 1],
+              "relation":{"address_id": flickrSheet.getRange(i + 2, 1, 1, 1).getValue(), "address": flickrSheet.getRange(i + 2, 2, 1, 1).getValue()}
             })
         }
     }
