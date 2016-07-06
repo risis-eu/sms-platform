@@ -1254,9 +1254,13 @@ module.exports = function handleDemos(server) {
         }
         boundaries.forEach(function(boundary, i){
             if(flags[boundary.id]){
-                flags[boundary.id]++;
+                flags[boundary.id]['frequency']++;
+                if(boundary.relation){
+                    flags[boundary.id]['relations'].push(boundary.relation);
+                }
+
             }else{
-                flags[boundary.id] = 1;
+                flags[boundary.id] = {'frequency': 1, 'relations': boundary.relation ? [boundary.relation] : []};
                 // We add a function containing it to an array of "tasks"
                   asyncTasks.push(function(callback){
                       rp.get({uri: apiURI+boundary.id}).then(function(body){
@@ -1264,7 +1268,7 @@ module.exports = function handleDemos(server) {
                           if(parsed.resources.length){
                               var input = parsed.resources[0].polygon;
                               var parsedC = virtToGeoJSONCoordinates(input);
-                              features.push({'type': 'Feature', 'id': boundary.id, 'properties': {'name': parsed.resources[0].name, frequency: 1}, 'geometry': {'type': parsedC.shapeType, coordinates: [parsedC.coordinatesArr]}});
+                              features.push({'type': 'Feature', 'id': boundary.id, 'properties': {'name': parsed.resources[0].name, frequency: 1, relations: [], 'geometry': {'type': parsedC.shapeType, coordinates: [parsedC.coordinatesArr]}});
                           }
                           callback();
                       }).catch(function (err) {
@@ -1277,7 +1281,8 @@ module.exports = function handleDemos(server) {
         async.parallelLimit(asyncTasks, 2, function(){
             if(features.length){
                 features.forEach(function(feature, i){
-                    features[i].properties.frequency = flags[features[i].id];
+                    features[i].properties.frequency = flags[features[i].id]['frequency'];
+                    features[i].properties.relations = flags[features[i].id]['relations'];
                 });
                 var output = {'type':'FeatureCollection','features': features};
                 var rnd = Math.round(+new Date() / 1000);;
