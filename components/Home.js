@@ -13,7 +13,7 @@ class Home extends React.Component {
                         <p>
                         The Semantically Mapping Science (SMS) platform supports access to heterogeneous data on science and innovation, and it supports combining, integrating and analyzing those Data. SMS is one of the facilities in the <a target="_blank" href="http://risis.eu">RISIS project</a>, a distributed data infrastructure for research and innovation dynamics and policy studies.
                         </p>
-                        <img className="ui bordered centered image" src="/assets/img/architecture.png" />
+                        <img className="ui bordered centered image" src="/assets/img/architecture.jpeg" />
                     </div>
                 </div>
                 </div>
