@@ -408,11 +408,16 @@ class GeoQuery{
         }
         /*jshint multistr: true */
         this.query = '\
-        SELECT DISTINCT ?uri ?title ?country from <http://geo.risis.eu/oecd> WHERE { \
-            ?uri a risisOECDV:FunctionalUrbanArea ;\
-                dcterms:title ?title ; '+ex1+'\
-                risisOECDV:ISO ?country ;\
-                geo:geometry ?polygon .\
+        SELECT DISTINCT ?uri ?title ?category ?country WHERE { \
+            GRAPH <http://geo.risis.eu/urau> { \
+                ?uri a risisOECDV:FunctionalUrbanArea ;\
+                    risisOECDV:fuaCatefory ?category ; '+ex1+'\
+                    risisOECDV:ISO ?country ;\
+                    geo:geometry ?polygon .\
+            } \
+            GRAPH <http://geo.risis.eu/oecd> { \
+                ?uri dcterms:title ?title . \
+            } \
             FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
         } LIMIT 100 \
         ';

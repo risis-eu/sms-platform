@@ -173,7 +173,7 @@ class GeoUtil{
         let output=[];
         if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
-                output.push({id: el.uri.value.replace('http://geo.risis.eu/oecd/fua/', ''), title: el.title.value, country: el.country.value});
+                output.push({id: el.uri.value.replace('http://geo.risis.eu/oecd/fua/', ''), title: el.title.value, country: el.country.value, category: el.category.value});
             });
             return output;
         }
