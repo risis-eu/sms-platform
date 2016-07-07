@@ -1246,6 +1246,8 @@ module.exports = function handleDemos(server) {
             apiSource = 'OSMAdminToPolygon';
         } else if(dataObj.source=='Flickr'){
             apiSource = 'FlickrAdminToPolygon';
+        } else if(dataObj.source=='OECDFUA'){
+            apiSource = 'OECDFUAToPolygon';
         }
         var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.'+apiSource+';smsKey=' + demoSMSKey + ';id=';
 
