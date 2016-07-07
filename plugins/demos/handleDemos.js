@@ -1053,7 +1053,7 @@ module.exports = function handleDemos(server) {
             sourceSTR = 'FlickrAdmin';
         }else if(source === 'oecd'){
             sourceSTR = 'OECDFUA';
-            var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.OECDFUAList;smsKey='+demoSMSKey+';country='+req.params.country;
+            //var apiURI = 'http://' + req.headers.host + smsAPI + '/geo.OECDFUAList;smsKey='+demoSMSKey+';country='+req.params.country;
         }
         var codes;
         var colors = ['#0bc4a7', '#1a48eb', '#ecdc0b', '#ed1ec6', '#d9990b', '#0c0d17', '#e3104f', '#6d8ecf', '#0bc4a7'];
@@ -1095,6 +1095,10 @@ module.exports = function handleDemos(server) {
                 var finalScript = '<!DOCTYPE html><html><head><link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.3/semantic.min.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" /><style>		.info {padding: 6px 8px;font: 14px/16px Arial, Helvetica, sans-serif;background: white;background: rgba(255,255,255,0.8);box-shadow: 0 0 15px rgba(0,0,0,0.2);border-radius: 5px;}.info h4 {margin: 0 0 5px;color: #777;}</style><title>Administrative Areas: ('+req.params.country+'), Level: '+req.params.level+', Source: '+req.params.source+'</title> ';
                 var features = [];
                 var colorsObject = {};
+                if(!polygons.length){
+                    res.end('no polygon found!');
+                    return 0;
+                }
                 polygons.forEach(function(input, i){
                     //console.log(input.name, input.id);
                     //handling each polygon in the list

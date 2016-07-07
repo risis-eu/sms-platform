@@ -339,10 +339,14 @@ class GeoQuery{
     getOECDFUAToPolygon(uri) {
         /*jshint multistr: true */
         this.query = '\
-        SELECT DISTINCT ?polygon ?name FROM <http://geo.risis.eu/oecd> WHERE { \
+        SELECT DISTINCT ?polygon ?name WHERE { \
+            GRAPH <http://geo.risis.eu/urau> {\
             <'+uri+'> a risisOECDV:FunctionalUrbanArea ;\
-                dcterms:title ?name ;\
                 geo:geometry ?polygon .\
+            }\
+            GRAPH <http://geo.risis.eu/oecd> { \
+            <'+uri+'> dcterms:title ?name . \
+            } \
           } \
         ';
         return this.prefixes + this.query;
@@ -356,6 +360,8 @@ class GeoQuery{
             vocab = 'risisOSMV';
         }else if(source === 'flickr'){
             vocab = 'risisFlickrV';
+        }else if(source === 'oecd'){
+            vocab = 'risisOECDV';
         }
         let ex1 = '', ex2 = '';
         if(parseInt(limit)){
@@ -364,15 +370,31 @@ class GeoQuery{
         if(parseInt(offset)){
             ex2 = ' OFFSET ' + offset;
         }
-        /*jshint multistr: true */
-        this.query = '\
-        SELECT DISTINCT ?uri ?title FROM <http://geo.risis.eu/'+source+'> WHERE { \
-            ?uri a '+vocab+':AdministrativeArea ;\
-                dcterms:title ?title ;\
-                '+vocab+':level '+level+' ;\
-                '+vocab+':ISO "'+convertToISO3(country)+'" .\
-          } '+ex1+ex2+' \
-        ';
+
+        if(source !== 'oecd'){
+            /*jshint multistr: true */
+            this.query = '\
+            SELECT DISTINCT ?uri ?title FROM <http://geo.risis.eu/'+source+'> WHERE { \
+                ?uri a '+vocab+':AdministrativeArea ;\
+                    dcterms:title ?title ;\
+                    '+vocab+':level '+level+' ;\
+                    '+vocab+':ISO "'+convertToISO3(country)+'" .\
+              } '+ex1+ex2+' \
+            ';
+        }else{
+            /*jshint multistr: true */
+            this.query = '\
+            SELECT DISTINCT ?uri ?title WHERE { \
+                GRAPH <http://geo.risis.eu/urau> { \
+                    ?uri a risisOECDV:FunctionalUrbanArea ;\
+                        risisOECDV:fuaCatefory "'+level+'" ; \
+                        '+vocab+':ISO "'+convertToISO3(country)+'" .\
+                } \
+                GRAPH <http://geo.risis.eu/oecd> { \
+                    ?uri dcterms:title ?title . \
+                } \
+            }';
+        }
         return this.prefixes + this.query;
     }
     getOECDFUAList(country) {
