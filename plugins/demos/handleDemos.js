@@ -1288,7 +1288,13 @@ module.exports = function handleDemos(server) {
             if(features.length){
                 features.forEach(function(feature, i){
                     features[i].properties.frequency = flags[features[i].id]['frequency'];
-                    features[i].properties.relations = flags[features[i].id]['relations'];
+                    if(flags[features[i].id]['relations']){
+                        for(var prop in flags[features[i].id]['relations']){
+                            features[i].properties[prop] = flags[features[i].id]['relations'][prop];
+                        }
+                        delete features[i].properties.relations;
+                    }
+                    //features[i].properties.relations = flags[features[i].id]['relations'];
                 });
                 var output = {'type':'FeatureCollection','features': features};
                 var rnd = Math.round(+new Date() / 1000);;
