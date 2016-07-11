@@ -1231,7 +1231,7 @@ module.exports = function handleDemos(server) {
             res.send(finalScript);
         });
     });
-    server.post('/demos/geo/exportToGeoJSON', function(req, res) {
+    server.post('/demos/geo/exportToGeoJSON/:bindProps?', function(req, res) {
         //console.log(req.body);
         var dataObj = req.body;
         var boundaries = JSON.parse(dataObj.boundaries);
@@ -1288,13 +1288,20 @@ module.exports = function handleDemos(server) {
             if(features.length){
                 features.forEach(function(feature, i){
                     features[i].properties.frequency = flags[features[i].id]['frequency'];
-                    if(flags[features[i].id]['relations']){
-                        for(var prop in flags[features[i].id]['relations']){
-                            features[i].properties[prop] = flags[features[i].id]['relations'][prop];
+                    //decide whether to put attributes a main properties or within relations
+                    if(req.params.bindProps){
+                        if(flags[features[i].id]['relations'] && flags[features[i].id]['relations'].length){
+                            flags[features[i].id]['relations'].forEach(function(relation, ii){
+                                for(var prop in relation){
+                                    features[i].properties[prop] = relation[prop];
+                                }
+                            }
+                            delete features[i].properties.relations;
                         }
-                        delete features[i].properties.relations;
+                    }else{
+                        features[i].properties.relations = flags[features[i].id]['relations'];
+
                     }
-                    //features[i].properties.relations = flags[features[i].id]['relations'];
                 });
                 var output = {'type':'FeatureCollection','features': features};
                 var rnd = Math.round(+new Date() / 1000);;
