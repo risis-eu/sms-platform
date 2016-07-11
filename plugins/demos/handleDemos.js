@@ -1295,8 +1295,8 @@ module.exports = function handleDemos(server) {
                                 for(var prop in relation){
                                     features[i].properties[prop] = relation[prop];
                                 }
-                            }
-                            delete features[i].properties.relations;
+                            });
+                            delete features[i].properties['relations'];
                         }
                     }else{
                         features[i].properties.relations = flags[features[i].id]['relations'];
