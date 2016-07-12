@@ -762,6 +762,30 @@ export default {
                     });
                 }
             });
+        } else if (resource === 'geo.PointToAdaptiveFUA') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
+            }
+            graphName = 'big-data-endpoint';
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            let queryFUA = queryObject.getPointToAaptiveFUA(params.lat, params.long, params.country, params.source, params.indicatorName);
+            //send request
+            //console.log(queryFUA);
+            rp.get({uri: getHTTPQuery('read', queryFUA, endpointParameters, outputFormat)}).then(function(res){
+                //console.log(res);
+                let resFUA = utilObject.parsePointToAaptiveFUA(res, params.source, params.indicatorName);
+                callback(null, {
+                    latitude: parseFloat(params.lat),
+                    longitude: parseFloat(params.long),
+                    source: params.source,
+                    indicatorName: params.indicatorName,
+                    resources: resFUA
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {resources: []});
+            });
         }
     }
     // other methods

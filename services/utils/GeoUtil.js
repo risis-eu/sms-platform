@@ -179,6 +179,18 @@ class GeoUtil{
         }
         return output;
     }
+    parsePointToAaptiveFUA(res, source, indicatorName){
+        let self = this;
+        let parsed = JSON.parse(res);
+        let output=[];
+        if(parsed.results.bindings.length){
+            parsed.results.bindings.forEach(function(el) {
+                output.push({id: el.uri.value.replace('http://geo.risis.eu/' + source + '/', ''), title: el.title.value, country: el.country.value, indicatorRef: self.getPropertyLabel(el.indicatorRef.value)});
+            });
+            return output;
+        }
+        return output;
+    }
     parseMunicipalityToPolygon(res){
         let parsed = JSON.parse(res);
         let output=[];

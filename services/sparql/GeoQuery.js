@@ -525,5 +525,41 @@ class GeoQuery{
         ';
         return this.prefixes + this.query;
     }
+    getPointToAaptiveFUA(lat, long, country, source, fuaGraph) {
+        let graph, vocab, countryC = '';
+        switch (source) {
+        case 'osm':
+            graph =  'http://geo.risis.eu/osm';
+            vocab = 'risisOSMV';
+            break;
+        case 'gadm':
+            graph =  'http://geo.risis.eu/gadm';
+            vocab = 'risisGADMV';
+            break;
+        case 'flickr':
+            graph =  'http://geo.risis.eu/flickr';
+            vocab = 'risisFlickrV';
+            break;
+        }
+        let ex1 = '', ex2 = '';
+        if(country){
+            ex1 = vocab + ':ISO "'+convertToISO3(country)+'" ; ' ;
+            ex2 = 'risisGeoV:ISO "'+convertToISO3(country)+'" ; ' ;
+        }
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?uri ?title ?country ?indicatorRef WHERE { \
+          graph <'+graph+'> { \
+            ?uri a '+vocab+':AdministrativeArea ; '+ex1+' \
+                geo:geometry ?polygon . \
+            } \
+          graph <http://geo.risis.eu/adaptiveFUAs/'+fuaGraph+'> { \
+            ?uri a risisGeoV:AdaptiveFUA ; risisGeoV:ISO ?country ; risisGeoV:indicatorRef ?indicatorRef ;'+ex2+' dcterms:title ?title . \
+        } \
+          FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+')))) \
+      } \
+        ';
+        return this.prefixes + this.query;
+    }
 }
 export default GeoQuery;
