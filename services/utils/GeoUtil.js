@@ -185,7 +185,7 @@ class GeoUtil{
         let output=[];
         if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
-                output.push({id: el.uri.value.replace('http://geo.risis.eu/' + source + '/', ''), title: el.title.value, country: el.country.value, indicatorRef: self.getPropertyLabel(el.indicatorRef.value)});
+                output.push({id: el.uri.value.replace('http://geo.risis.eu/' + source + '/', ''), title: el.title.value, country: el.country.value, indicatorRef: self.getPropertyLabel(el.indicatorRef.value), indicatorValue: el.indicatorValue.value});
             });
             return output;
         }

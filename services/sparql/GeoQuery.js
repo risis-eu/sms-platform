@@ -548,13 +548,13 @@ class GeoQuery{
         }
         /*jshint multistr: true */
         this.query = '\
-        SELECT DISTINCT ?uri ?title ?country ?indicatorRef WHERE { \
+        SELECT DISTINCT ?uri ?title ?country ?indicatorRef ?indicatorValue WHERE { \
           graph <'+graph+'> { \
             ?uri a '+vocab+':AdministrativeArea ; '+ex1+' \
                 geo:geometry ?polygon . \
             } \
           graph <http://geo.risis.eu/adaptiveFUAs/'+fuaGraph+'> { \
-            ?uri a risisGeoV:AdaptiveFUA ; risisGeoV:ISO ?country ; risisGeoV:indicatorRef ?indicatorRef ;'+ex2+' dcterms:title ?title . \
+            ?uri a risisGeoV:AdaptiveFUA ; risisGeoV:ISO ?country ; risisGeoV:indicatorRef ?indicatorRef ; risisGeoV:indicatorValue ?indicatorValue;'+ex2+' dcterms:title ?title . \
         } \
           FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+')))) \
       } \
