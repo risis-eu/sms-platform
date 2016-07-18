@@ -14,7 +14,7 @@ let flag = {};
 nl_unis_oecd.forEach((uni)=>{
     uni.processed.resources.forEach((boundary)=>{
         if(!flag[boundary.id]){
-            var oecdURL = 'http://sms.risis.eu/api/geo.OECDFUAToPolygon;id='+boundary.id;
+            var oecdURL = 'http://sms.risis.eu/api/geo.OECDFUAToPolygon;smsKey=wefHWDFWF$$235EFGWFGle;id='+boundary.id;
             asyncTasks.push(function(callback){
                 rp.get({uri: oecdURL}).then(function(body){
                     var parsed = JSON.parse(body);
