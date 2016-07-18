@@ -1231,6 +1231,58 @@ module.exports = function handleDemos(server) {
             res.send(finalScript);
         });
     });
+    server.post('/demos/geo/exportPointsToGeoJSON/:bindProps?', function(req, res) {
+        var dataObj = req.body;
+        var points = JSON.parse(dataObj.points);
+        if((!dataObj.source)){
+            res.send('source is missing!');
+            return 0;
+        }
+        var features = [];
+        var flags={};
+        points.forEach(function(point, i){
+            if(flags[point.id]){
+                flags[point.id]['frequency']++;
+                if(point.relation){
+                    flags[point.id]['relations'].push(point.relation);
+                }
+            }else{
+                flags[point.id] = {'frequency': 1, 'relations': (point.relation ? [point.relation] : [])};
+                features.push({'type': 'Feature', 'id': boundary.id, 'properties': {'name': parsed.resources[0].name, frequency: 1, relations: []}, 'geometry': {'type': 'Point' , coordinates: [point.longitude + ', ' + point.latitude]}});
+            }
+        });
+        if(features.length){
+            features.forEach(function(feature, i){
+                features[i].properties.frequency = flags[features[i].id]['frequency'];
+                //decide whether to put attributes a main properties or within relations
+                if(req.params.bindProps){
+                    if(flags[features[i].id]['relations'] && flags[features[i].id]['relations'].length){
+                        flags[features[i].id]['relations'].forEach(function(relation, ii){
+                            for(var prop in relation){
+                                features[i].properties[prop] = relation[prop];
+                            }
+                        });
+                        delete features[i].properties['relations'];
+                    }
+                }else{
+                    features[i].properties.relations = flags[features[i].id]['relations'];
+
+                }
+            });
+            var output = {'type':'FeatureCollection','features': features};
+            var rnd = Math.round(+new Date() / 1000);;
+            var fileName = '/geojsonDump/'+dataObj.source+'_'+rnd+'.geojson';
+            fs.writeFile('.'+fileName, JSON.stringify(output) , function(err) {
+                if(err) {
+                    res.send('Error! '+err);
+                    return console.log(err);
+                }
+                res.send('http://' + req.headers.host+fileName);
+            });
+        }else{
+            res.send('Error! No Point detected!');
+        }
+    });
     server.post('/demos/geo/exportToGeoJSON/:bindProps?', function(req, res) {
         //console.log(req.body);
         var dataObj = req.body;
