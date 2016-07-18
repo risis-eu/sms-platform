@@ -1248,7 +1248,7 @@ module.exports = function handleDemos(server) {
                 }
             }else{
                 flags[point.id] = {'frequency': 1, 'relations': (point.relation ? [point.relation] : [])};
-                features.push({'type': 'Feature', 'id': point.id, 'properties': {frequency: 1, relations: []}, 'geometry': {'type': 'Point' , coordinates: [point.longitude + ', ' + point.latitude]}});
+                features.push({'type': 'Feature', 'id': point.id, 'properties': {frequency: 1, relations: []}, 'geometry': {'type': 'Point' , coordinates: [point.longitude,point.latitude].join(', ')}});
             }
         });
         if(features.length){
