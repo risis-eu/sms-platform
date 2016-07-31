@@ -26,6 +26,126 @@ export default {
             done();
         }
     },
+    tripleStore: {
+        path: '/tripleStore',
+        method: 'get',
+        handler: require('../components/architecturePages/TripleStore'),
+        label: 'TripleStore',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Triple Store'});
+            done();
+        }
+    },
+    integrationRISIS: {
+        path: '/integrationRISIS',
+        method: 'get',
+        handler: require('../components/architecturePages/IntegrationRISIS'),
+        label: 'IntegrationRISIS',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Integration RISIS'});
+            done();
+        }
+    },
+    integrationPublic: {
+        path: '/integrationPublic',
+        method: 'get',
+        handler: require('../components/architecturePages/IntegrationPublic'),
+        label: 'IntegrationPublic',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Integration Public'});
+            done();
+        }
+    },
+    integrationSocial: {
+        path: '/integrationSocial',
+        method: 'get',
+        handler: require('../components/architecturePages/IntegrationSocial'),
+        label: 'IntegrationSocial',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Integration Social'});
+            done();
+        }
+    },
+    ner: {
+        path: '/ner',
+        method: 'get',
+        handler: require('../components/architecturePages/NER'),
+        label: 'NER',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Named Entity Recognition'});
+            done();
+        }
+    },
+    innovativeGeoServices: {
+        path: '/innovativeGeoServices',
+        method: 'get',
+        handler: require('../components/architecturePages/InnovativeGeoServices'),
+        label: 'InnovativeGeoServices',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Innovative Geo Services'});
+            done();
+        }
+    },
+    basicGeoServices: {
+        path: '/basicGeoServices',
+        method: 'get',
+        handler: require('../components/architecturePages/BasicGeoServices'),
+        label: 'BasicGeoServices',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Basic Geo Services'});
+            done();
+        }
+    },
+    identityServices: {
+        path: '/identityServices',
+        method: 'get',
+        handler: require('../components/architecturePages/IdentityServices'),
+        label: 'IdentityServices',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Identity Services'});
+            done();
+        }
+    },
+    categoryServices: {
+        path: '/categoryServices',
+        method: 'get',
+        handler: require('../components/architecturePages/CategoryServices'),
+        label: 'CategoryServices',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Category Services'});
+            done();
+        }
+    },
+    ACPs: {
+        path: '/ACPs',
+        method: 'get',
+        handler: require('../components/architecturePages/ACPs'),
+        label: 'ACPs',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | ACPs'});
+            done();
+        }
+    },
+    PDF2Text: {
+        path: '/PDF2Text',
+        method: 'get',
+        handler: require('../components/architecturePages/PDF2Text'),
+        label: 'PDF2Text',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | PDF to Text'});
+            done();
+        }
+    },
+    otherApps: {
+        path: '/otherApps',
+        method: 'get',
+        handler: require('../components/architecturePages/OtherApps'),
+        label: 'OtherApps',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Other Apps'});
+            done();
+        }
+    },
     demos: {
         path: '/demos',
         method: 'get',
