@@ -158,12 +158,15 @@ export default {
                         newValue='"'+objectValue+'"^^' + dtype;
                         break;
                     case 'http://www.w3.org/2001/XMLSchema#dateTime':
-                        dtype = 'xsd:dateTime';
-                        newValue='"'+objectValue+'"^^' + dtype;
+                        //dtype = 'xsd:dateTime';
+                        dtype = 'str';
+                        //newValue='"'+objectValue+'"^^' + dtype;
+                        newValue='"'+objectValue+'"';
                         break;
                     case 'http://www.w3.org/2001/XMLSchema#date':
-                        dtype = 'xsd:date';
-                        newValue='"'+objectValue+'"^^' + dtype;
+                        //dtype = 'xsd:date';
+                        dtype = 'str';
+                        newValue='"'+objectValue+'"';
                         break;
                     case 'http://www.w3.org/2001/XMLSchema#boolean':
                         dtype = 'xsd:boolean';

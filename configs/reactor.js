@@ -593,17 +593,20 @@ export default {
             'http://purl.org/dc/terms/created': {
                 label: ['Created date'],
                 category: ['date'],
-                hint: ['A point or period of time associated with an event in the life-cycle of the resource. The value should be formatted as date and time format - ISO 8601']
+                hint: ['A point or period of time associated with an event in the life-cycle of the resource. The value should be formatted as date and time format - ISO 8601'],
+                allowNewValue: 1
             },
             'http://purl.org/dc/terms/issued': {
                 label: ['Date issued'],
                 category: ['date'],
-                hint: ['A point or period of time associated with an event in the life-cycle of the resource. The value should be formatted as date and time format - ISO 8601.']
+                hint: ['A point or period of time associated with an event in the life-cycle of the resource. The value should be formatted as date and time format - ISO 8601.'],
+                allowNewValue: 1
             },
             'http://purl.org/dc/terms/modified': {
                 label: ['Date modified'],
                 category: ['date'],
-                hint: ['A point or period of time associated with an event in the life-cycle of the resource. The value should be formatted as date and time format - ISO 8601']
+                hint: ['A point or period of time associated with an event in the life-cycle of the resource. The value should be formatted as date and time format - ISO 8601'],
+                allowNewValue: 1
             },
             'http://purl.org/dc/terms/license': {
                 category: ['legalAspects'],
