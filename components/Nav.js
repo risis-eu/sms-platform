@@ -2,6 +2,7 @@
 import React from 'react';
 import {NavLink} from 'fluxible-router';
 import {appFullTitle, appShortTitle, enableAuthentication} from '../configs/general';
+import CookieBanner from 'react-cookie-banner';
 
 class Nav extends React.Component {
     componentDidMount(){
@@ -35,6 +36,7 @@ class Nav extends React.Component {
         };
         return (
             <nav ref="defaultNavbar" className="ui black menu inverted navbar page grid">
+                <CookieBanner message='This website uses cookies to ensure you get the best experience on our website.' cookie='user-has-accepted-cookies' dismissOnScroll={true} />
                 <NavLink routeName="home" className="brand item ui blue label" activeClass="active"><img src="/assets/img/sms_logo_t.png" alt={appShortTitle} /></NavLink>
                 <NavLink routeName="about" className="item ui label" activeClass="active">About Us</NavLink>
                 <NavLink routeName="dataset" className="item ui label" activeClass="active" href="/datasets">Datasets Metadata Editor</NavLink>
