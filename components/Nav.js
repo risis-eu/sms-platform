@@ -44,6 +44,7 @@ class Nav extends React.Component {
                 <a className="item ui label" href="http://api.sms.risis.eu" target="_blank">Linked Data API</a>
                 <NavLink routeName="demos" className="item ui label" activeClass="active" href="/demos">Demos</NavLink>
                 <div className="right menu">
+                    <a href="http://ld-r.sms.risis.eu" className="ui item link" title="Linked Data Reactor for SMS"><img style={{height: '17', width: '17'}} src="/assets/img/ld-r.png" /></a>
                     {user ? <div className="item link" onClick={this.showHelpModal}><i className="small help circle icon"></i></div> : <a href="http://github.com/risis-eu/sms-platform" className="ui item link"><i className="github icon"></i></a>}
                     {userMenu}
                 </div>
