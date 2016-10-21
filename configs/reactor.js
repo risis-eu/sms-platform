@@ -594,19 +594,31 @@ export default {
                 label: ['Created date'],
                 category: ['date'],
                 hint: ['A point or period of time associated with an event in the life-cycle of the resource. The value should be formatted as date and time format - ISO 8601'],
-                allowNewValue: 1
+                allowNewValue: 1,
+                //calendarFormat: 'YYYY-MM-DD\\THH:mm:ss\\Z',
+                objectIEditor: ['BasicCalendarInput'],
+                dateTimeFormat: 'YYYY-MM-DD',
+                objectIViewer: ['BasicDateTimeView']
             },
             'http://purl.org/dc/terms/issued': {
                 label: ['Date issued'],
                 category: ['date'],
                 hint: ['A point or period of time associated with an event in the life-cycle of the resource. The value should be formatted as date and time format - ISO 8601.'],
-                allowNewValue: 1
+                allowNewValue: 1,
+                //calendarFormat: 'YYYY-MM-DD\\THH:mm:ss\\Z',
+                objectIEditor: ['BasicCalendarInput'],
+                dateTimeFormat: 'YYYY-MM-DD',
+                objectIViewer: ['BasicDateTimeView']
             },
             'http://purl.org/dc/terms/modified': {
                 label: ['Date modified'],
                 category: ['date'],
                 hint: ['A point or period of time associated with an event in the life-cycle of the resource. The value should be formatted as date and time format - ISO 8601'],
-                allowNewValue: 1
+                allowNewValue: 1,
+                //calendarFormat: 'YYYY-MM-DD\\THH:mm:ss\\Z',
+                objectIEditor: ['BasicCalendarInput'],
+                dateTimeFormat: 'YYYY-MM-DD',
+                objectIViewer: ['BasicDateTimeView']
             },
             'http://purl.org/dc/terms/license': {
                 category: ['legalAspects'],
