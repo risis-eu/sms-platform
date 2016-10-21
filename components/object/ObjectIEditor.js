@@ -57,7 +57,6 @@ class ObjectIEditor extends React.Component {
         case 'LanguageInput':
             editor = <LanguageInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
             break;
-<<<<<<< HEAD
             case 'MediaTypeInput':
                 editor = <MediaTypeInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onEnterPress={this.handleEnterPress.bind(this)}/>;
             break;
