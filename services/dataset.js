@@ -7,6 +7,7 @@ import Configurator from './utils/Configurator';
 import rp from 'request-promise';
 /*-------------config-------------*/
 const outputFormat = 'application/sparql-results+json';
+const headers = {'Accept': 'application/sparql-results+json'};
 let user;
 /*-----------------------------------*/
 let endpointParameters, cGraphName, graphName, query, queryObject, utilObject, configurator, propertyURI;
@@ -91,10 +92,10 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getResourcesByType(cGraphName, rconfig.resourceFocusType, maxOnPage, offset);
+            query = queryObject.getResourcesByType(cGraphName, rconfig, maxOnPage, offset);
             //build http uri
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat), headers: headers}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     resources: utilObject.parseResourcesByType(res, graphName),
@@ -135,7 +136,7 @@ export default {
             query = queryObject.countResourcesByType(cGraphName, rconfig.resourceFocusType);
             //build http uri
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat), headers: headers}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     total: utilObject.parseCountResourcesByType(res)
