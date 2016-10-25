@@ -9,7 +9,7 @@ var appShortTitle = generalConfig.appShortTitle;
 var appFullTitle = generalConfig.appFullTitle;
 var demoSMSKey = 'kYHSiH9255$deg$nbYUsff';
 
-var smsAPI = '/api';
+var smsAPI = '/api/v1.0';
 
 module.exports = function handleDemos(server) {
 

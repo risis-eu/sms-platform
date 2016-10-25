@@ -9,7 +9,7 @@ host: sms.risis.eu
 schemes:
   - http
 # will be prefixed to all paths
-basePath: /api
+basePath: /api/v1.0
 produces:
   - application/json
 paths:

@@ -48,6 +48,10 @@ function onOpen() {
         functionName: "generateOSMMetadata"
     });
     menuEntries.push({
+        name: "Export Coordinates as GeoJSON",
+        functionName: "exportPointsGeoJSON"
+    });
+    menuEntries.push({
         name: "Export Boundaries as GeoJSON",
         functionName: "exportBoundariesGeoJSON"
     });
@@ -173,11 +177,11 @@ function geoCodeAddresses() {
         readyResponse = {};
         checkIfValue = sheet.getRange(i + 2, 3, 1, 3).getValues();
         //only send requests for the ones which are not processed yet
-        if (checkIfValue[0][0] != '' && checkIfValue[0][1] != '' && checkIfValue[0][2] != '') {
+        if (locationInfo[i]=='' || (checkIfValue[0][0] != '' && checkIfValue[0][1] != '' && checkIfValue[0][2] != '')) {
             continue;
         }
         //call SMS APIs
-        googleGeoCodeAPI = 'http://sms.risis.eu/api/geo.googleGeocode;apiKey=' + googleAPIKey + ';addr=' + encodeURIComponent(locationInfo[i])
+        googleGeoCodeAPI = 'http://sms.risis.eu/api/v1.0/geo.googleGeocode;apiKey=' + googleAPIKey + ';addr=' + encodeURIComponent(locationInfo[i])
         googleResponse = UrlFetchApp.fetch(googleGeoCodeAPI);
         parsedResponse = JSON.parse(googleResponse);
         if (parsedResponse.resources.results.length) {
@@ -276,11 +280,11 @@ function findGADMBoundaries() {
         prasedLevels = [];
         checkIfValue = sheet.getRange(i + 2, 1, 1, 2).getValues();
         //only send requests for the ones which are not processed yet
-        if (checkIfValue[0][1] != '') {
+        if (checkIfValue[0][1] != '' || locationInfo[i][2]=='' || locationInfo[i][3]=='') {
             continue;
         }
         //call SMS API
-        smsAPI = 'http://sms.risis.eu/api/geo.PointToGADM28Admin;lat=' + locationInfo[i][3] + ';long=' + locationInfo[i][2] + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
+        smsAPI = 'http://sms.risis.eu/api/v1.0/geo.PointToGADM28Admin;lat=' + locationInfo[i][3] + ';long=' + locationInfo[i][2] + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
         smsResponse = UrlFetchApp.fetch(smsAPI);
         parsedResponse = JSON.parse(smsResponse);
         readyResponse = {
@@ -317,11 +321,11 @@ function findFlickrBoundaries() {
         prasedLevels = [];
         checkIfValue = sheet.getRange(i + 2, 1, 1, 2).getValues();
         //only send requests for the ones which are not processed yet
-        if (checkIfValue[0][1] != '') {
+        if (checkIfValue[0][1] != '' || locationInfo[i][2]=='' || locationInfo[i][3]=='') {
             continue;
         }
         //call SMS API
-        smsAPI = 'http://sms.risis.eu/api/geo.PointToFlickrAdmin;lat=' + locationInfo[i][3] + ';long=' + locationInfo[i][2] + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
+        smsAPI = 'http://sms.risis.eu/api/v1.0/geo.PointToFlickrAdmin;lat=' + locationInfo[i][3] + ';long=' + locationInfo[i][2] + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
         smsResponse = UrlFetchApp.fetch(smsAPI);
         parsedResponse = JSON.parse(smsResponse);
         readyResponse = {
@@ -352,7 +356,7 @@ function generateOSMMetadata() {
 
         //collect OSM metadata per country if needed
         if (!metadataResponse[locationInfo[i][4]]) {
-            smsAPI = 'http://sms.risis.eu/api/geo.OSMAdminMetadata;country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
+            smsAPI = 'http://sms.risis.eu/api/v1.0/geo.OSMAdminMetadata;country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
             smsResponse = UrlFetchApp.fetch(smsAPI);
             parsedResponse = JSON.parse(smsResponse);
             metadataResponse[locationInfo[i][4]] = parsedResponse;
@@ -391,12 +395,12 @@ function findOSMBoundaries() {
         prasedLevels = [];
         checkIfValue = sheet.getRange(i + 2, 1, 1, 2).getValues();
         //only send requests for the ones which are not processed yet
-        if (checkIfValue[0][1] != '') {
+        if (checkIfValue[0][1] != '' || locationInfo[i][2]=='' || locationInfo[i][3]=='') {
             continue;
         }
 
         //call SMS API
-        smsAPI = 'http://sms.risis.eu/api/geo.PointToOSMAdmin;lat=' + locationInfo[i][3] + ';long=' + locationInfo[i][2] + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
+        smsAPI = 'http://sms.risis.eu/api/v1.0/geo.PointToOSMAdmin;lat=' + locationInfo[i][3] + ';long=' + locationInfo[i][2] + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
         if (osmExternalService !== 'undefined' && osmExternalService !== '' && osmExternalService !== 'none') {
             smsAPI = smsAPI + ';useExternal=' + osmExternalService;
         }
@@ -483,7 +487,7 @@ function findOECDFUAsFromOSM() {
                     for (var k = 0; k < ftmp.length; k++) {
                         ftmp2 = ftmp[k].split(',');
                         if (ftmp2[0].trim()) {
-                            smsAPI = 'http://sms.risis.eu/api/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(ftmp2[0].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
+                            smsAPI = 'http://sms.risis.eu/api/v1.0/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(ftmp2[0].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
                             smsResponse = UrlFetchApp.fetch(smsAPI);
                             //Browser.msgBox(smsAPI+ '->'+smsResponse);
                             parsedResponse = JSON.parse(smsResponse);
@@ -496,7 +500,7 @@ function findOECDFUAsFromOSM() {
                     //we only have to get the first part for flickr
                     ftmp = osmInfo[i][5 + j - 1].split(',');
                     if (ftmp[0].trim()) {
-                        smsAPI = 'http://sms.risis.eu/api/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(ftmp[0].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
+                        smsAPI = 'http://sms.risis.eu/api/v1.0/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(ftmp[0].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
                         smsResponse = UrlFetchApp.fetch(smsAPI);
                         //Browser.msgBox(smsAPI+ '->'+smsResponse);
                         parsedResponse = JSON.parse(smsResponse);
@@ -555,7 +559,7 @@ function findOECDFUAsFromFlickr() {
                 if (ftmp.length) {
                     for (var k = 0; k < ftmp.length; k++) {
                         ftmp2 = ftmp[k].split(',');
-                        smsAPI = 'http://sms.risis.eu/api/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(ftmp2[0].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
+                        smsAPI = 'http://sms.risis.eu/api/v1.0/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(ftmp2[0].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
                         smsResponse = UrlFetchApp.fetch(smsAPI);
                         //Browser.msgBox(smsAPI+ '->'+smsResponse);
                         parsedResponse = JSON.parse(smsResponse);
@@ -567,7 +571,7 @@ function findOECDFUAsFromFlickr() {
                     //we only have to get the first part for flickr
                     ftmp = flickrInfo[i][4 + j - 1].split(',');
 
-                    smsAPI = 'http://sms.risis.eu/api/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(ftmp[0].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
+                    smsAPI = 'http://sms.risis.eu/api/v1.0/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(ftmp[0].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
                     smsResponse = UrlFetchApp.fetch(smsAPI);
                     //Browser.msgBox(smsAPI+ '->'+smsResponse);
                     parsedResponse = JSON.parse(smsResponse);
@@ -615,7 +619,7 @@ function findOECDFUAsFromGADM() {
         for (var j = 1; j < 5; j++) {
             //call SMS API
             if (gadmInfo[i][4 + j - 1] !== 'undefined') {
-                smsAPI = 'http://sms.risis.eu/api/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(gadmInfo[i][(4 + j - 1)].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
+                smsAPI = 'http://sms.risis.eu/api/v1.0/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(gadmInfo[i][(4 + j - 1)].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
                 smsResponse = UrlFetchApp.fetch(smsAPI);
                 //Browser.msgBox(smsResponse);
                 parsedResponse = JSON.parse(smsResponse);
@@ -656,7 +660,7 @@ function findOECDFUAsFromGoogle() {
         }
         smsResponses = new Array();
         if (locationInfo[i][6] !== 'undefined') {
-            smsAPI = 'http://sms.risis.eu/api/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(locationInfo[i][(6)].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
+            smsAPI = 'http://sms.risis.eu/api/v1.0/geo.BoundaryToOECDFUA;name=' + encodeURIComponent(locationInfo[i][(6)].trim()) + ';country=' + locationInfo[i][4] + ';smsKey=' + smsAPIKey;
             smsResponse = UrlFetchApp.fetch(smsAPI);
             //Browser.msgBox(smsResponse);
             parsedResponse = JSON.parse(smsResponse);
@@ -735,6 +739,40 @@ function exportBoundariesGeoJSON() {
         "payload": {
             "source": geojsonExportSource[0],
             "boundaries": JSON.stringify(data)
+        }
+    };
+    //Browser.msgBox(JSON.stringify(options.payload));
+    var smsResponse = UrlFetchApp.fetch(smsAPI, options);
+    //Browser.msgBox(JSON.stringify(options.payload));
+    Browser.msgBox(smsResponse);
+}
+function exportPointsGeoJSON() {
+    var configSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('api config');
+    var smsAPIKey = configSheet.getRange(3, 2).getValues()[0];
+    var geojsonExportSource = 'Google';
+    var data = new Array();
+    var locSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('geocoding');
+    var locationInfo = locSheet.getRange(2, 1, locSheet.getLastRow() - 1, locSheet.getLastColumn() - 1).getValues();
+    for (var i = 0; i < locationInfo.length; i++) {
+            checkIfValue = locSheet.getRange(i + 2, 1, 1, 4).getValues();
+            //only send requests for the ones which are not processed yet
+            if (checkIfValue[0][2] == '') {
+                continue;
+            };
+            data.push({
+                "id": checkIfValue[0][0],
+                "longitude": checkIfValue[0][2],
+                "latitude": checkIfValue[0][3],
+                "relation":{"name": checkIfValue[0][1]}
+            })
+    }
+    var smsAPI = 'http://sms.risis.eu/demos/geo/exportPointsToGeoJSON';
+    var options = {
+        "muteHttpExceptions": true,
+        "method": "post",
+        "payload": {
+            "source": geojsonExportSource,
+            "points": JSON.stringify(data)
         }
     };
     //Browser.msgBox(JSON.stringify(options.payload));

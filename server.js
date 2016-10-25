@@ -78,6 +78,7 @@ fetchrPlugin.registerService(require('./services/facet'));
 fetchrPlugin.registerService(require('./services/admin'));
 fetchrPlugin.registerService(require('./services/geo'));
 fetchrPlugin.registerService(require('./services/metadata'));
+fetchrPlugin.registerService(require('./services/data'));
 // Set up the fetchr middleware
 server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
 server.use(compression());

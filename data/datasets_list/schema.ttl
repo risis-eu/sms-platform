@@ -1,0 +1,17 @@
+# store this file under graph name http://rdf.risis.eu/datasets/
+@prefix risisO: <http://rdf.risis.eu/datasets/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix vaem: <http://www.linkedmodel.org/schema/vaem#> .
+
+
+<http://risis.eu/dataset/nano> a void:Dataset ;
+            vaem:hasMetadata <http://rdf.risis.eu/dataset/nano/1.0/void.ttl#nano_rdf_dataset> .
+#example without metadata
+<http://orgref.org> a void:Dataset .

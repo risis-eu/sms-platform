@@ -28,7 +28,7 @@ let app = new Fluxible({
 });
 
 app.plug(fetchrPlugin({
-    xhrPath: '/api' // Path for XHR to be served from
+    xhrPath: '/api/v1.0' // Path for XHR to be served from
 }));
 app.plug(authPlugin({}));
 
