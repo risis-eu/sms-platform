@@ -5,29 +5,29 @@ class DataUtil{
         let output=[];
         if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
-                output.push({URI: el.dataset.value, title: el.title ? el.title.value : '', description: el.description ? el.description.value : '', metadataURI: el.metadata ? el.metadata.value : ''});
+                output.push({URI: el.dataset.value, title: el.title ? el.title.value : '', description: el.description ? el.description.value : '', metadataURI: el.metadata ? el.metadata.value : '', entityTypesAPIPath: '/data.dataset.entityTypes?datasetURI='+encodeURIComponent(el.dataset.value)});
             });
             return output;
         }
         return output;
     }
-    parseDatasetEntityTypes(body) {
+    parseDatasetEntityTypes(datasetURI, body) {
         let parsed = JSON.parse(body);
         let output=[];
         if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
-                output.push({URI: el.entityType.value, count: el.total.value});
+                output.push({URI: el.entityType.value, count: el.total.value, entitiesAPIPath: '/data.dataset.entities?datasetURI='+encodeURIComponent(datasetURI)+'&entityTypeURI='+encodeURIComponent(el.entityType.value)});
             });
             return output;
         }
         return output;
     }
-    parseDatasetEntities(body) {
+    parseDatasetEntities(datasetURI, entityTypeURI, body) {
         let parsed = JSON.parse(body);
         let output=[];
         if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
-                output.push({URI: el.entity.value});
+                output.push({URI: el.entity.value, entityAPIPath: '/data.dataset.entity?datasetURI='+encodeURIComponent(datasetURI)+'&entityURI='+encodeURIComponent(el.entity.value)});
             });
             return output;
         }

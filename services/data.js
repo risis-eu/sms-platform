@@ -41,9 +41,9 @@ export default {
             smsKey = params.smsKey ? params.smsKey : (queryParams.smsKey ? queryParams.smsKey : '');
             datasetURI = params.datasetURI ? decodeURIComponent(params.datasetURI) : (queryParams.datasetURI ? decodeURIComponent(queryParams.datasetURI) : '');
             //----------
-            if(!smsKey || !isValidAPIToken(smsKey)){
-                callback(null, {entityTypes: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
-            }
+            // if(!smsKey || !isValidAPIToken(smsKey)){
+            //     callback(null, {entityTypes: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
+            // }
             //the URI of graph where data is stored
             if(!datasetURI){
                 callback(null, {entityTypes: [], error: {'type':'params', 'msg': 'datasetURI is not given!'}}); return 0;
@@ -57,7 +57,7 @@ export default {
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 callback(null, {
                     datasetURI: datasetURI,
-                    entityTypes: utilObject.parseDatasetEntityTypes(res),
+                    entityTypes: utilObject.parseDatasetEntityTypes(datasetURI, res),
                 });
             }).catch(function (err) {
                 console.log(err);
@@ -91,7 +91,7 @@ export default {
                     entityTypeURI: entityTypeURI,
                     offset: offsetF,
                     limit: limitF,
-                    entities: utilObject.parseDatasetEntities(res),
+                    entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
                 });
             }).catch(function (err) {
                 console.log(err);
