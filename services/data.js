@@ -76,7 +76,7 @@ export default {
                 callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             //the URI of graph where data is stored
-            if(!datasetURI || entityTypeURI ){
+            if(!datasetURI || !entityTypeURI ){
                 callback(null, {entities: [], error: {'type':'params', 'msg': 'datasetURI or entityTypeURI are not given!'}}); return 0;
             }
             graphName = datasetURI;
