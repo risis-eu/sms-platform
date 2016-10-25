@@ -1,5 +1,5 @@
 'use strict';
-import {getEndpointParameters, getHTTPQuery} from './utils/helpers';
+import {getEndpointParameters, getHTTPQuery, isValidAPIToken} from './utils/helpers';
 import {defaultGraphName, enableAuthentication} from '../configs/general';
 import DataQuery from './sparql/DataQuery';
 import DataUtil from './utils/DataUtil';
@@ -19,133 +19,103 @@ export default {
     name: 'data',
     // At least one of the CRUD methods is Required
     read: (req, resource, params, config, callback) => {
-        if(resource === 'dataset.list'){
-            graphName = (params.id ? decodeURIComponent(params.id) : 0);
+        if(resource === 'data.datasets'){
+            const defaultDatasetListGraph = 'http://rdf.risis.eu/datasets/';
+            graphName = (params.id ? decodeURIComponent(params.id) : defaultDatasetListGraph);
             endpointParameters = getEndpointParameters(graphName);
-            //graph name used for server settings and configs
-            cGraphName = graphName;
-            //overwrite graph name for the ones with default graph
-            if(endpointParameters.useDefaultGraph){
-                cGraphName = 0;
-            }else{
-                if(!cGraphName){
-                    graphName = defaultGraphName[0];
-                    cGraphName = defaultGraphName[0];
-                }
-            }
-            //config handler
-            let rconfig = configurator.prepareDatasetConfig(graphName);
-            //control access on authentication
-            if(enableAuthentication){
-                if(!req.user){
-                    callback(null, {graphName: graphName, resources: [], page: 1, config: rconfig});
-                    return 0;
-                }else{
-                    user = req.user;
-                }
-            }else{
-                user = {accountName: 'open'};
-            }
             //SPARQL QUERY
-            query = queryObject.getDatasetsList();
+            query = queryObject.getDatasetsList(graphName);
+            //console.log(query);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 callback(null, {
-                    graphName: graphName,
-                    resources: utilObject.parseDatasetsList(res),
-                    page: 1,
-                    config: rconfig
+                    datasets: utilObject.parseDatasetsList(res),
                 });
             }).catch(function (err) {
                 console.log(err);
-                callback(null, {graphName: graphName, resources: [], page: 1, config: rconfig});
+                callback(null, {datasets: []});
             });
-        } else if (resource === 'dataset.resourcesByType') {
-            graphName = (params.id ? decodeURIComponent(params.id) : 0);
+        } else if (resource === 'data.dataset.entityTypes') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {entityTypes: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
+            }
+            //the URI of graph where data is stored
+            if(!params.datasetURI){
+                callback(null, {entityTypes: [], error: {'type':'params', 'msg': 'datasetURI is not given!'}}); return 0;
+            }
+            graphName = decodeURIComponent(params.datasetURI);
             endpointParameters = getEndpointParameters(graphName);
-            //graph name used for server settings and configs
-            cGraphName = graphName;
-            //overwrite graph name for the ones with default graph
-            if(endpointParameters.useDefaultGraph){
-                cGraphName = 0;
-            }else{
-                if(!cGraphName){
-                    graphName = defaultGraphName[0];
-                    cGraphName = defaultGraphName[0];
-                }
-            }
-            //config handler
-            let rconfig = configurator.prepareDatasetConfig(1, graphName);
-            let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
-            if(!maxOnPage){
-                maxOnPage = 20;
-            }
-            let offset = (params.page - 1) * maxOnPage;
-            //control access on authentication
-            if(enableAuthentication){
-                if(!req.user){
-                    callback(null, {graphName: graphName, resources: [], page: params.page, config: rconfig});
-                    return 0;
-                }else{
-                    user = req.user;
-                }
-            }else{
-                user = {accountName: 'open'};
-            }
-            query = queryObject.getResourcesByType(cGraphName, rconfig, maxOnPage, offset);
-            //build http uri
-            //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat), headers: headers}).then(function(res){
-                callback(null, {
-                    graphName: graphName,
-                    resources: utilObject.parseResourcesByType(res, graphName),
-                    page: params.page,
-                    config: rconfig
-                });
-            }).catch(function (err) {
-                console.log(err);
-                callback(null, {graphName: graphName, resources: [], page: params.page, config: rconfig});
-            });
-        } else if (resource === 'dataset.countResourcesByType') {
             //SPARQL QUERY
-            graphName = (params.id ? decodeURIComponent(params.id) : 0);
-            cGraphName = graphName;
-            endpointParameters = getEndpointParameters(graphName);
-            //overwrite graph name for the ones with default graph
-            if(endpointParameters.useDefaultGraph){
-                cGraphName = 0;
-            }else{
-                if(!cGraphName){
-                    graphName = defaultGraphName[0];
-                    cGraphName = defaultGraphName[0];
-                }
-            }
-            //config handler
-            let rconfig = configurator.prepareDatasetConfig(1, graphName);
-            //control access on authentication
-            if(enableAuthentication){
-                if(!req.user){
-                    callback(null, {graphName: graphName, total: 0});
-                    return 0;
-                }else{
-                    user = req.user;
-                }
-            }else{
-                user = {accountName: 'open'};
-            }
-            query = queryObject.countResourcesByType(cGraphName, rconfig.resourceFocusType);
-            //build http uri
+            query = queryObject.getDatasetEntityTypes(graphName);
+            //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat), headers: headers}).then(function(res){
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 callback(null, {
-                    graphName: graphName,
-                    total: utilObject.parseCountResourcesByType(res)
+                    datasetURI: graphName,
+                    entityTypes: utilObject.parseDatasetEntityTypes(res),
                 });
             }).catch(function (err) {
                 console.log(err);
-                callback(null, {graphName: graphName, total: 0});
+                callback(null, {datasetURI: graphName,entityTypes: []});
             });
-            //used to update other facets based on a change in a facet
+        } else if (resource === 'data.dataset.entities') {
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
+            }
+            //the URI of graph where data is stored
+            if(!params.datasetURI || !params.entityTypeURI ){
+                callback(null, {entities: [], error: {'type':'params', 'msg': 'datasetURI or entityTypeURI are not given!'}}); return 0;
+            }
+            let offsetF = 0;
+            let limitF = 20 ;
+            if(params.offset){
+                offsetF = params.offset;
+            }
+            if(params.limit){
+                limitF = params.limit;
+            }
+            graphName = decodeURIComponent(params.datasetURI);
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getDatasetEntities(graphName, decodeURIComponent(params.entityTypeURI), offsetF, limitF);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                callback(null, {
+                    datasetURI: graphName,
+                    entityTypeURI: decodeURIComponent(params.entityTypeURI),
+                    offset: offsetF,
+                    limit: limitF,
+                    entities: utilObject.parseDatasetEntities(res),
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {entities: []});
+            });
+        } else if (resource === 'data.dataset.entity'){
+            if(!params.smsKey || !isValidAPIToken(params.smsKey)){
+                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
+            }
+            //the URI of graph where data is stored
+            if(!params.datasetURI || !params.entityURI ){
+                callback(null, {entities: [], error: {'type':'params', 'msg': 'datasetURI or entityURI are not given!'}}); return 0;
+            }
+            graphName = decodeURIComponent(params.datasetURI);
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getDatasetEntity(graphName, decodeURIComponent(params.entityURI));
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+                callback(null, {
+                    datasetURI: graphName,
+                    entityURI: decodeURIComponent(params.entityURI),
+                    properties: utilObject.parseDatasetEntity(res),
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {entities: []});
+            });
         }
     }
     // other methods

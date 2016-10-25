@@ -12,6 +12,6 @@
 
 
 <http://risis.eu/dataset/nano> a void:Dataset ;
-            vaem:hasMetadata <http://rdf.risis.eu/dataset/nano/1.0/void.ttl#nano_rdf_dataset> .
+            vaem:hasMetadata <http://rdf.risis.eu/dataset/nano/1.0/void.ttl#> .
 #example without metadata
 <http://orgref.org> a void:Dataset .
