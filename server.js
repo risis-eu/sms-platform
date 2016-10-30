@@ -36,6 +36,14 @@ const htmlComponent = React.createFactory(HtmlComponent);
 const debug = debugLib('linked-data-reactor');
 const publicRoutes = ['/', '/about', '/demos', '/boundariesMap', '/tripleStore', '/integrationRISIS', '/integrationPublic', '/integrationSocial', '/ner', '/innovativeGeoServices', '/basicGeoServices', '/identityServices', '/categoryServices', '/ACPs', '/PDF2Text', '/otherApps'];
 
+const host = process.env.HOST ? process.env.HOST : 'localhost';
+let port = 3000 ;
+if(env === 'production'){
+    port = process.env.PORT ? process.env.PORT : (serverConfig.serverPort ? serverConfig.serverPort[0] : 3000);
+}else{
+    port = process.env.PORT ? parseInt(process.env.PORT) + 1 : 3001;
+}
+
 const server = express();
 // we need this because "cookie" is true in csrfProtection
 server.use(cookieParser());
@@ -135,9 +143,13 @@ server.use((req, res, next) => {
         res.end();
     });
 });
-const port = process.env.PORT || serverConfig.serverPort[0] || 3000;
+
 server.listen(port);
-//todo: fix the port issue on windows
-console.log('Listening on port ' + port);
+if(env === 'production'){
+    console.log('[production environment] Check your application on http://%s:%s', host, port);
+}else{
+    console.log('[development environment] Proxy server listening on port ' + port);
+    console.log('[development environment] Check your application on http://%s:%s', host, port-1);
+}
 
 export default server;
