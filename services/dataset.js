@@ -49,7 +49,7 @@ export default {
             //SPARQL QUERY
             query = queryObject.getDatasetsList();
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     resources: utilObject.parseDatasetsList(res),

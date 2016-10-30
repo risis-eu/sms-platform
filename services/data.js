@@ -1,5 +1,5 @@
 'use strict';
-import {getEndpointParameters, getHTTPQuery, isValidAPIToken} from './utils/helpers';
+import {getEndpointParameters, getHTTPQuery, getHTTPGetURL, isValidAPIToken} from './utils/helpers';
 import {defaultGraphName, enableAuthentication} from '../configs/general';
 import DataQuery from './sparql/DataQuery';
 import DataUtil from './utils/DataUtil';
@@ -28,7 +28,7 @@ export default {
             query = queryObject.getDatasetsList(graphName);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 callback(null, {
                     datasets: utilObject.parseDatasetsList(res),
                 });
@@ -54,7 +54,7 @@ export default {
             query = queryObject.getDatasetEntityTypes(graphName);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 callback(null, {
                     datasetURI: datasetURI,
                     entityTypes: utilObject.parseDatasetEntityTypes(datasetURI, res),
@@ -85,7 +85,7 @@ export default {
             query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 callback(null, {
                     datasetURI: datasetURI,
                     entityTypeURI: entityTypeURI,
@@ -117,7 +117,7 @@ export default {
             query = queryObject.getDatasetEntity(graphName, entityURI);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 callback(null, {
                     datasetURI: datasetURI,
                     entityURI: entityURI,

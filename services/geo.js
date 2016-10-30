@@ -1,5 +1,5 @@
 'use strict';
-import {getEndpointParameters, getHTTPQuery, isValidAPIToken} from './utils/helpers';
+import {getEndpointParameters, getHTTPQuery, getHTTPGetURL, isValidAPIToken} from './utils/helpers';
 import {defaultGraphName} from '../configs/general';
 import GeoQuery from './sparql/GeoQuery';
 import GeoUtil from './utils/GeoUtil';
@@ -82,7 +82,7 @@ export default {
             //SPARQL QUERY
             query = queryObject.getPointToNUTS(params.lat, params.long);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     latitude: parseFloat(params.lat),
@@ -102,7 +102,7 @@ export default {
             //SPARQL QUERY
             query = queryObject.getNUTSToName(params.code);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     resources: utilObject.parsePointToNUTS(res)
@@ -120,7 +120,7 @@ export default {
             //SPARQL QUERY
             query = queryObject.getNameToNUTS(params.name);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     resources: utilObject.parsePointToNUTS(res)
@@ -138,7 +138,7 @@ export default {
             //SPARQL QUERY
             query = queryObject.getNUTStoPolygon(params.code);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     resources: utilObject.parseNUTStoPolygon(res)
@@ -157,7 +157,7 @@ export default {
             query = queryObject.getMunicipalitiesPerCountry(params.country);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     country: params.country,
@@ -176,7 +176,7 @@ export default {
             //SPARQL QUERY
             query = queryObject.getNUTStoMunicipality(params.code);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     code: params.code,
@@ -195,7 +195,7 @@ export default {
             //SPARQL QUERY
             query = queryObject.getNameToMunicipality(params.name);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     resources: utilObject.parseNameToMunicipality(res)
@@ -213,7 +213,7 @@ export default {
             //SPARQL QUERY
             query = queryObject.getMunicipality(params.code);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     resources: utilObject.parseNameToMunicipality(res)
@@ -232,7 +232,7 @@ export default {
             query = queryObject.getPointToMunicipality(params.lat, params.long);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     latitude: parseFloat(params.lat),
@@ -253,7 +253,7 @@ export default {
             query = queryObject.getBoundaryToOECDFUA(params.name, params.country);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     name: params.name,
@@ -274,7 +274,7 @@ export default {
             query = queryObject.getMunicipalityToPolygon(params.code);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     code: params.code,
@@ -306,7 +306,7 @@ export default {
                     });
                 }else{
                     //send request
-                    rp.get({uri: getHTTPQuery('read', queryGADM, endpointParameters, outputFormat)}).then(function(res){
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', queryGADM, endpointParameters, outputFormat))}).then(function(res){
                         //console.log(res);
                         let resGADM = utilObject.parsePointToGADM28Admin(res, params.country);
                         if(!resGADM.length){
@@ -333,7 +333,7 @@ export default {
             query = queryObject.getGADM28AdminToPolygon('http://geo.risis.eu/gadm/' + params.id);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     id: params.id,
@@ -353,7 +353,7 @@ export default {
             query = queryObject.getGADM28Admin('http://geo.risis.eu/gadm/' + params.id);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     id: params.id,
@@ -432,7 +432,7 @@ export default {
                     }else{
                         //send request
                         //console.log(queryOSM);
-                        rp.get({uri: getHTTPQuery('read', queryOSM, endpointParameters, outputFormat)}).then(function(res){
+                        rp.get({uri: getHTTPGetURL(getHTTPQuery('read', queryOSM, endpointParameters, outputFormat))}).then(function(res){
                             //console.log(res);
                             let resOSM = utilObject.parsePointToOSMAdmin(res, params.country);
                             if(resOSM.length){
@@ -461,7 +461,7 @@ export default {
             query = queryObject.getOSMAdmin('http://geo.risis.eu/osm/' + params.id);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     id: params.id,
@@ -481,7 +481,7 @@ export default {
             query = queryObject.getOSMAdminMetadata(params.country, params.level);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     country: params.country,
@@ -501,7 +501,7 @@ export default {
             query = queryObject.getOSMAdminToPolygon('http://geo.risis.eu/osm/' + params.id);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     id: params.id,
@@ -532,7 +532,7 @@ export default {
                     });
                 }else{
                     //send request
-                    rp.get({uri: getHTTPQuery('read', queryFlickr, endpointParameters, outputFormat)}).then(function(res){
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', queryFlickr, endpointParameters, outputFormat))}).then(function(res){
                         //console.log(res);
                         let resFlickr = utilObject.parsePointToFlickrAdmin(res, params.country);
                         if(resFlickr.length){
@@ -559,7 +559,7 @@ export default {
             query = queryObject.getFlickrAdmin('http://geo.risis.eu/flickr/' + params.id);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     id: params.id,
@@ -579,7 +579,7 @@ export default {
             query = queryObject.getFlickrAdminToPolygon('http://geo.risis.eu/flickr/' + params.id);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     id: params.id,
@@ -599,7 +599,7 @@ export default {
             query = queryObject.getOECDFUAToPolygon('http://geo.risis.eu/oecd/fua/' + params.id);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     id: params.id,
@@ -619,7 +619,7 @@ export default {
             query = queryObject.getAdminsByLevel(params.level, params.country, params.source, params.offset, params.limit);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     level: params.level,
@@ -641,7 +641,7 @@ export default {
             query = queryObject.getOECDFUAList(params.country);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     country: params.country,
@@ -665,7 +665,7 @@ export default {
             query = queryObject.getAdminToContainer(params.source, params.id, params.country, params.depth);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     source: params.source,
@@ -692,7 +692,7 @@ export default {
             query = queryObject.getContainerAdmins(params.source, params.id, params.country, params.depth);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     source: params.source,
@@ -715,7 +715,7 @@ export default {
             query = queryObject.getOECDFUA('http://geo.risis.eu/oecd/fua/' + params.id);
             //console.log(query);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     country: params.country,
@@ -745,7 +745,7 @@ export default {
                     });
                 }else{
                     //send request
-                    rp.get({uri: getHTTPQuery('read', queryFUA, endpointParameters, outputFormat)}).then(function(res){
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', queryFUA, endpointParameters, outputFormat))}).then(function(res){
                         //console.log(res);
                         let resFUA = utilObject.parsePointToOECDFUA(res);
                         //if(!resGADM.error){
@@ -772,7 +772,7 @@ export default {
             let queryFUA = queryObject.getPointToAaptiveFUA(params.lat, params.long, params.country, params.source, params.indicatorName);
             //send request
             //console.log(queryFUA);
-            rp.get({uri: getHTTPQuery('read', queryFUA, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', queryFUA, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 let resFUA = utilObject.parsePointToAaptiveFUA(res, params.source, params.indicatorName);
                 callback(null, {

@@ -29,7 +29,7 @@ export default {
             //SPARQL QUERY
             query = datasetQueryObject.getDatasetsList();
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     resources: utilObject.parseDatasetsList(res)
@@ -44,7 +44,7 @@ export default {
             graphName = 'http://rdf.risis.eu/dataset/'+params.name+'/1.0/void.ttl#';
             resourceURI = 'http://rdf.risis.eu/dataset/'+params.name+'/1.0/void.ttl#'+params.name+'_rdf_dataset';
             query = resourceQueryObject.getProperties(graphName, resourceURI);
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                 //console.log(res);
                 callback(null, {
                     name: params.name,
