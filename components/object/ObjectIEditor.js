@@ -65,6 +65,7 @@ class ObjectIEditor extends React.Component {
             break;
             case 'BasicOptionInput':
                 editor = <BasicOptionInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;
+            break;
         case 'BasicCalendarInput':
             editor = <BasicCalendarInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
             break;
