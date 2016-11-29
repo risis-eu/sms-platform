@@ -101,6 +101,196 @@ export default {
                 console.log(err);
                 callback(null, {entities: []});
             });
+        } else if (resource === 'data.nano.patents') {
+            //set params
+            smsKey = params.smsKey ? params.smsKey : (queryParams.smsKey ? queryParams.smsKey : '');
+            datasetURI = 'http://risis.eu/dataset/nano';
+            entityTypeURI = 'http://risis.eu/nano/ontology/class/Document';
+            offsetF = params.offset ? params.offset : (queryParams.offset ? queryParams.offset : 0);
+            limitF = params.limit ? params.limit : (queryParams.limit ? queryParams.limit : 20);
+            //maximum: 10000
+            if(limitF > 10000){
+                limitF = 10000;
+            }
+            //----------
+
+            if(!smsKey || !isValidAPIToken(smsKey)){
+                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
+            }
+            //the URI of graph where data is stored
+            if(!datasetURI || !entityTypeURI ){
+                callback(null, {entities: [], error: {'type':'params', 'msg': 'datasetURI or entityTypeURI are not given!'}}); return 0;
+            }
+            graphName = datasetURI;
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
+                callback(null, {
+                    datasetURI: datasetURI,
+                    entityTypeURI: entityTypeURI,
+                    offset: offsetF,
+                    limit: limitF,
+                    entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {entities: []});
+            });
+        } else if (resource === 'data.nano.organisations') {
+            //set params
+            smsKey = params.smsKey ? params.smsKey : (queryParams.smsKey ? queryParams.smsKey : '');
+            datasetURI = 'http://risis.eu/dataset/nano';
+            entityTypeURI = 'http://risis.eu/nano/ontology/class/Organisation';
+            offsetF = params.offset ? params.offset : (queryParams.offset ? queryParams.offset : 0);
+            limitF = params.limit ? params.limit : (queryParams.limit ? queryParams.limit : 20);
+            //maximum: 10000
+            if(limitF > 10000){
+                limitF = 10000;
+            }
+            //----------
+
+            if(!smsKey || !isValidAPIToken(smsKey)){
+                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
+            }
+            //the URI of graph where data is stored
+            if(!datasetURI || !entityTypeURI ){
+                callback(null, {entities: [], error: {'type':'params', 'msg': 'datasetURI or entityTypeURI are not given!'}}); return 0;
+            }
+            graphName = datasetURI;
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
+                callback(null, {
+                    datasetURI: datasetURI,
+                    entityTypeURI: entityTypeURI,
+                    offset: offsetF,
+                    limit: limitF,
+                    entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {entities: []});
+            });
+        } else if (resource === 'data.orgref.organisations') {
+            //set params
+            smsKey = params.smsKey ? params.smsKey : (queryParams.smsKey ? queryParams.smsKey : '');
+            datasetURI = 'http://orgref.org';
+            entityTypeURI = 'http://risis.eu/orgref/ontology/class/Organisation';
+            offsetF = params.offset ? params.offset : (queryParams.offset ? queryParams.offset : 0);
+            limitF = params.limit ? params.limit : (queryParams.limit ? queryParams.limit : 20);
+            //maximum: 10000
+            if(limitF > 10000){
+                limitF = 10000;
+            }
+            //----------
+
+            if(!smsKey || !isValidAPIToken(smsKey)){
+                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
+            }
+            //the URI of graph where data is stored
+            if(!datasetURI || !entityTypeURI ){
+                callback(null, {entities: [], error: {'type':'params', 'msg': 'datasetURI or entityTypeURI are not given!'}}); return 0;
+            }
+            graphName = datasetURI;
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
+                callback(null, {
+                    datasetURI: datasetURI,
+                    entityTypeURI: entityTypeURI,
+                    offset: offsetF,
+                    limit: limitF,
+                    entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {entities: []});
+            });
+        } else if (resource === 'data.cordisFP7.projects') {
+            //set params
+            smsKey = params.smsKey ? params.smsKey : (queryParams.smsKey ? queryParams.smsKey : '');
+            datasetURI = 'http://www.freme-project.eu/datasets/cordis';
+            entityTypeURI = 'http://dbpedia.org/ontology/ResearchProject';
+            offsetF = params.offset ? params.offset : (queryParams.offset ? queryParams.offset : 0);
+            limitF = params.limit ? params.limit : (queryParams.limit ? queryParams.limit : 20);
+            //maximum: 10000
+            if(limitF > 10000){
+                limitF = 10000;
+            }
+            //----------
+
+            if(!smsKey || !isValidAPIToken(smsKey)){
+                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
+            }
+            //the URI of graph where data is stored
+            if(!datasetURI || !entityTypeURI ){
+                callback(null, {entities: [], error: {'type':'params', 'msg': 'datasetURI or entityTypeURI are not given!'}}); return 0;
+            }
+            graphName = datasetURI;
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
+                callback(null, {
+                    datasetURI: datasetURI,
+                    entityTypeURI: entityTypeURI,
+                    offset: offsetF,
+                    limit: limitF,
+                    entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {entities: []});
+            });
+        } else if (resource === 'data.eupro.projects') {
+            //set params
+            smsKey = params.smsKey ? params.smsKey : (queryParams.smsKey ? queryParams.smsKey : '');
+            datasetURI = 'http://risis.eu/dataset/eupro';
+            entityTypeURI = 'http://risis.eu/eupro/ontology/class/Projects';
+            offsetF = params.offset ? params.offset : (queryParams.offset ? queryParams.offset : 0);
+            limitF = params.limit ? params.limit : (queryParams.limit ? queryParams.limit : 20);
+            //maximum: 10000
+            if(limitF > 10000){
+                limitF = 10000;
+            }
+            //----------
+
+            if(!smsKey || !isValidAPIToken(smsKey)){
+                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
+            }
+            //the URI of graph where data is stored
+            if(!datasetURI || !entityTypeURI ){
+                callback(null, {entities: [], error: {'type':'params', 'msg': 'datasetURI or entityTypeURI are not given!'}}); return 0;
+            }
+            graphName = datasetURI;
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
+                callback(null, {
+                    datasetURI: datasetURI,
+                    entityTypeURI: entityTypeURI,
+                    offset: offsetF,
+                    limit: limitF,
+                    entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {entities: []});
+            });
         } else if (resource === 'data.dataset.entity'){
             //set params
             smsKey = params.smsKey ? params.smsKey : (queryParams.smsKey ? queryParams.smsKey : '');
