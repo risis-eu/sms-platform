@@ -27,9 +27,19 @@ class DataUtil{
         let output=[];
         if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
-                output.push({URI: el.entity.value, entityAPIPath: '/data.dataset.entity?datasetURI='+encodeURIComponent(datasetURI)+'&entityURI='+encodeURIComponent(el.entity.value)});
+                output.push({URI: el.entity.value, property: el.property.value, value: el.object.value , entityAPIPath: '/data.dataset.entity?datasetURI='+encodeURIComponent(datasetURI)+'&entityURI='+encodeURIComponent(el.entity.value)});
             });
-            return output;
+            let finalObj={};
+            //group by entity
+            output.forEach((e)=>{
+                if(finalObj[e.URI]){
+                    finalObj[e.URI].properties.push({property: e.property, value: e.value});
+                }else{
+                    finalObj[e.URI] = {URI: e.URI, entityAPIPath: e.entityAPIPath, properties: []};
+                    finalObj[e.URI].properties = [{property: e.property, value: e.value}]
+                }
+            })
+            return finalObj;
         }
         return output;
     }

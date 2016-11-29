@@ -54,16 +54,21 @@ class DataQuery{
         return this.prefixes + this.query;
     }
     getDatasetEntities(graph, entityTypeURI , offset, limit) {
-      /*jshint multistr: true */
-        this.query = '\
-      SELECT DISTINCT ?entity WHERE { \
-        { \
-          GRAPH <'+graph+'>  { \
-            ?entity a <'+entityTypeURI+'> . \
-          } \
-        } \
-    } ORDER BY ASC(?entity) LIMIT ' + limit + ' OFFSET ' + offset + ' \
-      ';
+        this.query = `
+      SELECT DISTINCT ?entity ?property ?object WHERE {
+        GRAPH <${graph}> {
+              ?entity ?property ?object .
+            {
+                SELECT DISTINCT ?entity WHERE {
+                    GRAPH <${graph}> {
+                        ?entity a <${entityTypeURI}>  .
+                    }
+                }
+                LIMIT ${limit} OFFSET ${offset}
+            }
+        }
+    } ORDER BY ?entity
+      `;
         return this.prefixes + this.query;
     }
     getDatasetEntity(graph, entityURI) {

@@ -70,6 +70,10 @@ export default {
             entityTypeURI = params.entityTypeURI ? decodeURIComponent(params.entityTypeURI) : (queryParams.entityTypeURI ? decodeURIComponent(queryParams.entityTypeURI) : '');
             offsetF = params.offset ? params.offset : (queryParams.offset ? queryParams.offset : 0);
             limitF = params.limit ? params.limit : (queryParams.limit ? queryParams.limit : 20);
+            //maximum: 10000
+            if(limitF > 10000){
+                limitF = 10000;
+            }
             //----------
 
             if(!smsKey || !isValidAPIToken(smsKey)){
