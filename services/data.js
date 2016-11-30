@@ -10,7 +10,7 @@ const outputFormat = 'application/sparql-results+json';
 const headers = {'Accept': 'application/sparql-results+json'};
 let user;
 /*-----------------------------------*/
-let endpointParameters, cGraphName, graphName, query, queryObject, utilObject, configurator, datasetURI, entityURI, entityTypeURI, propertyURI, queryParams, smsKey, offsetF, limitF;
+let endpointParameters, cGraphName, graphName, query, queryObject, utilObject, configurator, datasetURI, entityURI, entityTypeURI, propertyURI, queryParams, smsKey, offsetF, limitF, accessToken;
 queryObject = new DataQuery();
 utilObject = new DataUtil();
 configurator = new Configurator();
@@ -103,7 +103,7 @@ export default {
             });
         } else if (resource === 'data.nano.patents') {
             //set params
-            smsKey = params.smsKey ? params.smsKey : (queryParams.smsKey ? queryParams.smsKey : '');
+            //smsKey = params.smsKey ? params.smsKey : (queryParams.smsKey ? queryParams.smsKey : '');
             datasetURI = 'http://risis.eu/dataset/nano';
             entityTypeURI = 'http://risis.eu/nano/ontology/class/Document';
             offsetF = params.offset ? params.offset : (queryParams.offset ? queryParams.offset : 0);
@@ -113,31 +113,42 @@ export default {
                 limitF = 10000;
             }
             //----------
-
-            if(!smsKey || !isValidAPIToken(smsKey)){
-                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
+            accessToken = params.access_token ? params.access_token : (queryParams.access_token ? queryParams.access_token : '');
+            if(!accessToken){
+                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
             }
             //the URI of graph where data is stored
             if(!datasetURI || !entityTypeURI ){
                 callback(null, {entities: [], error: {'type':'params', 'msg': 'datasetURI or entityTypeURI are not given!'}}); return 0;
             }
-            graphName = datasetURI;
-            endpointParameters = getEndpointParameters(graphName);
-            //SPARQL QUERY
-            query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
-            //console.log(query);
-            //send request
-            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
-                callback(null, {
-                    datasetURI: datasetURI,
-                    entityTypeURI: entityTypeURI,
-                    offset: offsetF,
-                    limit: limitF,
-                    entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
-                });
-            }).catch(function (err) {
-                console.log(err);
-                callback(null, {entities: []});
+            let validationURI =`https://auth-risis.cortext.net/auth/access?access_token=${accessToken}`;
+            rp.get({uri: validationURI}).then(function(r1){
+                let tmp = JSON.parse(r1);
+                if(tmp.error){
+                    callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
+                }else{
+                    graphName = datasetURI;
+                    endpointParameters = getEndpointParameters(graphName);
+                    //SPARQL QUERY
+                    query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
+                    //console.log(query);
+                    //send request
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
+                        callback(null, {
+                            datasetURI: datasetURI,
+                            entityTypeURI: entityTypeURI,
+                            offset: offsetF,
+                            limit: limitF,
+                            entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {entities: []});
+                    });
+                }
+            }).catch(function (err1) {
+                //console.log(err1);
+                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
             });
         } else if (resource === 'data.nano.organisations') {
             //set params
@@ -151,31 +162,42 @@ export default {
                 limitF = 10000;
             }
             //----------
-
-            if(!smsKey || !isValidAPIToken(smsKey)){
-                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
+            accessToken = params.access_token ? params.access_token : (queryParams.access_token ? queryParams.access_token : '');
+            if(!accessToken){
+                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
             }
             //the URI of graph where data is stored
             if(!datasetURI || !entityTypeURI ){
                 callback(null, {entities: [], error: {'type':'params', 'msg': 'datasetURI or entityTypeURI are not given!'}}); return 0;
             }
-            graphName = datasetURI;
-            endpointParameters = getEndpointParameters(graphName);
-            //SPARQL QUERY
-            query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
-            //console.log(query);
-            //send request
-            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
-                callback(null, {
-                    datasetURI: datasetURI,
-                    entityTypeURI: entityTypeURI,
-                    offset: offsetF,
-                    limit: limitF,
-                    entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
-                });
-            }).catch(function (err) {
-                console.log(err);
-                callback(null, {entities: []});
+            let validationURI =`https://auth-risis.cortext.net/auth/access?access_token=${accessToken}`;
+            rp.get({uri: validationURI}).then(function(r1){
+                let tmp = JSON.parse(r1);
+                if(tmp.error){
+                    callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
+                }else{
+                    graphName = datasetURI;
+                    endpointParameters = getEndpointParameters(graphName);
+                    //SPARQL QUERY
+                    query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
+                    //console.log(query);
+                    //send request
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
+                        callback(null, {
+                            datasetURI: datasetURI,
+                            entityTypeURI: entityTypeURI,
+                            offset: offsetF,
+                            limit: limitF,
+                            entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {entities: []});
+                    });
+                }
+            }).catch(function (err1) {
+                //console.log(err1);
+                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
             });
         } else if (resource === 'data.orgref.organisations') {
             //set params
@@ -189,31 +211,42 @@ export default {
                 limitF = 10000;
             }
             //----------
-
-            if(!smsKey || !isValidAPIToken(smsKey)){
-                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
+            accessToken = params.access_token ? params.access_token : (queryParams.access_token ? queryParams.access_token : '');
+            if(!accessToken){
+                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
             }
             //the URI of graph where data is stored
             if(!datasetURI || !entityTypeURI ){
                 callback(null, {entities: [], error: {'type':'params', 'msg': 'datasetURI or entityTypeURI are not given!'}}); return 0;
             }
-            graphName = datasetURI;
-            endpointParameters = getEndpointParameters(graphName);
-            //SPARQL QUERY
-            query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
-            //console.log(query);
-            //send request
-            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
-                callback(null, {
-                    datasetURI: datasetURI,
-                    entityTypeURI: entityTypeURI,
-                    offset: offsetF,
-                    limit: limitF,
-                    entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
-                });
-            }).catch(function (err) {
-                console.log(err);
-                callback(null, {entities: []});
+            let validationURI =`https://auth-risis.cortext.net/auth/access?access_token=${accessToken}`;
+            rp.get({uri: validationURI}).then(function(r1){
+                let tmp = JSON.parse(r1);
+                if(tmp.error){
+                    callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
+                }else{
+                    graphName = datasetURI;
+                    endpointParameters = getEndpointParameters(graphName);
+                    //SPARQL QUERY
+                    query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
+                    //console.log(query);
+                    //send request
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
+                        callback(null, {
+                            datasetURI: datasetURI,
+                            entityTypeURI: entityTypeURI,
+                            offset: offsetF,
+                            limit: limitF,
+                            entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {entities: []});
+                    });
+                }
+            }).catch(function (err1) {
+                //console.log(err1);
+                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
             });
         } else if (resource === 'data.cordisFP7.projects') {
             //set params
@@ -227,31 +260,42 @@ export default {
                 limitF = 10000;
             }
             //----------
-
-            if(!smsKey || !isValidAPIToken(smsKey)){
-                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
+            accessToken = params.access_token ? params.access_token : (queryParams.access_token ? queryParams.access_token : '');
+            if(!accessToken){
+                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
             }
             //the URI of graph where data is stored
             if(!datasetURI || !entityTypeURI ){
                 callback(null, {entities: [], error: {'type':'params', 'msg': 'datasetURI or entityTypeURI are not given!'}}); return 0;
             }
-            graphName = datasetURI;
-            endpointParameters = getEndpointParameters(graphName);
-            //SPARQL QUERY
-            query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
-            //console.log(query);
-            //send request
-            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
-                callback(null, {
-                    datasetURI: datasetURI,
-                    entityTypeURI: entityTypeURI,
-                    offset: offsetF,
-                    limit: limitF,
-                    entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
-                });
-            }).catch(function (err) {
-                console.log(err);
-                callback(null, {entities: []});
+            let validationURI =`https://auth-risis.cortext.net/auth/access?access_token=${accessToken}`;
+            rp.get({uri: validationURI}).then(function(r1){
+                let tmp = JSON.parse(r1);
+                if(tmp.error){
+                    callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
+                }else{
+                    graphName = datasetURI;
+                    endpointParameters = getEndpointParameters(graphName);
+                    //SPARQL QUERY
+                    query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
+                    //console.log(query);
+                    //send request
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
+                        callback(null, {
+                            datasetURI: datasetURI,
+                            entityTypeURI: entityTypeURI,
+                            offset: offsetF,
+                            limit: limitF,
+                            entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {entities: []});
+                    });
+                }
+            }).catch(function (err1) {
+                //console.log(err1);
+                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
             });
         } else if (resource === 'data.eupro.projects') {
             //set params
@@ -265,31 +309,42 @@ export default {
                 limitF = 10000;
             }
             //----------
-
-            if(!smsKey || !isValidAPIToken(smsKey)){
-                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
+            accessToken = params.access_token ? params.access_token : (queryParams.access_token ? queryParams.access_token : '');
+            if(!accessToken){
+                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
             }
             //the URI of graph where data is stored
             if(!datasetURI || !entityTypeURI ){
                 callback(null, {entities: [], error: {'type':'params', 'msg': 'datasetURI or entityTypeURI are not given!'}}); return 0;
             }
-            graphName = datasetURI;
-            endpointParameters = getEndpointParameters(graphName);
-            //SPARQL QUERY
-            query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
-            //console.log(query);
-            //send request
-            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
-                callback(null, {
-                    datasetURI: datasetURI,
-                    entityTypeURI: entityTypeURI,
-                    offset: offsetF,
-                    limit: limitF,
-                    entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
-                });
-            }).catch(function (err) {
-                console.log(err);
-                callback(null, {entities: []});
+            let validationURI =`https://auth-risis.cortext.net/auth/access?access_token=${accessToken}`;
+            rp.get({uri: validationURI}).then(function(r1){
+                let tmp = JSON.parse(r1);
+                if(tmp.error){
+                    callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
+                }else{
+                    graphName = datasetURI;
+                    endpointParameters = getEndpointParameters(graphName);
+                    //SPARQL QUERY
+                    query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
+                    //console.log(query);
+                    //send request
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
+                        callback(null, {
+                            datasetURI: datasetURI,
+                            entityTypeURI: entityTypeURI,
+                            offset: offsetF,
+                            limit: limitF,
+                            entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {entities: []});
+                    });
+                }
+            }).catch(function (err1) {
+                //console.log(err1);
+                callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
             });
         } else if (resource === 'data.dataset.entity'){
             //set params
