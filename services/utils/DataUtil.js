@@ -22,12 +22,30 @@ class DataUtil{
         }
         return output;
     }
-    parseDatasetEntities(datasetURI, entityTypeURI, body) {
+    parseDatasetEntities(datasetURI, entityTypeURI, body, filters) {
+        let filertObj={};
+        if(filters){
+            filertObj =JSON.parse(filters);
+        }
         let parsed = JSON.parse(body);
         let output=[];
         if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
-                output.push({URI: el.entity.value, property: el.property.value, value: el.object.value , entityAPIPath: '/data.dataset.entity?datasetURI='+encodeURIComponent(datasetURI)+'&entityURI='+encodeURIComponent(el.entity.value)});
+                if(filertObj.accept && filertObj.accept.length){
+                    if(filertObj.accept.indexOf(el.property.value) !== -1){
+                        output.push({URI: el.entity.value, property: el.property.value, value: el.object.value , entityAPIPath: '/data.dataset.entity?datasetURI='+encodeURIComponent(datasetURI)+'&entityURI='+encodeURIComponent(el.entity.value)});
+                    }
+                }else{
+                    if(filertObj.ignore && filertObj.ignore.length){
+                        if(filertObj.ignore.indexOf(el.property.value) == -1){
+                            output.push({URI: el.entity.value, property: el.property.value, value: el.object.value , entityAPIPath: '/data.dataset.entity?datasetURI='+encodeURIComponent(datasetURI)+'&entityURI='+encodeURIComponent(el.entity.value)});
+                        }
+                    }else{
+                        output.push({URI: el.entity.value, property: el.property.value, value: el.object.value , entityAPIPath: '/data.dataset.entity?datasetURI='+encodeURIComponent(datasetURI)+'&entityURI='+encodeURIComponent(el.entity.value)});
+                    }
+
+                }
+
             });
             let finalObj={};
             //group by entity

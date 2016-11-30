@@ -10,7 +10,7 @@ const outputFormat = 'application/sparql-results+json';
 const headers = {'Accept': 'application/sparql-results+json'};
 let user;
 /*-----------------------------------*/
-let endpointParameters, cGraphName, graphName, query, queryObject, utilObject, configurator, datasetURI, entityURI, entityTypeURI, propertyURI, queryParams, smsKey, offsetF, limitF, accessToken, maxEntities = 10000;
+let endpointParameters, cGraphName, graphName, query, queryObject, utilObject, configurator, datasetURI, entityURI, entityTypeURI, propertyURI, queryParams, smsKey, offsetF, limitF, accessToken, filters, maxEntities = 10000;
 queryObject = new DataQuery();
 utilObject = new DataUtil();
 configurator = new Configurator();
@@ -95,7 +95,7 @@ export default {
                     offset: offsetF,
                     limit: limitF,
                     maximumPerPage: maxEntities,
-                    entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
+                    entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res, filters)
                 });
             }).catch(function (err) {
                 console.log(err);
@@ -112,6 +112,7 @@ export default {
                 limitF = maxEntities;
             }
             //----------
+            filters = params.filters ? decodeURIComponent(params.filters) : (queryParams.filters ? decodeURIComponent(queryParams.filters) : '');
             accessToken = params.access_token ? params.access_token : (queryParams.access_token ? queryParams.access_token : '');
             if(!accessToken){
                 callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
@@ -139,7 +140,7 @@ export default {
                             offset: offsetF,
                             limit: limitF,
                             maximumPerPage: maxEntities,
-                            entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
+                            entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res, filters)
                         });
                     }).catch(function (err) {
                         console.log(err);
@@ -161,6 +162,7 @@ export default {
                 limitF = maxEntities;
             }
             //----------
+            filters = params.filters ? decodeURIComponent(params.filters) : (queryParams.filters ? decodeURIComponent(queryParams.filters) : '');
             accessToken = params.access_token ? params.access_token : (queryParams.access_token ? queryParams.access_token : '');
             if(!accessToken){
                 callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
@@ -188,7 +190,7 @@ export default {
                             offset: offsetF,
                             limit: limitF,
                             maximumPerPage: maxEntities,
-                            entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
+                            entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res, filters)
                         });
                     }).catch(function (err) {
                         console.log(err);
@@ -210,6 +212,7 @@ export default {
                 limitF = maxEntities;
             }
             //----------
+            filters = params.filters ? decodeURIComponent(params.filters) : (queryParams.filters ? decodeURIComponent(queryParams.filters) : '');
             accessToken = params.access_token ? params.access_token : (queryParams.access_token ? queryParams.access_token : '');
             if(!accessToken){
                 callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
@@ -237,7 +240,7 @@ export default {
                             offset: offsetF,
                             limit: limitF,
                             maximumPerPage: maxEntities,
-                            entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
+                            entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res, filters)
                         });
                     }).catch(function (err) {
                         console.log(err);
@@ -259,6 +262,7 @@ export default {
                 limitF = maxEntities;
             }
             //----------
+            filters = params.filters ? decodeURIComponent(params.filters) : (queryParams.filters ? decodeURIComponent(queryParams.filters) : '');
             accessToken = params.access_token ? params.access_token : (queryParams.access_token ? queryParams.access_token : '');
             if(!accessToken){
                 callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
@@ -286,7 +290,7 @@ export default {
                             offset: offsetF,
                             limit: limitF,
                             maximumPerPage: maxEntities,
-                            entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
+                            entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res, filters)
                         });
                     }).catch(function (err) {
                         console.log(err);
@@ -308,6 +312,7 @@ export default {
                 limitF = maxEntities;
             }
             //----------
+            filters = params.filters ? decodeURIComponent(params.filters) : (queryParams.filters ? decodeURIComponent(queryParams.filters) : '');
             accessToken = params.access_token ? params.access_token : (queryParams.access_token ? queryParams.access_token : '');
             if(!accessToken){
                 callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
@@ -335,7 +340,7 @@ export default {
                             offset: offsetF,
                             limit: limitF,
                             maximumPerPage: maxEntities,
-                            entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res)
+                            entities: utilObject.parseDatasetEntities(datasetURI, entityTypeURI, res, filters)
                         });
                     }).catch(function (err) {
                         console.log(err);
