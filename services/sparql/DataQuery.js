@@ -40,17 +40,21 @@ class DataQuery{
       ';
         return this.prefixes + this.query;
     }
-    getDatasetEntityTypes(graph) {
-      /*jshint multistr: true */
-        this.query = '\
-      SELECT DISTINCT ?entityType (COUNT(?s) AS ?total) WHERE { \
-        { \
-          GRAPH <'+graph+'>  { \
-            ?s a ?entityType. \
-          } \
-        } \
-      } ORDER BY ASC(?total) \
-      ';
+    getDatasetEntityTypes(graph, entityType) {
+        let ext ='';
+        if(entityType){
+            ext = `?s a <${entityType}> .`;
+        }
+        this.query = `
+      SELECT DISTINCT ?entityType (COUNT(DISTINCT ?s) AS ?total) WHERE {
+        {
+          GRAPH <${graph}>  {
+            ?s a ?entityType .
+            ${ext}
+          }
+        }
+      } ORDER BY ASC(?total)
+      `;
         return this.prefixes + this.query;
     }
     getDatasetEntities(graph, entityTypeURI , offset, limit) {

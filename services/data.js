@@ -51,7 +51,7 @@ export default {
             graphName = datasetURI;
             endpointParameters = getEndpointParameters(graphName);
             //SPARQL QUERY
-            query = queryObject.getDatasetEntityTypes(graphName);
+            query = queryObject.getDatasetEntityTypes(graphName,'');
             //console.log(query);
             //send request
             rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
@@ -100,6 +100,50 @@ export default {
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {entities: []});
+            });
+        } else if (resource === 'data.nano.patents.metadata') {
+            datasetURI = 'http://risis.eu/dataset/nano';
+            entityTypeURI = 'http://risis.eu/nano/ontology/class/Document';
+            graphName = datasetURI;
+            endpointParameters = getEndpointParameters(graphName);
+            //SPARQL QUERY
+            query = queryObject.getDatasetEntityTypes(graphName, entityTypeURI);
+            //console.log(query);
+            //send request
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
+                callback(null, {metadata: {
+                    api_path: '/api/v1.0/data.nano.patents',
+                    label: '[RISIS] Nano Patents Dataset',
+                    description: 'List of Nanotechnology patents from RISIS Nano Dataset.',
+                    total_number_of_entities: utilObject.parseDatasetEntityTypes(datasetURI, res)[0].count,
+                    input:{
+                        'offset': {label: 'Offset', description:'offset of entities', type: 'number'},
+                        'limit': {label: 'Limit', description:'number of entities to be returned in one call', type: 'number'},
+                        'filters': {label: 'Filters', description:'allows filtering of the results e.g. accept, ignore parameters can filter the properties returned by API.', type: 'object', children: {
+                            'accept': {label: 'Accept', description:'set of properties to be selected', type: 'array'},
+                            'ignore': {label: 'Ignore', description:'set of properties to be ignored', type: 'array'},
+                        }},
+                        'access_token': {label: 'Access Token', description:'token required to call the API', type: 'string'}
+                    },
+                    output:{
+                        entity_properties: [
+                            'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+                            'http://risis.eu/nano/ontology/predicate/id',
+                            'http://risis.eu/nano/ontology/predicate/appln_abstract',
+                            'http://risis.eu/nano/ontology/predicate/appln_auth',
+                            'http://risis.eu/nano/ontology/predicate/appln_filing_year',
+                            'http://risis.eu/nano/ontology/predicate/appln_first_priority_year',
+                            'http://risis.eu/nano/ontology/predicate/appln_id',
+                            'http://risis.eu/nano/ontology/predicate/appln_kind',
+                            'http://risis.eu/nano/ontology/predicate/appln_nr',
+                            'http://risis.eu/nano/ontology/predicate/appln_title',
+                            'http://risis.eu/nano/ontology/predicate/artificial'
+                        ]
+                    }
+                }});
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {metadata: {}});
             });
         } else if (resource === 'data.nano.patents') {
             //set params
