@@ -17,38 +17,22 @@ class AdminQuery{
         `;
         this.query='';
     }
-<<<<<<< HEAD
-    getUsers(graphName) {
-        /*jshint multistr: true */
-        this.query = '\
-        SELECT DISTINCT ?subject ?username ?isActive ?isSuperUser ?mbox ?firstName ?lastName (group_concat(distinct ?member ; separator = ",") AS ?membership) FROM <'+ graphName +'> WHERE {\
-                { \
-                ?subject a foaf:Person . \
-                ?subject foaf:accountName ?username . \
-                ?subject ldReactor:isActive ?isActive . \
-                ?subject foaf:firstName ?firstName . \
-                ?subject foaf:lastName ?lastName . \
-                ?subject foaf:member ?member . \
-                ?subject ldReactor:isSuperUser ?isSuperUser . \
-                ?subject foaf:mbox ?mbox . \
-                } \
-        } ORDER BY ASC(?lastName)\
-        ';
-=======
     getUsers(endpointParameters, graphName) {
         let {gStart, gEnd} = this.queryObject.prepareGraphName(graphName);
         this.query = `
-        SELECT DISTINCT ?subject ?username ?isActive ?isSuperUser ?mbox WHERE {
+        SELECT DISTINCT ?subject ?username ?isActive ?isSuperUser ?mbox ?firstName ?lastName (group_concat(distinct ?member ; separator = ",") AS ?membership) WHERE {
             ${gStart}
-                ?subject a ldr:User ;
+                ?subject a foaf:Person ;
                          foaf:accountName ?username ;
+                         foaf:firstName ?firstName ;
+                         foaf:lastName ?lastName ;
+                         foaf:member ?member ;
                          ldr:isActive ?isActive ;
                          ldr:isSuperUser ?isSuperUser ;
                          foaf:mbox ?mbox .
             ${gEnd}
-        } ORDER BY ASC(?username)
+        } ORDER BY ASC(?lastName)
         `;
->>>>>>> 8801343676a50d998df565eeae18272d36a57af7
         return this.prefixes + this.query;
     }
     activateUser(endpointParameters, graphName, resourceURI){

@@ -12,3 +12,10 @@
 
 - test agg objects + Queries
 - add http authentication Support
+
+
+
+#	plugins/authentication/auth-helper.js
+#	plugins/authentication/handleAuth.js
+#	services/utils/helpers.js
+#	services/dataset.js

@@ -28,13 +28,8 @@ export default {
                 }else{
                     user = req.user;
                     //only super users have access to admin services
-<<<<<<< HEAD
                     if(!parseInt(user.isSuperUser) && user.member.indexOf('http://rdf.risis.eu/user/PRB') === -1 && user.member.indexOf('http://rdf.risis.eu/user/FCB') === -1){
                         callback(null, {graphName: graphName, users: []});
-=======
-                    if(!parseInt(user.isSuperUser)){
-                        callback(null, {datasetURI: datasetURI, graphName: '', users: []});
->>>>>>> 8801343676a50d998df565eeae18272d36a57af7
                     }
                 }
             }else{

@@ -22,67 +22,47 @@ export default {
     name: 'dataset',
     // At least one of the CRUD methods is Required
     read: (req, resource, params, config, callback) => {
-<<<<<<< HEAD
         if(resource === 'dataset.list'){
-            graphName = (params.id ? decodeURIComponent(params.id) : 0);
+            datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
             endpointParameters = getEndpointParameters(graphName);
-            //graph name used for server settings and configs
-            cGraphName = graphName;
-            //overwrite graph name for the ones with default graph
-            if(endpointParameters.useDefaultGraph){
-                cGraphName = 0;
-            }else{
-                if(!cGraphName){
-                    graphName = defaultGraphName[0];
-                    cGraphName = defaultGraphName[0];
-                }
-            }
-            //config handler
-            let rconfig = configurator.prepareDatasetConfig(graphName);
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {graphName: graphName, resources: [], page: 1, config: rconfig});
-=======
-        if (resource === 'dataset.resourcesByType') {
+                    return 0;
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+                //SPARQL QUERY
+                query = queryObject.getDatasetsList();
+                //send request
+                rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
+                    callback(null, {
+                        graphName: graphName,
+                        resources: utilObject.parseDatasetsList(res),
+                        page: 1,
+                        config: rconfig
+                    });
+                }).catch(function (err) {
+                    console.log(err);
+                    callback(null, {graphName: graphName, resources: [], page: 1, config: rconfig});
+                });
+            });
+        } else if (resource === 'dataset.resourcesByType') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {datasetURI: datasetURI, graphName: graphName, resources: [], page: params.page, config: rconfig});
->>>>>>> 8801343676a50d998df565eeae18272d36a57af7
                     return 0;
                 }else{
                     user = req.user;
                 }
-<<<<<<< HEAD
-            }else{
-                user = {accountName: 'open'};
-            }
-            //SPARQL QUERY
-            query = queryObject.getDatasetsList();
-            //send request
-            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
-                callback(null, {
-                    graphName: graphName,
-                    resources: utilObject.parseDatasetsList(res),
-                    page: 1,
-                    config: rconfig
-                });
-            }).catch(function (err) {
-                console.log(err);
-                callback(null, {graphName: graphName, resources: [], page: 1, config: rconfig});
-            });
-        } else if (resource === 'dataset.resourcesByType') {
-            graphName = (params.id ? decodeURIComponent(params.id) : 0);
-            endpointParameters = getEndpointParameters(graphName);
-            //graph name used for server settings and configs
-            cGraphName = graphName;
-            //overwrite graph name for the ones with default graph
-            if(endpointParameters.useDefaultGraph){
-                cGraphName = 0;
-=======
->>>>>>> 8801343676a50d998df565eeae18272d36a57af7
             }else{
                 user = {accountName: 'open'};
             }

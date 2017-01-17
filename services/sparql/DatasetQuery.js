@@ -2,22 +2,21 @@
 import {getQueryDataTypeValue} from '../utils/helpers';
 class DatasetQuery{
     constructor() {
-<<<<<<< HEAD
-        /*jshint multistr: true */
-        this.prefixes='\
-        PREFIX risis: <http://risis.eu/> \
-        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \
-        PREFIX owl: <http://www.w3.org/2002/07/owl#> \
-        PREFIX dcterms: <http://purl.org/dc/terms/> \
-        PREFIX void: <http://rdfs.org/ns/void#> \
-        PREFIX pav: <http://purl.org/pav/> \
-        PREFIX wv: <http://vocab.org/waiver/terms/norms> \
-        PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-        PREFIX skos: <http://www.w3.org/2004/02/skos/core#> \
-        PREFIX risisVoid: <http://rdf.risis.eu/dataset/risis/1.0/void.ttl#> \
-         ';
+        this.prefixes=`
+        PREFIX risis: <http://risis.eu/>
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX owl: <http://www.w3.org/2002/07/owl#>
+        PREFIX dcterms: <http://purl.org/dc/terms/>
+        PREFIX void: <http://rdfs.org/ns/void#>
+        PREFIX pav: <http://purl.org/pav/>
+        PREFIX wv: <http://vocab.org/waiver/terms/norms>
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        PREFIX risisVoid: <http://rdf.risis.eu/dataset/risis/1.0/void.ttl#>
+        PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
+        `;
         this.query='';
     }
     //-----------RISIS------------
@@ -36,21 +35,6 @@ class DatasetQuery{
       return this.prefixes + this.query;
     }
     //--------------------------------
-    countResourcesByType(graphName, type) {
-=======
-        this.prefixes=`
-        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        PREFIX owl: <http://www.w3.org/2002/07/owl#>
-        PREFIX dcterms: <http://purl.org/dc/terms/>
-        PREFIX void: <http://rdfs.org/ns/void#>
-        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-        PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
-        `;
-        this.query='';
-    }
     prepareGraphName(graphName){
         let gStart = 'GRAPH <'+ graphName +'> { ';
         let gEnd = ' } ';
@@ -73,7 +57,6 @@ class DatasetQuery{
     }
     countResourcesByType(endpointParameters, graphName, type) {
         let {gStart, gEnd} = this.prepareGraphName(graphName);
->>>>>>> 8801343676a50d998df565eeae18272d36a57af7
         let st = '?resource a <'+ type + '> .';
         //will get all the types
         if(!type.length || (type.length && !type[0]) ){
