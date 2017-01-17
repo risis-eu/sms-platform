@@ -1,11 +1,11 @@
 'use strict';
 //required for authentication
-var helper = require('./auth-helper');
-var passwordHash = require('password-hash');
-var passport = require ('passport');
-var passportConfig = require('./passport-config');
+let passwordHash = require('password-hash');
+let passport = require ('passport');
+let passportConfig = require('./passport-config');
 passportConfig.enable(passport);
 //----------------------
+<<<<<<< HEAD
 var handleEmail = require('../../plugins/email/handleEmail');
 var rp = require('request-promise');
 var config = require('../../configs/server');
@@ -152,6 +152,18 @@ var getUserDataQuery = function(email){
     ';
     return query;
 }
+=======
+let handleEmail = require('../../plugins/email/handleEmail');
+let rp = require('request-promise');
+let config = require('../../configs/server');
+let generalConfig = require('../../configs/general');
+let helpers = require('../../services/utils/helpers');
+
+let appShortTitle = generalConfig.appShortTitle;
+let appFullTitle = generalConfig.appFullTitle;
+
+let outputFormat = 'application/sparql-results+json';
+>>>>>>> 8801343676a50d998df565eeae18272d36a57af7
 module.exports = function handleAuthentication(server) {
     server.use(passport.initialize());
     server.use(passport.session());
@@ -302,7 +314,7 @@ module.exports = function handleAuthentication(server) {
         res.redirect('/');
     });
     server.get('/profile/:id', function(req, res) {
-        res.redirect('/dataset/' + encodeURIComponent(generalConfig.authGraphName)+'/resource/'+ encodeURIComponent(req.params.id));
+        res.redirect('/dataset/' + encodeURIComponent(generalConfig.authDatasetURI)+'/resource/'+ encodeURIComponent(req.params.id));
     });
     server.get('/confirmation', function(req, res) {
         if(!req.isAuthenticated()){
@@ -424,3 +436,101 @@ module.exports = function handleAuthentication(server) {
          }
      });
 };
+<<<<<<< HEAD
+=======
+let prepareGraphName = (graphName)=> {
+    let gStart = 'GRAPH <'+ graphName +'> { ';
+    let gEnd = ' } ';
+    if(!graphName || graphName === 'default'){
+        gStart =' ';
+        gEnd = ' ';
+    }
+    return {gStart: gStart, gEnd: gEnd}
+};
+let addUserQueries = (req, res, recaptchaSiteKey) => {
+    //first check if user already exists
+    let endpoint = helpers.getStaticEndpointParameters([generalConfig.authDatasetURI[0]]);
+    let {gStart, gEnd} = helpers.prepareGraphName(endpoint.graphName);
+    let query = `
+    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+    PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
+    SELECT ( COUNT(?s) AS ?exists ) WHERE {
+      ${gStart}
+          ?s a ldr:User .
+          ?s foaf:accountName """${req.body.username}""" .
+      ${gEnd}
+    }
+    `;
+    let rpPath = helpers.getHTTPGetURL(helpers.getHTTPQuery('read', query, endpoint, outputFormat));
+    //send request
+    rp.get({uri: rpPath}).then(function(resq){
+        let parsed = JSON.parse(resq);
+        if(parsed.results.bindings.length){
+            if(parsed.results.bindings[0].exists.value ==='0'){
+                //register as new user
+                console.log('start registration');
+                let rnd = Math.round(+new Date() / 1000);
+                let resourceURI = generalConfig.baseResourceDomain + '/user/' + rnd;
+                let dresourceURI = generalConfig.baseResourceDomain + '/resource/' + rnd;
+                let datasetURI = generalConfig.baseResourceDomain + '/dataset/' + rnd;
+                let blanknode = generalConfig.baseResourceDomain + '/editorship/' + rnd;
+                let tmpE= [];
+                let isActive = generalConfig.enableUserConfirmation? 0 : 1;
+                let date = new Date();
+                let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
+                query = `
+                    PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
+                    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+                    PREFIX dcterms: <http://purl.org/dc/terms/>
+                    INSERT DATA  {
+                        ${gStart}
+                            <${resourceURI}> a foaf:Person , ldr:User ;
+                                             foaf:firstName """${req.body.firstname}""";
+                                             foaf:lastName """${req.body.lastname}""";
+                                             foaf:organization """${req.body.organization}""";
+                                             foaf:accountName """${req.body.username}""";
+                                             foaf:member ldr:NormalUser ;
+                                             foaf:mbox <mailto:${req.body.email}>;
+                                             dcterms:created "${currentDate}"^^xsd:dateTime;
+                                             ldr:password """${passwordHash.generate(req.body.password)}""";
+                                             ldr:isActive "${isActive}"^^xsd:Integer;
+                                             ldr:isSuperUser "0"^^xsd:Integer;
+                                             ldr:editorOfDataset <${datasetURI}>;
+                                             ldr:editorOfResource <${dresourceURI}>;
+                                             ldr:editorOfProperty <${blanknode}1>, <${blanknode}2>, <${blanknode}3>, <${blanknode}4> .
+                                             <${blanknode}1> ldr:resource <${resourceURI}> ;
+                                                             ldr:property foaf:firstName .
+                                             <${blanknode}2> ldr:resource <${resourceURI}> ;
+                                                             ldr:property foaf:lastName .
+                                             <${blanknode}3> ldr:resource <${resourceURI}> ;
+                                                             ldr:property foaf:organization .
+                                             <${blanknode}4> ldr:resource <${resourceURI}> ;
+                                                             ldr:property ldr:password .
+
+                        ${gEnd}
+                    }
+                `;
+                let HTTPQueryObject = helpers.getHTTPQuery('update', query, endpoint, outputFormat);
+                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(){
+                    console.log('User is created!');
+                    //send email notifications
+                    if(generalConfig.enableEmailNotifications){
+                        handleEmail.sendMail('userRegistration', req.body.email, '', '', '', '');
+                    }
+                    return res.redirect('/confirmation');
+                }).catch(function (err2) {
+                    console.log(err2);
+                });
+            }else{
+                res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, recaptchaSiteKey: recaptchaSiteKey, data: req.body, errorMsg: 'Error... User already exists!'});
+                console.log('User already exists!');
+            }
+
+        }else{
+            res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, recaptchaSiteKey: recaptchaSiteKey, data: req.body, errorMsg: 'Error... Unknown Error!'});
+        }
+    }).catch(function (errq) {
+        console.log(errq);
+    });
+}
+>>>>>>> 8801343676a50d998df565eeae18272d36a57af7

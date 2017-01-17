@@ -2,42 +2,40 @@
 import {getQueryDataTypeValue} from '../utils/helpers';
 class FacetQuery{
     constructor() {
-        /*jshint multistr: true */
-        this.prefixes='\
-        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \
-        PREFIX owl: <http://www.w3.org/2002/07/owl#> \
-        PREFIX dcterms: <http://purl.org/dc/terms/> \
-        PREFIX void: <http://rdfs.org/ns/void#> \
-        PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-        PREFIX skos: <http://www.w3.org/2004/02/skos/core#> \
-         ';
+        this.prefixes=`
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX owl: <http://www.w3.org/2002/07/owl#>
+        PREFIX dcterms: <http://purl.org/dc/terms/>
+        PREFIX void: <http://rdfs.org/ns/void#>
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        `;
         this.query='';
     }
+    prepareGraphName(graphName){
+        let gStart = 'GRAPH <'+ graphName +'> { ';
+        let gEnd = ' } ';
+        if(!graphName || graphName === 'default'){
+            gStart =' ';
+            gEnd = ' ';
+        }
+        return {gStart: gStart, gEnd: gEnd}
+    }
     getMasterPropertyValues(endpointParameters, graphName, type, propertyURI) {
-        let st = '?s <'+ propertyURI + '>  ?v.';
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
+        let st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.';
         //---to support resource focus types
         let st_extra = this.makeExtraTypeFilters(endpointParameters, type);
-        st = st + ' ' + st_extra;
-        if(String(graphName)!=='' && graphName){
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT (count(?s) AS ?total) ?v WHERE {\
-                { GRAPH <' + graphName + '> \
-                    { '+ st +' \
-                    } \
-                } \
-            } GROUP BY ?v \
-            ';
-        }else{
-            this.query = '\
-            SELECT (count(?s) AS ?total) ?v WHERE {\
-                { '+ st +' \
-            }  \
-            } GROUP BY ?v \
-            ';
-        }
+        st = st_extra + ' ' + st;
+        this.query = `
+        SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
+            ${gStart}
+                ${st}
+            ${gEnd}
+        } GROUP BY ?v
+        `;
         return this.prefixes + this.query;
     }
     getMultipleFilters(endpointParameters, prevSelection, type) {
@@ -76,7 +74,7 @@ class FacetQuery{
                         filters.push('(' + tmp2.join(' || ') + ')');
                         //---------------
                     }else{
-                        //for virtuoso
+                        //for virtuoso and others
                         filters.push('str(?v' + i + ') IN ('+ tmp.join(',') +')');
                     }
                 }else{
@@ -109,7 +107,7 @@ class FacetQuery{
                     }
                 }
                 //---------
-                st = st + '?s <'+ key + '>  ?v' + i + '. ';
+                st = st + '?s '+ this.filterPropertyPath(key) + ' ?v' + i + '. ';
             }
         }
         st = st + ' FILTER (' + filters.join(' && ') + ') ';
@@ -120,11 +118,11 @@ class FacetQuery{
 
         //---to support resource focus types
         let st_extra = this.makeExtraTypeFilters(endpointParameters, type);
-        return st + st_extra;
+        return st_extra + ' ' + st;
     }
     makeExtraTypeFilters(endpointParameters, type){
         //---to support resource focus types
-        let st_extra = ' ?s a <'+ type + '> .';
+        let st_extra = ' ?s rdf:type <'+ type + '> .';
         //will get all the types
         if(!type || !type.length || (type.length && !type[0]) ){
             st_extra = '';
@@ -141,103 +139,115 @@ class FacetQuery{
                 typeURIs.forEach(function(fl){
                     tmp2.push('?type=' + fl);
                 });
-                st_extra = ' ?s a ?type . FILTER (' + tmp2.join(' || ') + ')';
+                st_extra = ' ?s rdf:type ?type . FILTER (' + tmp2.join(' || ') + ')';
                 //---------------
             }else{
                 //---for virtuoso
-                st_extra = ' ?s a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
+                st_extra = ' ?s rdf:type ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
             }
         }
         //-----------------------------------------------
         return st_extra;
     }
+    filterPropertyPath(propertyURI){
+        if(propertyURI.indexOf('->')!== -1){
+            let tmp2 =[], tmp = propertyURI.split('->');
+            tmp.forEach((el)=> {
+                tmp2.push('<'+el.trim()+'>');
+            });
+            return tmp2.join('/');
+        }else{
+            return '<'+ propertyURI + '>';
+        }
+    }
     getSideEffects(endpointParameters, graphName, type, propertyURI, prevSelection) {
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
-        st = st + '?s <'+ propertyURI + '>  ?v.';
-        if(String(graphName)!=='' && graphName){
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT (count(?s) AS ?total) ?v WHERE {\
-                { GRAPH <' + graphName + '> \
-                    { '+ st +' \
-                    } \
-                } \
-            } GROUP BY ?v \
-            ';
-        }else{
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT (count(?s) AS ?total) ?v WHERE {\
-                { '+ st +' \
-                } \
-            } GROUP BY ?v \
-            ';
-        }
+        st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.' + st;
+        this.query = `
+        SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
+            ${gStart}
+                ${st}
+            ${gEnd}
+        } GROUP BY ?v
+        `;
         return this.prefixes + this.query;
     }
-    countSecondLevelPropertyValues(endpointParameters, graphName, type, propertyURI, prevSelection) {
+    countSecondLevelPropertyValues(endpointParameters, graphName, type, prevSelection) {
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
-        if(String(graphName)!=='' && graphName){
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT (count(?s) AS ?total) WHERE {\
-                { GRAPH <' + graphName + '> \
-                    { '+ st +' \
-                    } \
-                } \
-            }\
-            ';
-        }else{
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT (count(?s) AS ?total) WHERE {\
-                { '+ st +' \
-                } \
-            }\
-            ';
+        this.query = `
+        SELECT (count(DISTINCT ?s) AS ?total) WHERE {
+            ${gStart}
+                ${st}
+            ${gEnd}
         }
+        `;
         return this.prefixes + this.query;
     }
-    getSecondLevelPropertyValues(endpointParameters, graphName, rtconfig, propertyURI, prevSelection, limit, offset) {
+    getSecondLevelPropertyValues(endpointParameters, graphName, searchTerm, rtconfig, prevSelection, limit, offset) {
+        let self = this;
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
         let type = rtconfig.type;
         let labelProperty = rtconfig.labelProperty;
+        let imageProperty = rtconfig.imageProperty;
+        let geoProperty = rtconfig.geoProperty;
         let selectStr = '';
         let titleStr = '';
+        let imageStr = '';
+        let geoStr = '';
         let bindPhase = '';
         let noffset = (offset-1)*limit;
+        let searchPhase='';
+        if(searchTerm && searchTerm.length>2){
+            searchPhase = 'FILTER( regex(?title, "'+searchTerm+'", "i") || regex(STR(?s), "'+searchTerm+'", "i"))';
+        }
         //add labels for entities
         if(labelProperty && labelProperty.length){
             selectStr = ' ?title ';
             if(labelProperty.length === 1){
-                titleStr = 'OPTIONAL { ?s <' + labelProperty[0] + '> ?title .} ';
+                titleStr = 'OPTIONAL { ?s ' + self.filterPropertyPath(labelProperty[0]) + ' ?title .} ';
             }else {
                 titleStr = '';
                 let tmpA = [];
                 labelProperty.forEach(function(prop, index) {
-                    titleStr = titleStr + 'OPTIONAL { ?s <' + prop + '> ?vp'+index+' .} ';
+                    titleStr = titleStr + 'OPTIONAL { ?s ' + self.filterPropertyPath(prop) + ' ?vp'+index+' .} ';
                     tmpA.push('?vp' + index);
                 });
                 bindPhase = ' BIND(CONCAT('+tmpA.join(',"-",')+') AS ?title) '
             }
+        }else{
+            selectStr = ' ?title ';
+            titleStr = 'OPTIONAL { ?s rdfs:label ?title .} ';
+        }
+        if(imageProperty && imageProperty.length){
+            selectStr = selectStr + ' ?image ';
+            imageStr = 'OPTIONAL { ?s ' + self.filterPropertyPath(imageProperty[0]) + ' ?image .} ';
+        }
+        if(geoProperty && geoProperty.length){
+            selectStr = selectStr + ' ?geo ';
+            geoStr = 'OPTIONAL { ?s ' + self.filterPropertyPath(geoProperty[0]) + ' ?geo .} ';
         }
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
-        if(String(graphName)!=='' && graphName){
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT DISTINCT ?s ' + selectStr + ' WHERE {\
-                { GRAPH <' + graphName + '> \
-                    { '+ st + titleStr + bindPhase +' \
-                    } \
-                } \
-            } LIMIT ' + limit + ' OFFSET ' + noffset;
-        }else{
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT DISTINCT ?s ' + selectStr + ' WHERE {\
-                { '+ st + titleStr + bindPhase + ' \
-                } \
-            } LIMIT ' + limit + ' OFFSET ' + noffset;
+        let limitOffsetPharse =`LIMIT ${limit} OFFSET ${noffset}`;
+        if(searchPhase){
+            limitOffsetPharse ='';
         }
+        this.query = `
+        SELECT DISTINCT ?s ${selectStr} WHERE {
+            ${gStart}
+                {
+                    SELECT DISTINCT ?s WHERE {
+                        ${gStart}
+                            ${st}
+                        ${gEnd}
+                    }
+                    ${limitOffsetPharse}
+                }
+                ${titleStr} ${imageStr} ${geoStr} ${bindPhase} ${searchPhase}
+            ${gEnd}
+        }
+        `;
         return this.prefixes + this.query;
     }
 }

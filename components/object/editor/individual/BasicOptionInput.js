@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import BasicIndividualInput from './BasicIndividualInput';
-
+/**
+a dropdown list of items as input
+*/
 class BasicOptionInput extends React.Component {
     constructor(props) {
         super(props);
@@ -9,8 +11,6 @@ class BasicOptionInput extends React.Component {
         if(this.props.spec.isDefault){
             v = this.createDefaultValue(this.props.spec.valueType, this.props.spec.dataType);
         }
-        //to initialize value in Property state
-        this.props.onDataEdit(v);
         this.state = {value: v, userDefinedMode: 0};
     }
     componentDidMount() {
@@ -18,7 +18,10 @@ class BasicOptionInput extends React.Component {
             ReactDOM.findDOMNode(this.refs.basicInputSelect).focus();
         }
     }
-
+    componentWillMount() {
+        //to initialize value in Property state
+        this.props.onDataEdit(this.state.value);
+    }
     createDefaultValue(valueType, dataType) {
         return this.props.config.defaultValue ? this.props.config.defaultValue[0] : '';
     }

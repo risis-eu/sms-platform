@@ -1,9 +1,10 @@
+import loadDatasets from '../actions/loadDatasets';
 import loadDataset from '../actions/loadDataset';
 import loadDatasetsList from '../actions/loadDatasetsList';
 import loadResource from '../actions/loadResource';
 import loadUsersList from '../actions/loadUsersList';
 import loadFacets from '../actions/loadFacets';
-import {appFullTitle, appShortTitle, authGraphName, baseResourceDomain} from '../configs/general';
+import {appFullTitle, appShortTitle, authDatasetURI, baseResourceDomain} from '../configs/general';
 
 export default {
     home: {
@@ -164,24 +165,41 @@ export default {
         action: (context, payload, done) => {
             context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Example Boundaries Map'});
             done();
+    newDataset: {
+        path: '/newDataset',
+        method: 'get',
+        handler: require('../components/NewDataset'),
+        label: 'NewDataset',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Add a new dataset'});
+            done();
+        }
+    },
+    annotateDataset: {
+        path: '/annotateDataset',
+        method: 'get',
+        handler: require('../components/DatasetAnnotation'),
+        label: 'DatasetAnnotation',
+        action: (context, payload, done) => {
+            context.executeAction(loadDatasets, {pageTitle: 'Annotate a dataset'}, done);
         }
     },
     facets: {
         path: '/browse/:id?',
         method: 'get',
-        handler: require('../components/FacetedBrowser'),
+        handler: require('../components/dataset/FacetedBrowser'),
         label: 'Faceted Browser',
         action: (context, payload, done) => {
-            let graphName, page;
-            graphName = payload.params.id;
-            if (!graphName) {
-                graphName = 0;
+            let datasetURI, page;
+            datasetURI = payload.params.id;
+            if (!datasetURI) {
+                datasetURI = 0;
             }
-            context.executeAction(loadFacets, {mode: 'init', id: graphName, selection: 0, page: 1}, done);
+            context.executeAction(loadFacets, {mode: 'init', id: decodeURIComponent(datasetURI), selection: 0, page: 1}, done);
         }
     },
     datasets: {
-        //if no id is provided -> will start by defaultGraphName in reactor.config
+        //if no id is provided -> will start by defaultDatasetURI in reactor.config
         path: '/datasets',
         method: 'get',
         handler: require('../components/DatasetsList'),
@@ -191,22 +209,26 @@ export default {
         }
     },
     dataset: {
-        //if no id is provided -> will start by defaultGraphName in reactor.config
+        //if no id is provided -> will start by defaultDatasetURI in reactor.config
         path: '/dataset/:page?/:id?',
         method: 'get',
         handler: require('../components/reactors/DatasetReactor'),
         label: 'Dataset',
         action: (context, payload, done) => {
-            let graphName, page;
-            graphName = payload.params.id;
-            page = payload.params.page;
-            if (!graphName) {
-                graphName = 0;
+            let datasetURI, page;
+            datasetURI = decodeURIComponent(payload.params.id);
+            if (!datasetURI) {
+                datasetURI = 0;
             }
+            page = payload.params.page;
             if (!page) {
                 page = 1;
             }
-            context.executeAction(loadDataset, { id: graphName, page: page}, done);
+            //do not allow to browse user graph
+            if(datasetURI===authDatasetURI[0]){
+                datasetURI = 0
+            }
+            context.executeAction(loadDataset, { id: datasetURI, page: page}, done);
         }
     },
     resource: {
@@ -227,8 +249,11 @@ export default {
             let graphName = decodeURIComponent(payload.params.did);
             if (!graphName) {
                 graphName = 0;
+            let datasetURI = decodeURIComponent(payload.params.did);
+            if (!datasetURI) {
+                datasetURI = 0;
             }
-            context.executeAction(loadResource, { dataset: graphName, resource: decodeURIComponent(payload.params.rid), category: category, propertyPath: propertyPath}, done);
+            context.executeAction(loadResource, { dataset: decodeURIComponent(datasetURI), resource: decodeURIComponent(payload.params.rid), category: category, propertyPath: propertyPath}, done);
         }
     },
     user: {
@@ -238,7 +263,7 @@ export default {
         label: 'User',
         action: (context, payload, done) => {
             let category = 0;
-            context.executeAction(loadResource, { dataset: authGraphName, resource: baseResourceDomain + '/user/' + decodeURIComponent(payload.params.id), category: category}, done);
+            context.executeAction(loadResource, { dataset: authDatasetURI[0], resource: baseResourceDomain + '/user/' + decodeURIComponent(payload.params.id), category: category}, done);
         }
     },
     users: {

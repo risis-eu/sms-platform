@@ -1,7 +1,13 @@
 import React from 'react';
+//import ReactDOM from 'react-dom';
 import {NavLink} from 'fluxible-router';
+import searchInDataset from '../../actions/searchInDataset';
 
 class ResourceListPager extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {searchTerm: '', searchMode: 0};
+    }
     componentDidMount() {
     }
     buildLink(page, color, icon) {
@@ -11,8 +17,34 @@ class ResourceListPager extends React.Component {
             );
         }else{
             return (
-                <NavLink key={(icon ? ('i' + page) : page)} routeName="dataset" className={'ui ' + color + ' label'} href={'/dataset/' + page + '/' + encodeURIComponent(this.props.graphName)}> {icon ? <i className={icon}></i> : <span>{page}</span>} </NavLink>
+                <NavLink key={(icon ? ('i' + page) : page)} routeName="dataset" className={'ui ' + color + ' label'} href={'/dataset/' + page + '/' + encodeURIComponent(this.props.datasetURI)}> {icon ? <i className={icon}></i> : <span>{page}</span>} </NavLink>
             );
+        }
+    }
+    onSearchClick(){
+        this.props.onSearchMode(!this.state.searchMode);
+        this.setState({searchMode: !this.state.searchMode});
+    }
+    handleSearchChange(evt) {
+        this.setState({searchTerm: evt.target.value});
+        if(!evt.target.value){
+            //in case of empty, restore results
+            this.searchOnDataset('');
+        }
+    }
+    searchOnDataset(term) {
+        this.context.executeAction(searchInDataset, {
+            id: this.props.datasetURI,
+            selection: this.props.selection,
+            searchTerm: term
+        });
+    }
+    handleSearchKeyDown(evt) {
+        switch (evt.keyCode) {
+            //case 9: // Tab
+            case 13: // Enter
+                this.searchOnDataset(this.state.searchTerm);
+                break;
         }
     }
     render() {
@@ -21,12 +53,17 @@ class ResourceListPager extends React.Component {
         if(!maxOnPage){
             maxOnPage = 20;
         }
-        let graphName = this.props.graphName;
+        let datasetURI = this.props.datasetURI;
         let i, startI, totalPages, threshold = this.props.threshold, currentPage, pageList = [];
         if(this.props.total){
             currentPage = parseInt(this.props.currentPage);
             //total number of pages
             totalPages = Math.ceil(this.props.total / maxOnPage);
+            if(this.state.searchMode){
+                //totalPages = Math.ceil(this.props.visibleResourcesTotal / maxOnPage);
+                //todo: support paging for search, I disable it for now!
+                totalPages = 1;
+            }
             if(totalPages > threshold){
                 //first page
                 pageList.push(self.buildLink(1, 'grey', 'step backward icon'));
@@ -57,8 +94,27 @@ class ResourceListPager extends React.Component {
         return (
             <div className="ui" ref="resourceListPager">
                 {totalPages} Page(s): <span>{pageList}</span>
+                {this.props.onExpandCollapse ?
+                    <a className='ui icon mini basic button right floated' onClick={this.props.onExpandCollapse.bind(this)}>
+                        <i className='ui icon expand'></i>
+                    </a>
+                : ''}
+                <a className='ui icon mini basic button right floated' onClick={this.onSearchClick.bind(this)}>
+                    <i className='ui icon orange search'></i>
+                </a>
+                {!this.state.searchMode ? '' :
+                    <div className="ui secondary segment animated slideInDown">
+                        <div className="ui icon input fluid">
+                            <input ref="searchInput" type="text" placeholder="Search in resources..." value={this.state.searchTerm} onChange={this.handleSearchChange.bind(this)} onKeyDown={this.handleSearchKeyDown.bind(this)}/>
+                            <i className="search icon"></i>
+                        </div>
+                    </div>
+                }
             </div>
         );
     }
 }
+ResourceListPager.contextTypes = {
+    executeAction: React.PropTypes.func.isRequired
+};
 export default ResourceListPager;

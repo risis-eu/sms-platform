@@ -1,7 +1,9 @@
 import React from 'react';
 import PropertyHeader from '../../../property/PropertyHeader';
 import ObjectIViewer from '../../ObjectIViewer';
-
+/**
+Default component to display object with properties
+*/
 class BasicIndividualDetailView extends React.Component {
     componentDidMount() {
         let currentComp = this.refs.detailProperties;
@@ -11,7 +13,7 @@ class BasicIndividualDetailView extends React.Component {
         let list = this.props.spec.extendedViewData.map(function(node, index) {
             let llist = node.spec.instances.map(function(instance, index2){
                 return (
-                    <ObjectIViewer key={index + '_' + index2} spec={instance} config={node.config} graphName={self.props.graphName} resource={self.props.spec.value} property={node.spec.propertyURI}/>
+                    <ObjectIViewer key={index + '_' + index2} spec={instance} config={node.config} datasetURI={self.props.datasetURI} resource={self.props.spec.value} property={node.spec.propertyURI}/>
                 );
             });
             return (
@@ -44,5 +46,18 @@ class BasicIndividualDetailView extends React.Component {
         );
     }
 }
-
+BasicIndividualDetailView.propTypes = {
+    /**
+    Container dataset URI
+    */
+    datasetURI: React.PropTypes.string,
+    /**
+    LD-R Configurations object
+    */
+    config: React.PropTypes.object,
+    /**
+    LD-R spec
+    */
+    spec: React.PropTypes.object
+};
 export default BasicIndividualDetailView;

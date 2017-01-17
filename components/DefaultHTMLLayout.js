@@ -12,30 +12,30 @@ class DefaultHTMLLayout extends React.Component {
                 <meta charSet="utf-8" />
                 <title>{this.props.context.getStore(ApplicationStore).getPageTitle()}</title>
                 <meta name="viewport" content="width=device-width, user-scalable=no" />
-                <link href="/bower_components/semantic/dist/semantic.min.css" rel="stylesheet" type="text/css" />
-                <link href="/bower_components/animate.css/animate.min.css" rel="stylesheet" type="text/css" />
+                <link href="/semantic-ui/semantic.min.css" rel="stylesheet" type="text/css" />
+                <link href="/animate.css/animate.min.css" rel="stylesheet" type="text/css" />
                 {/* Vendors css bundle */
                     this.props.addAssets ? <link href="/public/css/vendor.bundle.css" rel="stylesheet" type="text/css" />: <style></style>
                 }
-                <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-
+                <link href="/leaflet/dist/leaflet.css" rel="stylesheet" type="text/css" />
+                <link href="/assets/css/custom1.css" rel="stylesheet" type="text/css" />
             </head>
             <body>
                 <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
                 <script dangerouslySetInnerHTML={{__html: this.props.state}}></script>
-                <script src="/bower_components/es5-shim/es5-shim.min.js"></script>
-                <script src="/bower_components/es5-shim/es5-sham.min.js"></script>
-                <script src="/bower_components/json3/lib/json3.min.js"></script>
-                <script src="/bower_components/es6-shim/es6-shim.min.js"></script>
-                <script src="/bower_components/es6-shim/es6-sham.min.js"></script>
+                {/* Following are added only to support IE browser */}
+                <script src="/es5-shim/es5-shim.min.js"></script>
+                <script src="/es5-shim/es5-sham.min.js"></script>
+                <script src="/json3/lib/json3.min.js"></script>
+                <script src="/es6-shim/es6-shim.min.js"></script>
+                <script src="/es6-shim/es6-sham.min.js"></script>
                 {/* Above are added only to support IE browser */}
-                <script src="/bower_components/jquery/dist/jquery.min.js"></script>
-                <script src="/bower_components/semantic/dist/components/transition.min.js"></script>
-                <script src="/bower_components/semantic/dist/components/popup.min.js"></script>
-                <script src="/bower_components/semantic/dist/components/dropdown.min.js"></script>
-                <script src="/bower_components/semantic/dist/components/checkbox.min.js"></script>
-                <script src="/bower_components/semantic/dist/components/dimmer.min.js"></script>
-                <script src="/bower_components/semantic/dist/components/modal.min.js"></script>
+                <script src="/jquery/dist/jquery.min.js"></script>
+                <script src="/semantic-ui/components/transition.min.js"></script>
+                <script src="/semantic-ui/components/dropdown.min.js"></script>
+                <script src="/semantic-ui/components/checkbox.min.js"></script>
+                <script src="/semantic-ui/components/dimmer.min.js"></script>
+                <script src="/semantic-ui/components/modal.min.js"></script>
                 {/* All external vendors bundle*/
                     this.props.addAssets ? <script src={'/public/js/vendor.bundle.js'}></script> : ''}
                 {/* Main app bundle */}

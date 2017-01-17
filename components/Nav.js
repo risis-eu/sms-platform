@@ -1,8 +1,8 @@
 'use strict';
 import React from 'react';
 import {NavLink} from 'fluxible-router';
-import {appFullTitle, appShortTitle, enableAuthentication} from '../configs/general';
 import CookieBanner from 'react-cookie-banner';
+import {appFullTitle, appShortTitle, enableAuthentication, enableDynamicReactorConfiguration,enableDynamicServerConfiguration,enableDynamicfacetsConfiguration, configDatasetURI} from '../configs/general';
 
 class Nav extends React.Component {
     componentDidMount(){
@@ -17,18 +17,22 @@ class Nav extends React.Component {
         let user = this.context.getUser();
         // console.log(user);
         let userMenu;
+        let configMenu = <a href={'/browse/' + encodeURIComponent(configDatasetURI)} className="ui item link" title="Configuration Manager">
+            <i className="ui black settings icon"></i>
+        </a>;
         if(enableAuthentication){
             if(user){
                 userMenu = <div className="ui right dropdown item">
                                 {user.accountName} <i className="dropdown icon"></i>
                                 <div className="menu">
-                                    <NavLink className="item" routeName="resource" href={'/dataset/' + encodeURIComponent(user.graphName) + '/resource/' + encodeURIComponent(user.id)}>Profile</NavLink>
+                                    <NavLink className="item" routeName="resource" href={'/dataset/' + encodeURIComponent(user.datasetURI) + '/resource/' + encodeURIComponent(user.id)}>Profile</NavLink>
                                     {parseInt(user.isSuperUser) ? <NavLink className="item" routeName="users" href="/users">Users List</NavLink> : ''}
                                     <a href="/logout" className="item">Logout</a>
                                 </div>
                             </div>;
             }else{
-                userMenu = <div className="ui right item"> <a className="ui mini circular teal button" href="/login">Sign-in</a> &nbsp;  <a href="http://datasets.risis.eu/register" className="ui mini circular yellow button">Register</a> </div>;
+                userMenu = <div className="ui right item"> <a className="ui mini circular teal button" href="/login">Sign-in</a> &nbsp;  <a href="/register" className="ui mini circular yellow button">Register</a> </div>;
+                configMenu = '';
             }
         }
         let logoStyle = {
@@ -44,8 +48,15 @@ class Nav extends React.Component {
                 <a className="item ui label" href="http://api.sms.risis.eu" target="_blank">Linked Data API</a>
                 <NavLink routeName="demos" className="item ui label" activeClass="active" href="/demos">Demos</NavLink>
                 <div className="right menu">
-                    <a href="http://ld-r.sms.risis.eu" className="ui item link" title="Linked Data Reactor for SMS"><img style={{height: 17, width: 17}} src="/assets/img/ld-r.png" /></a>
-                    {user ? <div className="item link" onClick={this.showHelpModal}><i className="small help circle icon"></i></div> : <a href="http://github.com/risis-eu/sms-platform" className="ui item link"><i className="github icon"></i></a>}
+                    <div className="item link" onClick={this.showHelpModal}>
+                            <i className="small help circle icon"></i>
+                    </div>
+                    {(enableDynamicReactorConfiguration || enableDynamicServerConfiguration || enableDynamicfacetsConfiguration) ?
+                        configMenu
+                    : ''}
+                    <a href="http://github.com/risis-eu/sms-platform" className="ui item link">
+                            <i className="github circle icon"></i> Github
+                    </a>
                     {userMenu}
                 </div>
             </nav>

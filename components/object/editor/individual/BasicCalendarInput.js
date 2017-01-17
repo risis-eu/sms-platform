@@ -8,6 +8,9 @@ if (process.env.BROWSER) {
 /*----config
     calendarFormat
 ------------*/
+/**
+A calendar to choose date/time values from
+*/
 class BasicCalendarInput extends React.Component {
     constructor(props) {
         super(props);
@@ -15,14 +18,16 @@ class BasicCalendarInput extends React.Component {
         if(this.props.spec.isDefault){
             v = this.createDefaultValue();
         }
-        //to initialize value in Property state
-        this.props.onDataEdit(v);
         this.state = {value: v};
     }
     componentDidMount() {
         if(!this.props.noFocus){
             ReactDOM.findDOMNode(this.refs.basicCalendarInput).focus();
         }
+    }
+    componentWillMount() {
+        //to initialize value in Property state
+        this.props.onDataEdit(this.state.value);
     }
     getFormat() {
         //default format
@@ -36,14 +41,14 @@ class BasicCalendarInput extends React.Component {
         return moment();
     }
     handleChange(event) {
-        let v = moment(event).utc().format(this.getFormat());
+        let v = moment(event).format(this.getFormat());
         this.props.onDataEdit(v);
-        this.setState({value: moment(event).utc()});
+        this.setState({value: moment(event)});
     }
     render() {
         return (
             <div className="ui" ref="basicCalendarInput">
-                <Calendar value={moment(this.state.value).utc()} format={this.getFormat()} onChange={this.handleChange.bind(this)} />
+                <Calendar value={moment(this.state.value)} format={this.getFormat()} onChange={this.handleChange.bind(this)} />
             </div>
         );
     }

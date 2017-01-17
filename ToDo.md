@@ -1,16 +1,14 @@
-#TODO list on LD-R
-- actions/loadDatasetsList.js
-- components/DatasetsList.js
-- components/object/ObjectAViewer.js and ObjectAEditor.js
-- components/HelpModal.js About.js Home.js
-- components/Nav.js -> added RISIS header
-- components/resource/Resource.js added tab titles and order for some properties
-- assets
-- data
-- README.md
-- configs/* routes
-- .gitignore
-- external_views/*
-- favicon.ico
-- service/dataset.js   sparql/DatasetQuery.js utisl/helper.js -> for allowing literal values on uris
-- plugins/authentication
+#TODO list
+- Design a smart routing algorithm for default routing of components (e.g. based on value types or components metadata).
+- Add interface for more Triple stores other than Virtuoso and Stardog.
+- Consider Language tag in SPARQL Queries.
+- Create user-specific configs (e.g. for facet and property configs).
+- Support LD-Fragment for streaming query results (useful esp. in facets).
+- Add infinite scrolling features to facets.
+- Add customized facets (e.g. for taxonomical data, timeline, etc.).
+- Implement Aggregate Property Reactor.
+- In case of resource access level, find a way to update user session after a new resource is created by the user.
+- Adding Microdata annotations to components
+
+- test agg objects + Queries
+- add http authentication Support

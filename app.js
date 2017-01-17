@@ -11,19 +11,23 @@ import IndividualObjectStore from './stores/IndividualObjectStore';
 import DBpediaStore from './stores/DBpediaStore';
 import DBpediaGMapStore from './stores/DBpediaGMapStore';
 import FacetedBrowserStore from './stores/FacetedBrowserStore';
+import DatasetsStore from './stores/DatasetsStore';
+import DatasetAnnotationStore from './stores/DatasetAnnotationStore';
 
 let app = new Fluxible({
     component: Application,
     stores: [
         RouteStore,
         ApplicationStore,
+        DatasetsStore,
         DatasetStore,
         UserStore,
         ResourceStore,
         IndividualObjectStore,
         DBpediaStore,
         DBpediaGMapStore,
-        FacetedBrowserStore
+        FacetedBrowserStore,
+        DatasetAnnotationStore
     ]
 });
 
@@ -32,4 +36,4 @@ app.plug(fetchrPlugin({
 }));
 app.plug(authPlugin({}));
 
-module.exports = app;
+export default app;

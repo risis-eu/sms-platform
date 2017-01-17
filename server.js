@@ -23,6 +23,8 @@ import handleAuthentication from './plugins/authentication/handleAuth';
 import handleDemos from './plugins/demos/handleDemos';
 //required for export resources
 import handleExport from './plugins/export/handleExport';
+//required for generating docs
+import handleDocumentation from './plugins/documentation/handleDocumentation';
 import {enableAuthentication} from './configs/general';
 import cookieSession from 'cookie-session';
 import hogan from 'hogan-express';
@@ -62,6 +64,8 @@ if(enableAuthentication){
 }
 //handling content export
 handleExport(server);
+//handling docs
+handleDocumentation(server);
 server.set('state namespace', 'App');
 server.use(favicon(path.join(__dirname, '/favicon.ico')));
 //--------used for views external to fluxible
@@ -72,7 +76,16 @@ server.set('view options', { layout: false });
 server.engine('html', hogan);
 //------------------
 server.use('/public', express.static(path.join(__dirname, '/build')));
-server.use('/bower_components', express.static(path.join(__dirname, '/bower_components')));
+//server.use('/bower_components', express.static(path.join(__dirname, '/bower_components')));
+//add frontend npm modules here
+server.use('/json3', express.static(path.join(__dirname, '/node_modules/json3')));
+server.use('/es5-shim', express.static(path.join(__dirname, '/node_modules/es5-shim')));
+server.use('/es6-shim', express.static(path.join(__dirname, '/node_modules/es6-shim')));
+server.use('/semantic-ui', express.static(path.join(__dirname, '/node_modules/semantic-ui-css')));
+server.use('/jquery', express.static(path.join(__dirname, '/node_modules/jquery')));
+server.use('/animate.css', express.static(path.join(__dirname, '/node_modules/animate.css')));
+server.use('/leaflet', express.static(path.join(__dirname, '/node_modules/leaflet')));
+
 server.use('/assets', express.static(path.join(__dirname, '/assets')));
 server.use('/documentation', express.static(path.join(__dirname, '/documentation')));
 server.use('/geojsonDump', express.static(path.join(__dirname, '/geojsonDump')));

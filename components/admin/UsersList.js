@@ -6,10 +6,10 @@ import {connectToStores} from 'fluxible-addons-react';
 import {NavLink} from 'fluxible-router';
 
 class UsersList extends React.Component {
-    activateUser(uri, email){
+    activateUser(uri, email) {
         this.context.executeAction(activateUser, {
-          resourceURI: uri,
-          email: email
+            resourceURI: uri,
+            email: email
         });
     }
     render() {
@@ -77,22 +77,28 @@ class UsersList extends React.Component {
             }
         });
       }else{
-        list=<div className="ui warning message"><div className="header"> Sorry! No user found!</div></div>
+          list=<div className="ui warning message"><div className="header"> Sorry! No user found!</div></div>
       }
         return (
-          <div className="ui page grid">
-            <div className="row">
-              <div className="column">
-                <h1 className="ui header"><a target="_blank" href={'/export/NTriples/' + encodeURIComponent(currentComponent.props.UserStore.graphName)}><span className="ui big black circular label">{i}</span></a> Registered Users</h1>
-                  <div className="ui segment">
-                    <div className="ui huge divided animated list">
-                      {list}
+            <div className="ui page grid">
+                <div className="row">
+                    <div className="column">
+                        <h1 className="ui header">
+                            <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(currentComponent.props.UserStore.datasetURI)}>
+                                <span className="ui big black circular label">{i}</span>
+                            </a>
+                            Registered Users</h1>
+                        <div className="ui segment">
+                            <div className="ui huge divided animated list">
+                                {list}
+                            </div>
+                            {emailHint
+                                ? <div>* A notification email will be sent to the user after activation.</div>
+                                : ''}
+                        </div>
                     </div>
-                    {emailHint ? <div>* A notification email will be sent to the user after activation.</div> : ''}
-                  </div>
-              </div>
+                </div>
             </div>
-          </div>
         );
     }
 }
@@ -101,9 +107,7 @@ UsersList.contextTypes = {
     getUser: React.PropTypes.func
 };
 
-UsersList = connectToStores(UsersList, [UserStore], function (context, props) {
-    return {
-        UserStore: context.getStore(UserStore).getState()
-    };
+UsersList = connectToStores(UsersList, [UserStore], function(context, props) {
+    return {UserStore: context.getStore(UserStore).getState()};
 });
 export default UsersList;

@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {list} from '../../../../data/languages';
-
+/**
+A component to add standard language values
+*/
 class LanguageInput extends React.Component {
     constructor(props) {
         super(props);
@@ -9,8 +11,6 @@ class LanguageInput extends React.Component {
         if(this.props.spec.isDefault){
             v = this.createDefaultValue(this.props.spec.valueType, this.props.spec.dataType);
         }
-        //to initialize value in Property state
-        this.props.onDataEdit(v);
         this.state = {value: v};
     }
     componentDidMount() {
@@ -18,7 +18,10 @@ class LanguageInput extends React.Component {
             ReactDOM.findDOMNode(this.refs.languageInputSelect).focus();
         }
     }
-
+    componentWillMount() {
+        //to initialize value in Property state
+        this.props.onDataEdit(this.state.value);
+    }
     createDefaultValue(valueType, dataType) {
         if(this.props.config && this.props.config.defaultValue){
             return this.props.config.defaultValue[0];

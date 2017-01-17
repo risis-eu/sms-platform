@@ -1,19 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import passwordHash from 'password-hash';
-
+/**
+A component to edit password/hidden values
+*/
 class PasswordInput extends React.Component {
     constructor(props) {
         super(props);
         let v = this.props.spec.value;
-        //to initialize value in Property state
-        this.props.onDataEdit(v);
         this.state = {value: ''};
     }
     componentDidMount() {
         if(!this.props.noFocus){
             ReactDOM.findDOMNode(this.refs.passwordInput).focus();
         }
+    }
+    componentWillMount() {
+        //to initialize value in Property state
+        this.props.onDataEdit(this.state.value);
     }
     handleKeyDown(evt) {
         if(this.props.allowActionByKey){

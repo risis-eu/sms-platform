@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom';
 import {provideContext, connectToStores} from 'fluxible-addons-react';
 import lookupDBpedia from '../../../../actions/lookupDBpedia';
 import DBpediaStore from '../../../../stores/DBpediaStore';
-
+/**
+A component to search and add resources from DBpedia
+*/
 class DBpediaInput extends React.Component {
     constructor(props) {
         super(props);
@@ -11,14 +13,16 @@ class DBpediaInput extends React.Component {
         if(this.props.spec.isDefault){
             v = this.createDefaultValue(this.props.spec.valueType, this.props.spec.dataType);
         }
-        //to initialize value in Property state
-        this.props.onDataEdit(v);
         this.state = {value: v};
     }
     componentDidMount() {
         if(!this.props.noFocus){
             ReactDOM.findDOMNode(this.refs.basicIndividualInput).focus();
         }
+    }
+    componentWillMount() {
+        //to initialize value in Property state
+        this.props.onDataEdit(this.state.value);
     }
     handleKeyDown(evt) {
         if(this.props.allowActionByKey){

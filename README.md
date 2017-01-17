@@ -5,7 +5,7 @@ The Semantically Mapping Science (SMS) platform supports access to heterogeneous
 
 ###Installation
 
-You should have installed [NodeJS](https://nodejs.org/), [npm](https://github.com/npm/npm), [bower](http://bower.io/) and [Webpack](https://webpack.github.io/) on your system as prerequisite, then:
+You should have installed [NodeJS](https://nodejs.org/), [npm](https://github.com/npm/npm) and [Webpack](https://webpack.github.io/) on your system as prerequisite, then:
 
 Clone the repository: `git clone https://github.com/risis-eu/sms.git`
 

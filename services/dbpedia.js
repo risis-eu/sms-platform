@@ -1,5 +1,5 @@
 'use strict';
-import {dbpediaLookupService} from '../configs/server';
+import {dbpediaLookupService, dbpediaSpotlightService} from '../configs/server';
 import rp from 'request-promise';
 import DBpediaUtil from './utils/DBpediaUtil';
 import DBpediaQuery from './sparql/DBpediaQuery';
@@ -24,7 +24,7 @@ export default {
                     suggestions: utilObject.parseDBpediaLookup(res)
                 });
             }).catch(function (err) {
-                console.log('\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                console.log('\n dbpedia.lookup \n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 callback(null, {suggestions: []});
             });
         /////////////////////////////////////////////
@@ -34,18 +34,31 @@ export default {
             // console.log(query);
             rpPath = DBpediaLiveEndpoint + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             rp.get({uri: rpPath}).then(function(res){
-                callback(null, {coordinates: utilObject.parseDBpediaCoordinates(res)});
+                callback(null, {coordinates: utilObject.parseDBpediaCoordinates(res), property: params.property});
             }).catch(function () {
                 //last chance: try DBpedia live endpoint!
                 rpPath = DBpediaEndpoint + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
                 rp.get({uri: rpPath}).then(function(res){
-                    callback(null, {coordinates: utilObject.parseDBpediaCoordinates(res)});
+                    callback(null, {coordinates: utilObject.parseDBpediaCoordinates(res), property: params.property});
                 }).catch(function (err) {
                     console.log(err);
-                    callback(null, {coordinates: []});
+                    callback(null, {coordinates: [], property: ''});
                 });
             });
           /////////////////////////////////////////////
+        } else if (resource === 'dbpedia.spotlight') {
+            query = params.query;
+            //send request
+            rp.post({headers: {'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'}, accept: 'application/json', uri: 'http://' + dbpediaSpotlightService[0].host + ':' + dbpediaSpotlightService[0].port + dbpediaSpotlightService[0].path, form: {'text': query}}).then(function(res){
+                callback(null, {
+                    tags: utilObject.parseDBpediaSpotlight(res),
+                    id: params.id,
+                    query: params.query
+                });
+            }).catch(function (err) {
+                console.log('\n dbpedia.spotlight \n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                callback(null, {tags: [], id: params.id, query: params.query, error: 'spotlight service'});
+            });
         }
     }
     // other methods
