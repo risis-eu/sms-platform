@@ -7,6 +7,7 @@ import createASampleFacetsConfig from '../../actions/createASampleFacetsConfig';
 import loadFacets from '../../actions/loadFacets';
 import ResourceList from './ResourceList';
 import ResourceListPager from './ResourceListPager';
+import URIUtil from '../utils/URIUtil';
 
 class FacetedBrowser extends React.Component {
     constructor(props) {
@@ -74,10 +75,10 @@ class FacetedBrowser extends React.Component {
                 propConfig = self.getPropertyConfig(datasetURI, el);
                 if(propConfig){
                     if(!propConfig.isHidden){
-                        properties.push({label: (propConfig ? (propConfig.label ? propConfig.label : self.getPropertyLabel(el)) : self.getPropertyLabel(el)), value: el, valueType: 'uri', position: (propConfig && propConfig.position) ? propConfig.position : 0});
+                        properties.push({label: (propConfig ? (propConfig.label ? propConfig.label : self.getPropertyLabel(el)) : self.getPropertyLabel(el)), value: el, valueType: 'uri', position: (propConfig && propConfig.position) ? propConfig.position : 0, category: (propConfig && propConfig.category) ? propConfig.category : ''});
                     }
                 }else{
-                    properties.push({label: (propConfig ? (propConfig.label ? propConfig.label : self.getPropertyLabel(el)) : self.getPropertyLabel(el)), value: el, valueType: 'uri', position: (propConfig && propConfig.position) ? propConfig.position : 0});
+                    properties.push({label: (propConfig ? (propConfig.label ? propConfig.label : self.getPropertyLabel(el)) : self.getPropertyLabel(el)), value: el, valueType: 'uri', position: (propConfig && propConfig.position) ? propConfig.position : 0, category: (propConfig && propConfig.category) ? propConfig.category : ''});
                 }
             });
             //apply ordering if in config
@@ -260,10 +261,21 @@ class FacetedBrowser extends React.Component {
             if(dcnf.allowInlineConfig){
                 configDiv = <a onClick={this.createFConfig.bind(this, this.props.FacetedBrowserStore.datasetURI)} className="ui icon mini black circular button"><i className="ui settings icon"></i> </a>;
             }
+            let typeSt, typesLink = [];
+            if(dcnf.resourceFocusType){
+                if(!dcnf.resourceFocusType.length || (dcnf.resourceFocusType.length && !dcnf.resourceFocusType[0]) ){
+                    typeSt = '';
+                }else{
+                    dcnf.resourceFocusType.forEach(function(uri) {
+                        typesLink.push(<a key={uri} className="ui black label" target="_blank" href={uri}> {URIUtil.getURILabel(uri)} </a>);
+                    });
+                    typeSt = typesLink;
+                }
+            }
             if(this.props.FacetedBrowserStore.total){
                 resourceDIV = <div className="ui">
                                 <h3 className="ui header">
-                                    {this.props.FacetedBrowserStore.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.FacetedBrowserStore.datasetURI)}><span className="ui blue circular label">{this.state.searchMode ? this.addCommas(this.props.FacetedBrowserStore.resources.length) + '/' :''}{this.addCommas(this.props.FacetedBrowserStore.total)}</span></a> : ''} Resources from {datasetTitle}
+                                    {this.props.FacetedBrowserStore.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.FacetedBrowserStore.datasetURI)}><span className="ui blue circular label">{this.state.searchMode ? this.addCommas(this.props.FacetedBrowserStore.resources.length) + '/' :''}{this.addCommas(this.props.FacetedBrowserStore.total)}</span></a> : ''} Resources {typeSt ? <span>of type{typeSt}</span>: ''} from {datasetTitle}
                                  </h3>
                                 <div className="ui segment top attached">
                                     <ResourceList resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} OpenInNewTab={true} isBig={!showFactes} config={dcnf}/>
