@@ -13,8 +13,8 @@ export default {
             },
             'http://rdf.risis.eu/sms/users.ttl#': {
                 resourceFocusType: ['https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#User'],
-                resourceLabelProperty: ['http://xmlns.com/foaf/0.1/accountName']
-                readOnly: 0,
+                resourceLabelProperty: ['http://xmlns.com/foaf/0.1/accountName'],
+                readOnly: 0
             },
             'http://ld-r.org/configurations': {
                 readOnly: 0,
