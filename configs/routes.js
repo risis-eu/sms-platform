@@ -276,6 +276,7 @@ export default {
             if (datasetURI === authDatasetURI[0]) {
                 datasetURI = 0
             }
+            console.log(datasetURI);
             context.executeAction(loadDataset, {
                 id: datasetURI,
                 page: page
@@ -290,27 +291,18 @@ export default {
         action: (context, payload, done) => {
             //predicate Category
             let category = payload.params.pcategory;
-            if (!category) {
+            if(!category){
                 category = 0;
             }
             let propertyPath = payload.params.propertyPath;
-            if (!propertyPath) {
+            if(!propertyPath){
                 propertyPath = [];
             }
-            let graphName = decodeURIComponent(payload.params.did);
-            if (!graphName) {
-                graphName = 0;
-                let datasetURI = decodeURIComponent(payload.params.did);
-                if (!datasetURI) {
-                    datasetURI = 0;
-                }
-                context.executeAction(loadResource, {
-                    dataset: decodeURIComponent(datasetURI),
-                    resource: decodeURIComponent(payload.params.rid),
-                    category: category,
-                    propertyPath: propertyPath
-                }, done);
+            let datasetURI = payload.params.did;
+            if (!datasetURI) {
+                datasetURI = 0;
             }
+            context.executeAction(loadResource, { dataset: decodeURIComponent(datasetURI), resource: decodeURIComponent(payload.params.rid), category: category, propertyPath: propertyPath}, done);
         }
     },
     user: {

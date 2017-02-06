@@ -19,7 +19,7 @@ class About extends React.Component {
                           <div className="six wide left aligned column">
 
                                 <div className="ui list">
-                                    <div className="blue ui card item" style={{height: '205'}}>
+                                    <div className="blue ui card item" style={{height: 205}}>
                                       <div className="content">
                                         <div className="header"><a href="http://vu.nl" target="_blank"><img className="ui centered medium image" src="/assets/img/VU_logo.png" /></a></div>
                                         <div className="meta"><a href="http://www.networkinstitute.org/" target="_blank">Department of Computer Science  & <br/> The Network Institute</a></div>
@@ -36,7 +36,7 @@ class About extends React.Component {
                           <div className="six wide left aligned column">
 
                                 <div className="ui list">
-                                  <div className="ui yellow card item" style={{height: '205'}}>
+                                  <div className="ui yellow card item" style={{height: 205}}>
                                     <div className="content">
                                         <div className="extra content">
                                           <h3 className="ui header"> Contacts: </h3>

@@ -24,11 +24,10 @@ export default {
     read: (req, resource, params, config, callback) => {
         if(resource === 'dataset.list'){
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
-            endpointParameters = getEndpointParameters(graphName);
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
-                    callback(null, {graphName: graphName, resources: [], page: 1, config: rconfig});
+                    callback(null, {graphName: graphName, resources: [], page: 1, config: {}});
                     return 0;
                 }else{
                     user = req.user;
@@ -40,17 +39,18 @@ export default {
                 graphName = endpointParameters.graphName;
                 //SPARQL QUERY
                 query = queryObject.getDatasetsList();
+                //console.log(query);
                 //send request
                 rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
                     callback(null, {
                         graphName: graphName,
                         resources: utilObject.parseDatasetsList(res),
                         page: 1,
-                        config: rconfig
+                        config: {}
                     });
                 }).catch(function (err) {
                     console.log(err);
-                    callback(null, {graphName: graphName, resources: [], page: 1, config: rconfig});
+                    callback(null, {graphName: graphName, resources: [], page: 1, config: {}});
                 });
             });
         } else if (resource === 'dataset.resourcesByType') {
