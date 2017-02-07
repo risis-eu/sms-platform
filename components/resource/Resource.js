@@ -56,18 +56,18 @@ class Resource extends React.Component {
                     }
                 }
                 if(node.propertyURI === 'http://purl.org/dc/terms/title'){
-                    titleDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} graphName={self.props.graphName} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
+                    titleDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI={self.props.datasetURI} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
                 }else if (node.propertyURI === 'http://purl.org/dc/terms/description'){
-                    descDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} graphName={self.props.graphName} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
+                    descDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI={self.props.datasetURI} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
                 }else if (node.propertyURI === 'http://rdf.risis.eu/metadata/useCase'){
-                    useCaseDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} graphName={self.props.graphName} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
+                    useCaseDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI={self.props.datasetURI} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
                 }else if (node.propertyURI === 'http://xmlns.com/foaf/0.1/page'){
-                    pageDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} graphName={self.props.graphName} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
+                    pageDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI={self.props.datasetURI} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
                 } else if(node.propertyURI === 'http://purl.org/dc/terms/subject'){
-                    keywordDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} graphName={self.props.graphName} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
+                    keywordDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI={self.props.datasetURI} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
                 }else{
                     return (
-                        <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} graphName={self.props.graphName} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
+                        <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI={self.props.datasetURI} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
                     );
                 }
             }
@@ -82,7 +82,7 @@ class Resource extends React.Component {
             const changeTab = {'overview': 'Overview', 'people': 'People', 'date': 'Date', 'legalAspects': 'Legal Aspects', 'access': 'Access/Visit', 'technicalAspects': 'Technical Aspects', 'structuralAspects': 'Content/Structural Aspects'};
             tabsDIV = this.props.config.propertyCategories.map(function(node, index) {
                 return (
-                    <NavLink className={(node === currentCategory ? 'item link active' : 'item link')} key={index} routeName="resource" href={'/dataset/' + encodeURIComponent(self.props.graphName) + '/resource/' + encodeURIComponent(self.props.resource) + '/' + node + '/' + encodeURIComponent(self.props.propertyPath)}>
+                    <NavLink className={(node === currentCategory ? 'item link active' : 'item link')} key={index} routeName="resource" href={'/dataset/' + encodeURIComponent(self.props.datasetURI) + '/resource/' + encodeURIComponent(self.props.resource) + '/' + node + '/' + encodeURIComponent(self.props.propertyPath)}>
                       {(changeTab[node] ? changeTab[node] : node) }
                     </NavLink>
                 );
