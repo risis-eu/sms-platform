@@ -247,15 +247,16 @@ export default {
                         newValue = '"""' + objectValue + '"""';
                         dtype = 'str';
                 }
-                //fix in virtuoso
-                if (dtype === 'uri') {
-                    dtype = 'iri';
-                }
-                return {
-                    dtype: dtype,
-                    value: newValue
-                };
+                break;
         }
+        //fix in virtuoso
+        if (dtype === 'uri') {
+            dtype = 'iri';
+        }
+        return {
+            dtype: dtype,
+            value: newValue
+        };
     },
     isValidAPIToken(token) {
         if (apiTokens.indexOf(token) === -1) {
