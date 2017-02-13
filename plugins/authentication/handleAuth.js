@@ -306,6 +306,7 @@ let addUserQueries = (req, res, recaptchaSiteKey) => {
                                              ldr:isActive "${isActive}"^^xsd:Integer;
                                              ldr:isSuperUser "0"^^xsd:Integer;
                                              ldr:editorOfDataset <${datasetURI}>;
+                                             ldr:editorOfGraph <${datasetURI}>;
                                              ldr:editorOfResource <${dresourceURI}>;
                                              ldr:editorOfProperty <${blanknode}1>, <${blanknode}2>, <${blanknode}3>, <${blanknode}4>, <${blanknode}5>, <${blanknode}6>, <${blanknode}7> .
                                              <${blanknode}1> ldr:resource <${resourceURI}> ;
