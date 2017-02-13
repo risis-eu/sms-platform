@@ -3,6 +3,7 @@ import {enableAuthentication} from '../../configs/general';
 import ResourceStore from '../../stores/ResourceStore';
 import {connectToStores} from 'fluxible-addons-react';
 import Resource from '../resource/Resource';
+import DatasetMetadataResource from '../resource/DatasetMetadataResource';
 import UserResource from '../resource/UserResource';
 import PersonResource from '../resource/PersonResource';
 import OrgResource from '../resource/OrgResource';
@@ -68,6 +69,9 @@ class ResourceReactor extends React.Component {
                     break;
                 case 'OrgResource':
                     resourceReactor = <OrgResource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    break;
+                case 'DatasetMetadataResource':
+                    resourceReactor = <DatasetMetadataResource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
                     break;
                 default:
                     resourceReactor = <Resource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;

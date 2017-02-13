@@ -49,7 +49,7 @@ export default {
                 propertyCategories: ['overview', 'people', 'date', 'legalAspects', 'access', 'technicalAspects', 'structuralAspects'],
                 //used when creating random resources
                 dynamicResourceDomain: ['http://risis.eu'],
-                resourceReactor: ['Resource']
+                resourceReactor: ['DatasetMetadataResource']
             },
             'http://xmlns.com/foaf/0.1/Organization': {
                 treatAsResourceType: 1,
@@ -356,7 +356,7 @@ export default {
                             label: ['Geographical Coverage'],
                             allowNewValue: 1,
                             objectReactor: ['AggregateObject'],
-                            objectAViewer: ['DBpediaGoogleMapView'],
+                            objectAViewer: ['DBpediaMapView'],
                             objectIViewer: ['BasicDBpediaView'],
                             asWikipedia: 1,
                             objectIEditor: ['DBpediaInput'],
@@ -419,7 +419,7 @@ export default {
                 hint: ['The geographical area covered by the dataset.The same metadata could also be used to document the geographical area covered by an entity contained in the dataset in particular. For example we could say that the dataset covers all Eu countries or covers only France and Italy.'],
                 allowNewValue: 1,
                 objectReactor: ['AggregateObject'],
-                objectAViewer: ['DBpediaGoogleMapView'],
+                objectAViewer: ['DBpediaMapView'],
                 objectIViewer: ['BasicDBpediaView'],
                 asWikipedia: 1,
                 objectAEditor: ['BasicAggregateInput'],
