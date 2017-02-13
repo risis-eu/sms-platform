@@ -2,7 +2,7 @@ import {
     listOfCountries
 } from '../../data/countries';
 import {
-    sparqlEndpoint
+    sparqlEndpoint, apiTokens
 } from '../../configs/server';
 import {
     defaultDatasetURI,
