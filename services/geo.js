@@ -1,5 +1,5 @@
 'use strict';
-import {getEndpointParameters, getHTTPQuery, getHTTPGetURL, isValidAPIToken} from './utils/helpers';
+import {getStaticEndpointParameters, getHTTPQuery, getHTTPGetURL, isValidAPIToken} from './utils/helpers';
 import {defaultGraphName} from '../configs/general';
 import GeoQuery from './sparql/GeoQuery';
 import GeoUtil from './utils/GeoUtil';
@@ -78,7 +78,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = '';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getPointToNUTS(params.lat, params.long);
             //send request
@@ -98,7 +98,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = '';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getNUTSToName(params.code);
             //send request
@@ -116,7 +116,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = '';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getNameToNUTS(params.name);
             //send request
@@ -134,7 +134,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = '';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getNUTStoPolygon(params.code);
             //send request
@@ -152,7 +152,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getMunicipalitiesPerCountry(params.country);
             //console.log(query);
@@ -172,7 +172,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getNUTStoMunicipality(params.code);
             //send request
@@ -191,7 +191,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getNameToMunicipality(params.name);
             //send request
@@ -209,7 +209,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getMunicipality(params.code);
             //send request
@@ -227,7 +227,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = '';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getPointToMunicipality(params.lat, params.long);
             //console.log(query);
@@ -248,7 +248,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getBoundaryToOECDFUA(params.name, params.country);
             //console.log(query);
@@ -269,7 +269,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = '';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getMunicipalityToPolygon(params.code);
             //console.log(query);
@@ -289,7 +289,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             let queryGADM = queryObject.getPointToGADM28Admin(params.lat, params.long, params.country, params.level);
             //console.log(query);
@@ -328,7 +328,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getGADM28AdminToPolygon('http://geo.risis.eu/gadm/' + params.id);
             //console.log(query);
@@ -348,7 +348,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getGADM28Admin('http://geo.risis.eu/gadm/' + params.id);
             //console.log(query);
@@ -368,7 +368,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             let queryOSM = queryObject.getPointToOSMAdmin(params.lat, params.long, params.country, params.level);
             //start to get it from the cache
@@ -456,7 +456,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getOSMAdmin('http://geo.risis.eu/osm/' + params.id);
             //console.log(query);
@@ -476,7 +476,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getOSMAdminMetadata(params.country, params.level);
             //console.log(query);
@@ -496,7 +496,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getOSMAdminToPolygon('http://geo.risis.eu/osm/' + params.id);
             //console.log(query);
@@ -516,7 +516,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             let queryFlickr = queryObject.getPointToFlickrAdmin(params.lat, params.long, params.country, params.level);
             //start to get it from the cache
@@ -554,7 +554,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getFlickrAdmin('http://geo.risis.eu/flickr/' + params.id);
             //console.log(query);
@@ -574,7 +574,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getFlickrAdminToPolygon('http://geo.risis.eu/flickr/' + params.id);
             //console.log(query);
@@ -594,7 +594,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getOECDFUAToPolygon('http://geo.risis.eu/oecd/fua/' + params.id);
             //console.log(query);
@@ -614,7 +614,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getAdminsByLevel(params.level, params.country, params.source, params.offset, params.limit);
             //console.log(query);
@@ -636,7 +636,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getOECDFUAList(params.country);
             //console.log(query);
@@ -660,7 +660,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'parameter', 'msg': 'id and source parameters are required!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getAdminToContainer(params.source, params.id, params.country, params.depth);
             //console.log(query);
@@ -687,7 +687,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'parameter', 'msg': 'id and source parameters are required!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getContainerAdmins(params.source, params.id, params.country, params.depth);
             //console.log(query);
@@ -710,7 +710,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getOECDFUA('http://geo.risis.eu/oecd/fua/' + params.id);
             //console.log(query);
@@ -730,7 +730,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             let queryFUA = queryObject.getPointToOECDFUA(params.lat, params.long, params.country);
             let hashID = ['OECDFUA', params.lat, params.long, params.country].join('-');
@@ -767,7 +767,7 @@ export default {
                 callback(null, {resources: [], error: {'type':'access', 'msg': 'Invalid SMS API Key!'}}); return 0;
             }
             graphName = 'big-data-endpoint';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             let queryFUA = queryObject.getPointToAaptiveFUA(params.lat, params.long, params.country, params.source, params.indicatorName);
             //send request

@@ -1,5 +1,5 @@
 'use strict';
-import {getEndpointParameters, getHTTPQuery, getHTTPGetURL, isValidAPIToken} from './utils/helpers';
+import {getStaticEndpointParameters, getHTTPQuery, getHTTPGetURL, isValidAPIToken} from './utils/helpers';
 import {defaultGraphName, enableAuthentication} from '../configs/general';
 import DataQuery from './sparql/DataQuery';
 import DataUtil from './utils/DataUtil';
@@ -23,7 +23,7 @@ export default {
         if(resource === 'data.datasets'){
             const defaultDatasetListGraph = 'http://rdf.risis.eu/datasets/';
             graphName = (params.id ? decodeURIComponent(params.id) : defaultDatasetListGraph);
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getDatasetsList(graphName);
             //console.log(query);
@@ -49,7 +49,7 @@ export default {
                 callback(null, {entityTypes: [], error: {'type':'params', 'msg': 'datasetURI is not given!'}}); return 0;
             }
             graphName = datasetURI;
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getDatasetEntityTypes(graphName,'');
             //console.log(query);
@@ -83,7 +83,7 @@ export default {
                 callback(null, {entities: [], error: {'type':'params', 'msg': 'datasetURI or entityTypeURI are not given!'}}); return 0;
             }
             graphName = datasetURI;
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
             //console.log(query);
@@ -105,7 +105,7 @@ export default {
             datasetURI = 'http://risis.eu/dataset/nano';
             entityTypeURI = 'http://risis.eu/nano/ontology/class/Document';
             graphName = datasetURI;
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getDatasetEntityTypes(graphName, entityTypeURI);
             //console.log(query);
@@ -172,7 +172,7 @@ export default {
                     callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
                 }else{
                     graphName = datasetURI;
-                    endpointParameters = getEndpointParameters(graphName);
+                    endpointParameters = getStaticEndpointParameters(graphName);
                     //SPARQL QUERY
                     query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
                     //console.log(query);
@@ -222,7 +222,7 @@ export default {
                     callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
                 }else{
                     graphName = datasetURI;
-                    endpointParameters = getEndpointParameters(graphName);
+                    endpointParameters = getStaticEndpointParameters(graphName);
                     //SPARQL QUERY
                     query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
                     //console.log(query);
@@ -272,7 +272,7 @@ export default {
                     callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
                 }else{
                     graphName = datasetURI;
-                    endpointParameters = getEndpointParameters(graphName);
+                    endpointParameters = getStaticEndpointParameters(graphName);
                     //SPARQL QUERY
                     query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
                     //console.log(query);
@@ -322,7 +322,7 @@ export default {
                     callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
                 }else{
                     graphName = datasetURI;
-                    endpointParameters = getEndpointParameters(graphName);
+                    endpointParameters = getStaticEndpointParameters(graphName);
                     //SPARQL QUERY
                     query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
                     //console.log(query);
@@ -372,7 +372,7 @@ export default {
                     callback(null, {entities: [], error: {'type':'access', 'msg': 'Invalid Access Token!'}}); return 0;
                 }else{
                     graphName = datasetURI;
-                    endpointParameters = getEndpointParameters(graphName);
+                    endpointParameters = getStaticEndpointParameters(graphName);
                     //SPARQL QUERY
                     query = queryObject.getDatasetEntities(graphName, decodeURIComponent(entityTypeURI), offsetF, limitF);
                     //console.log(query);
@@ -410,7 +410,7 @@ export default {
                 callback(null, {entities: [], error: {'type':'params', 'msg': 'datasetURI or entityURI are not given!'}}); return 0;
             }
             graphName = decodeURIComponent(datasetURI);
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = queryObject.getDatasetEntity(graphName, entityURI);
             //console.log(query);

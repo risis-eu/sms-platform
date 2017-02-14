@@ -1,5 +1,5 @@
 'use strict';
-import {getEndpointParameters, getHTTPQuery} from './utils/helpers';
+import {getStaticEndpointParameters, getHTTPQuery} from './utils/helpers';
 import {defaultGraphName} from '../configs/general';
 import MetadataQuery from './sparql/MetadataQuery';
 import MetadataUtil from './utils/MetadataUtil';
@@ -25,7 +25,7 @@ export default {
     read: (req, resource, params, config, callback) => {
         if(resource === 'metadata.datasetsList'){
             graphName = '';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             //SPARQL QUERY
             query = datasetQueryObject.getDatasetsList();
             //send request
@@ -40,7 +40,7 @@ export default {
             });
         } else if (resource === 'metadata.dataset') {
             graphName = '';
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getStaticEndpointParameters(graphName);
             graphName = 'http://rdf.risis.eu/dataset/'+params.name+'/1.0/void.ttl#';
             resourceURI = 'http://rdf.risis.eu/dataset/'+params.name+'/1.0/void.ttl#'+params.name+'_rdf_dataset';
             query = resourceQueryObject.getProperties(graphName, resourceURI);
