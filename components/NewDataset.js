@@ -30,6 +30,13 @@ class NewDataset extends React.Component {
         this.setState({endpointURI: val.trim()});
     }
     handleCreateDataset() {
+        let user , tmp = this.context.getUser();
+        //we do not need this for super user
+        if(tmp){
+            if(!tmp.isSuperUser || !parseInt(tmp.isSuperUser)){
+                user = tmp.id;
+            }
+        }
         let datasetURI, datasetLabel, endpointURI, graphName, resourceFocusType, host, port, path, endpointType;
         graphName= 'default';
         datasetLabel= 'd' + Math.round(+new Date() / 1000);
@@ -51,7 +58,8 @@ class NewDataset extends React.Component {
         if(!this.state.endpointURI){
             this.context.executeAction(createEmptyDataset, {
                 datasetLabel: datasetLabel,
-                datasetURI: datasetURI
+                datasetURI: datasetURI,
+                user: user
             });
         }else{
             endpointURI = this.state.endpointURI;

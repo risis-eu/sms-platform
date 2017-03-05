@@ -29,12 +29,12 @@ class Resource extends React.Component {
         let isUserTheCreator = 0;
         let user = this.context.getUser();
         let self = this;
-        let titleDIV, descDIV, keywordDIV, pageDIV, useCaseDIV, accessLevel, isWriteable, configReadOnly;
-        if(self.props.readOnly !== 'undefined'){
+        let titleDIV, descDIV, keywordDIV, pageDIV, useCaseDIV, accessLevel, isWriteable, configReadOnly, creatorDIV, dateDIV, annotationMetaDIV, annotationDIV;
+        if(typeof self.props.readOnly !== 'undefined'){
             readOnly = self.props.readOnly;
         }else{
             //check the config for resource
-            if(self.props.config && self.props.config.readOnly !== 'undefined'){
+            if(self.props.config && typeof self.props.config.readOnly !== 'undefined'){
                 readOnly = self.props.config.readOnly;
             }
         }
@@ -65,6 +65,14 @@ class Resource extends React.Component {
                     pageDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI={self.props.datasetURI} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
                 } else if(node.propertyURI === 'http://purl.org/dc/terms/subject'){
                     keywordDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI={self.props.datasetURI} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
+                } else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdOn'){
+                    dateDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy') {
+                    creatorDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#annotatedBy') {
+                    annotationMetaDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#annotations') {
+                    annotationDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
                 }else{
                     return (
                         <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI={self.props.datasetURI} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
@@ -119,6 +127,10 @@ class Resource extends React.Component {
                                     {useCaseDIV}
                                     {pageDIV}
                                     {list}
+                                    {annotationDIV}
+                                    {annotationMetaDIV}
+                                    {dateDIV}
+                                    {creatorDIV}
                                 </div>
                             </div>
                       </div>;

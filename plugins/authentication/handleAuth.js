@@ -172,55 +172,55 @@ module.exports = function handleAuthentication(server) {
             return res.redirect('/');
         }
     });
-     server.post('/register', function(req, res, next) {
-         let recaptchaSiteKey = '';
-         let recaptchaSecretKey = '';
-         if(generalConfig.useGoogleRecaptcha && config.googleRecaptchaService){
-             recaptchaSiteKey = config.googleRecaptchaService.siteKey[0];
-             recaptchaSecretKey = config.googleRecaptchaService.secretKey[0];
-         }
+    server.post('/register', function(req, res, next) {
+        let recaptchaSiteKey = '';
+        let recaptchaSecretKey = '';
+        if(generalConfig.useGoogleRecaptcha && config.googleRecaptchaService){
+            recaptchaSiteKey = config.googleRecaptchaService.siteKey[0];
+            recaptchaSecretKey = config.googleRecaptchaService.secretKey[0];
+        }
 
-         let error= '';
-         if(req.body.password !== req.body.cpassword){
-             error = 'Error! password mismatch...';
-         }else{
-             for (let prop in req.body) {
-                 if(!req.body[prop]){
-                     error = error + ' missing value for "' + prop +'"';
-                 }
-             }
-         }
-         if(error){
-             console.log(error);
-             res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, recaptchaSiteKey: recaptchaSiteKey, data: req.body, errorMsg: 'Error... '+error});
-         }else{
-             //successfull
-             //check recaptcha if enabled
-             if(recaptchaSiteKey){
-                 let recaptchaValidationURL = 'https://www.google.com/recaptcha/api/siteverify';
-                 let recpostOptions = {
-                     method: 'POST',
-                     uri: recaptchaValidationURL + '?secret='+recaptchaSecretKey + '&response=' + encodeURIComponent(req.body['g-recaptcha-response'])
-                 };
-                 rp(recpostOptions).then(function(recres){
-                     let recapRes = JSON.parse(recres);
-                     //console.log(recapRes);
-                     if(recapRes.success !== undefined && !recapRes.success){
-                         //error in recaptcha validation
-                         res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, recaptchaSiteKey: recaptchaSiteKey, data: req.body, errorMsg: 'Error... Captcha is not validated! You seem to be a robot...'});
-                         return 0;
-                     }else{
-                         addUserQueries(req, res, recaptchaSiteKey);
-                     }
-                 }).catch(function (errRecap) {
-                     console.log(errRecap);
-                 });
-             }else{
-                 addUserQueries(req, res, recaptchaSiteKey);
-             }
+        let error= '';
+        if(req.body.password !== req.body.cpassword){
+            error = 'Error! password mismatch...';
+        }else{
+            for (let prop in req.body) {
+                if(!req.body[prop]){
+                    error = error + ' missing value for "' + prop +'"';
+                }
+            }
+        }
+        if(error){
+            console.log(error);
+            res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, recaptchaSiteKey: recaptchaSiteKey, data: req.body, errorMsg: 'Error... '+error});
+        }else{
+            //successfull
+            //check recaptcha if enabled
+            if(recaptchaSiteKey){
+                let recaptchaValidationURL = 'https://www.google.com/recaptcha/api/siteverify';
+                let recpostOptions = {
+                    method: 'POST',
+                    uri: recaptchaValidationURL + '?secret='+recaptchaSecretKey + '&response=' + encodeURIComponent(req.body['g-recaptcha-response'])
+                };
+                rp(recpostOptions).then(function(recres){
+                    let recapRes = JSON.parse(recres);
+                    //console.log(recapRes);
+                    if(recapRes.success !== undefined && !recapRes.success){
+                        //error in recaptcha validation
+                        res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, recaptchaSiteKey: recaptchaSiteKey, data: req.body, errorMsg: 'Error... Captcha is not validated! You seem to be a robot...'});
+                        return 0;
+                    }else{
+                        addUserQueries(req, res, recaptchaSiteKey);
+                    }
+                }).catch(function (errRecap) {
+                    console.log(errRecap);
+                });
+            }else{
+                addUserQueries(req, res, recaptchaSiteKey);
+            }
 
-         }
-     });
+        }
+    });
 };
 let getUserExistsQuery = function(username, email){
     /*jshint multistr: true */
@@ -270,7 +270,7 @@ let addUserQueries = (req, res, recaptchaSiteKey) => {
                 console.log('start registration');
                 let rnd = Math.round(+new Date() / 1000);
                 let resourceURI = generalConfig.baseResourceDomain + '/user/' + rnd;
-                let dresourceURI = generalConfig.baseResourceDomain + '/resource/' + rnd;
+                //let dresourceURI = generalConfig.baseResourceDomain + '/resource/' + rnd;
                 let datasetURI = generalConfig.baseResourceDomain + '/dataset/' + rnd;
                 let blanknode = generalConfig.baseResourceDomain + '/editorship/' + rnd;
                 let orcidid;
@@ -296,6 +296,7 @@ let addUserQueries = (req, res, recaptchaSiteKey) => {
                                              foaf:lastName """${req.body.lastname}""";
                                              foaf:organization """${req.body.organization}""";
                                              foaf:accountName """${req.body.username}""";
+                                             rdfs:label """${req.body.username}""";
                                              foaf:member ldr:NormalUser, <http://rdf.risis.eu/user/RISISUsers> ;
                                              foaf:mbox <mailto:${req.body.email}>;
                                              vivo:orcidId <${orcidid}>;
@@ -305,25 +306,22 @@ let addUserQueries = (req, res, recaptchaSiteKey) => {
                                              ldr:password """${passwordHash.generate(req.body.password)}""";
                                              ldr:isActive "${isActive}"^^xsd:Integer;
                                              ldr:isSuperUser "0"^^xsd:Integer;
-                                             ldr:editorOfDataset <${datasetURI}>;
-                                             ldr:editorOfGraph <${datasetURI}>;
-                                             ldr:editorOfResource <${dresourceURI}>;
-                                             ldr:editorOfProperty <${blanknode}1>, <${blanknode}2>, <${blanknode}3>, <${blanknode}4>, <${blanknode}5>, <${blanknode}6>, <${blanknode}7> .
-                                             <${blanknode}1> ldr:resource <${resourceURI}> ;
+                                             ldr:viewerOf <${blanknode}0> ;
+                                             ldr:editorOf <${blanknode}1>, <${blanknode}2>, <${blanknode}3>, <${blanknode}4>, <${blanknode}5>, <${blanknode}6>, <${blanknode}7> .
+                                             <${blanknode}1> ldr:scope "RP" ; ldr:resource <${resourceURI}> ;
                                                              ldr:property foaf:firstName .
-                                             <${blanknode}2> ldr:resource <${resourceURI}> ;
+                                             <${blanknode}2> ldr:scope "RP" ; ldr:resource <${resourceURI}> ;
                                                              ldr:property foaf:lastName .
-                                             <${blanknode}3> ldr:resource <${resourceURI}> ;
+                                             <${blanknode}3> ldr:scope "RP" ; ldr:resource <${resourceURI}> ;
                                                              ldr:property foaf:organization .
-                                             <${blanknode}4> ldr:resource <${resourceURI}> ;
+                                             <${blanknode}4> ldr:scope "RP" ; ldr:resource <${resourceURI}> ;
                                                              ldr:property ldr:password .
-                                             <${blanknode}5> ldr:resource <${resourceURI}> ;
+                                             <${blanknode}5> ldr:scope "RP" ; ldr:resource <${resourceURI}> ;
                                                              ldr:property vCard:role .
-                                             <${blanknode}5> ldr:resource <${resourceURI}> ;
+                                             <${blanknode}6> ldr:scope "RP" ; ldr:resource <${resourceURI}> ;
                                                              ldr:property vCard:adr .
-                                             <${blanknode}7> ldr:resource <${resourceURI}> ;
+                                             <${blanknode}7> ldr:scope "RP" ; ldr:resource <${resourceURI}> ;
                                                              ldr:property vivo:orcidId .
-
                         ${gEnd}
                     }
                 `;

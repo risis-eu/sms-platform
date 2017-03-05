@@ -26,16 +26,16 @@ class UserResource extends React.Component {
         let user = this.context.getUser();
         let self = this;
         let accessLevel, isWriteable, configReadOnly;
-        if(self.props.readOnly !== 'undefined'){
+        if(typeof self.props.readOnly !== 'undefined'){
             readOnly = self.props.readOnly;
         }else{
             //check the config for resource
-            if(self.props.config && self.props.config.readOnly !== 'undefined'){
+            if(self.props.config && typeof self.props.config.readOnly !== 'undefined'){
                 readOnly = self.props.config.readOnly;
             }
         }
         //create a list of properties
-        let firstNameDIV, lastNameDIV, orgDIV, emailDIV, unameDIV, passDIV;
+        let firstNameDIV, lastNameDIV, orgDIV, emailDIV, unameDIV, passDIV, creatorDIV, dateDIV;
         let list = this.props.properties.map(function(node, index) {
             //if there was no config at all or it is hidden, do not render the property
             if(!node.config || !node.config.isHidden){
@@ -52,7 +52,11 @@ class UserResource extends React.Component {
                         }
                     }
                 }
-                if(node.propertyURI === 'http://xmlns.com/foaf/0.1/firstName'){
+                if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdOn'){
+                    dateDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy') {
+                    creatorDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                } else if(node.propertyURI === 'http://xmlns.com/foaf/0.1/firstName'){
                     firstNameDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
                 }else if(node.propertyURI === 'http://xmlns.com/foaf/0.1/lastName') {
                     lastNameDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
@@ -114,6 +118,8 @@ class UserResource extends React.Component {
                                     {unameDIV}
                                     {passDIV}
                                     {list}
+                                    {dateDIV}
+                                    {creatorDIV}
                                 </div>
                             </div>
                       </div>;

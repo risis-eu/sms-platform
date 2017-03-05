@@ -32,7 +32,7 @@ class DatasetUtil {
             return output;
         }
     }
-    parseResourcesByType(user, body, datasetURI) {
+    parseResourcesByType(user, body, datasetURI, rconfig) {
         let output = [];
         let resources = [];
         let accessLevel = {access: false};
@@ -46,7 +46,7 @@ class DatasetUtil {
                         if(user.id == el.instances[0].value) {
                             userIsCreator = 1;
                         }*/
-                        accessLevel=checkAccess(user, datasetURI, el.resource.value, 0);
+                        accessLevel=checkAccess(user, datasetURI, el.resource.value, rconfig.resourceFocusType , 0);
                     }
                     output.push({
                         v: el.resource.value,
