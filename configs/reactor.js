@@ -60,6 +60,11 @@ export default {
                 treatAsResourceType: 1,
                 usePropertyCategories: 0
             },
+            'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#User': {
+                treatAsResourceType: 1,
+                usePropertyCategories: 0,
+                resourceReactor: ['UserResource']
+            },
             'http://rdf.risis.eu/metadata/Table': {
                 treatAsResourceType: 1,
                 usePropertyCategories: 0
