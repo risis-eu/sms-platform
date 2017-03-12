@@ -118,17 +118,57 @@ class ldServices extends React.Component {
                                 </div>
                             </div>
                             <p style={{textAlign: 'justify', fontSize: '1.2em'}}>
-                                One practical application we built for batch processing of addresses is a <a href="https://docs.google.com/document/d/1JoJM7VF_ZaaAPbSjtgpydzRDYLvr-tROzhITGj0cH3w/edit?usp=sharing">Google spreadsheet add-on</a> which chains Google Geocoding API with our PointToAdmin and AdminToFUA services. Given addresses in a spreadsheet are enriched with different levels of administrative boundaries and FUAs. The users are then able to export the extracted boundaries and process them in geodata analysis tools such as CartoDB. The following <a href="https://youtu.be/qZGDD5RN7pI?list=PLSBPxopOi20XPOn1sGBthbNtXIUOqM_4b">video</a> tutorial demonstrates how to use our Google spreadsheet add-on:
+                                One practical application we built for batch processing of addresses is a <a href="https://docs.google.com/document/d/1JoJM7VF_ZaaAPbSjtgpydzRDYLvr-tROzhITGj0cH3w/edit?usp=sharing">Google spreadsheet add-on</a> which chains Google Geocoding API with our PointToAdmin and AdminToFUA services. Given addresses in a spreadsheet are enriched with different levels of administrative boundaries and FUAs. The users are then able to export the extracted boundaries and process them in geodata analysis tools such as <a href="https://carto.com/ ">CartoDB</a>. The following <a href="https://youtu.be/qZGDD5RN7pI?list=PLSBPxopOi20XPOn1sGBthbNtXIUOqM_4b">video</a> tutorial demonstrates how to use our Google spreadsheet add-on:
                             </p>
                             <div style={{textAlign: 'center'}}>
                                 <iframe width="560" height="315" src="https://www.youtube.com/embed/qZGDD5RN7pI?list=PLSBPxopOi20XPOn1sGBthbNtXIUOqM_4b" frameBorder="0" allowFullScreen></iframe>
                             </div>
+                            <p style={{textAlign: 'justify', fontSize: '1.2em'}}>
+                                We have also developed a user interface for automatic geo-enrichment of linked datasets in the SMS platform. The interface allows users to select an existing dataset and geocode the whole dataset by selecting the right attributes in the dataset. For a dataset that does not include geo coordinates, addresses will first get automatically geocoded by Google Geocoding API to include longitudes and latitudes. For datasets that are already geocoded, the SMS boundary services will be immediately applied to extract the container boundaries in different levels for existing open geo boundary sources.
+                                The result of geo-enrichment can be stored either directly in the original dataset or in a separate dataset with links to original dataset. The interactive user interface allows users to see in real-time the geo-enriched entities on a map with their extracted geo boundaries.
+                                For the geo-enriched datasets, users can use the SMS faceted browser to display the entities within the datastes on an interactive map and combine geo-data with other structural attribute of the datasets to facilitate browsing the datasets.
+                                The following <a href="https://youtu.be/FFy4-Zlt_ak?list=PLSBPxopOi20XPOn1sGBthbNtXIUOqM_4b">video</a> demonstrates how the Linked Data geo-enrichment service works :
+                            </p>
+                            <div style={{textAlign: 'center'}}>
+                                <iframe width="560" height="315" src="https://www.youtube.com/embed/FFy4-Zlt_ak?list=PLSBPxopOi20XPOn1sGBthbNtXIUOqM_4b" frameBorder="0" allowFullScreen></iframe>
+                            </div>
+                            <p style={{textAlign: 'justify', fontSize: '1.2em'}}>
+                                As another application, SMS proposes a Linked Data approach and implementation which combines openly available spatial and non-spatial resources on the Web to more flexibly classify urban areas. We have already interlinked several datasets related to open geo-boundaries. Users can choose an existing statistical dataset which provides data on certain levels of administrative boundaries and combine it with SMS linked geo data to create a new notion for urban areas. In the section related to use cases, we bring one example of delineating an adaptive urban area.
+                            </p>
+                            <img className="ui medium centered image" src="/assets/img/docs/image12.jpg" />
                         <hr/>
                         <h2>Data Linking Services and Applications</h2>
                         <p style={{textAlign: 'justify', fontSize: '1.2em'}}>
                             Before a user can obtain a view over the data of interest, he is to interact with our services. All his/her interactions are of value to the other users in the sense that those actions are documented for others to reuse, modify for different purposes. User interactions include:
 
                         </p>
+                        <div className="ui divided list" style={{textAlign: 'justify', fontSize: '1.2em'}}>
+                            <div className="item">
+                                <b>Mapping between research question, entity-types and datasets</b>.
+    This enquires about how the research question relates to entity-types hence, datasets that describe those types of interest.
+                            </div>
+                            <div className="item">
+                                <b>Alignments used to generate linksets</b>.
+                                	Here, an explicit description of how to align datasets is required from the user.
+                            </div>
+                            <div className="item">
+                                <b>Lens or user view over the data</b>.
+                                	The user provides a complete description of how she likes the data to be integrated.
+                            </div>
+                            <div className="item">
+                                <b>The design of a view</b>.
+                                The user submit the set of properties that are of interest to answer her research question.
+                            </div>
+                            <div className="item">
+                                <b>Link validation</b>.
+                                The service requires the user to confirm or reject each correspondence created between entities. The justification of the rejection or validation of a link is asked from the user. The later data is intended to help other users decide on their own whether or not to add a contradictory explanation of why the a previously judged “wrong” link should be reinserted for their particular task.
+                            </div>
+                        </div>
+                        <p className="ui divided list" style={{textAlign: 'justify', fontSize: '1.2em'}}>
+                            The following figure shows the steps a user has to take in order to describe and extract a view over the data of interest. For the sake of example, let us assume that the system already contains a set of linksets and lenses. For a user to start a linking activity, she needs a research question.
+                            Based on the research question, she is requested to select the entities types of interest, the datasets that describes the selected entity types. From here on, all she needs to do is “Select the lens for the view” and “Design the view”. Once the view is designed, the user uses the linking service to “generate the view table” that she will use for her analysis. After analysing the data, the user is to feed the linking service ”Associate the result of the analyses” with her results (link to publication, report, website...) to finally end the started activity.
+                        </p>
+                        <img className="ui centered image" src="/assets/img/docs/image33.jpg" />
                     </div>
                 </div>
               </div>
