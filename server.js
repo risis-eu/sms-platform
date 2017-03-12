@@ -76,6 +76,7 @@ server.set('view options', { layout: false });
 server.engine('html', hogan);
 //------------------
 server.use('/public', express.static(path.join(__dirname, '/build')));
+server.use('/api_documentation', express.static(path.join(__dirname, '/api_documentation')));
 //server.use('/bower_components', express.static(path.join(__dirname, '/bower_components')));
 //add frontend npm modules here
 server.use('/json3', express.static(path.join(__dirname, '/node_modules/json3')));
