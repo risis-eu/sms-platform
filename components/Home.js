@@ -85,10 +85,17 @@ class Home extends React.Component {
                             </div>
                           </div>
                           <div className="item">
-                            <i className="file pdf green icon"></i>
+                            <i className="file pdf outline green icon"></i>
                             <div className="content">
                               <a className="header" href="/assets/pdf/sms_documentation.pdf" target="_blank">SMS Platform Documentation</a>
                               <div className="description">Complete documentation of SMS platform.</div>
+                            </div>
+                          </div>
+                          <div className="item">
+                            <i className="file image outline green icon"></i>
+                            <div className="content">
+                              <a className="header" href="/assets/pdf/sms_poster.pdf" target="_blank">SMS Poster</a>
+                              <div className="description">A poster demonstrating the overall data flow within the SMS system.</div>
                             </div>
                           </div>
                           <div className="item">
