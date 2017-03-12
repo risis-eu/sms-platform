@@ -2,6 +2,7 @@ import React from 'react';
 import ResourceList from './ResourceList';
 import ResourceListPager from './ResourceListPager';
 import YASQEViewer from '../object/viewer/individual/YASQEViewer';
+import {enableAuthentication} from '../../configs/general';
 import URIUtil from '../utils/URIUtil';
 class Dataset extends React.Component {
     constructor(props){
@@ -23,6 +24,27 @@ class Dataset extends React.Component {
         });
     }
     render() {
+        //check erros first
+        if(this.props.error){
+            return (
+                <div className="ui page grid" ref="dataset">
+                    <div className="ui column">
+                        <div className="ui warning message"><h2>{this.props.error}</h2></div>
+                    </div>
+                </div>
+            )
+        }
+        let user = this.context.getUser();
+        if(enableAuthentication && !user){
+            return (
+                <div className="ui page grid" ref="dataset">
+                    <div className="ui column">
+                        <div className="ui warning message"><div className="header"> Please <a href="http://datasets.risis.eu/register">Register</a> or <a href="/login">Login</a> to see the datasets/resources.</div></div>
+                    </div>
+                </div>
+            )
+        }
+        //continue
         let self = this;
         let resourceFocusType = this.props.config.resourceFocusType;
         let typeSt, typesLink = [];
@@ -81,4 +103,7 @@ class Dataset extends React.Component {
         );
     }
 }
+Dataset.contextTypes = {
+    getUser: React.PropTypes.func
+};
 export default Dataset;

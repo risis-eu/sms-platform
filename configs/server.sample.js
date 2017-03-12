@@ -31,5 +31,7 @@ export default {
     googleRecaptchaService: {
         siteKey: ['put your google recaptcha site key here...'],
         secretKey: ['put your google recaptcha secret key here...']
-    }
+    },
+    googleMapsGeocodingAPIKey: ['put your Google Maps Geocoding API key here...'],
+    smsAPIKey: ['put your SMS API key here...']
 };

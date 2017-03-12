@@ -14,5 +14,8 @@ if not exist configs\facets.js (
 if not exist plugins\email\config.js (
     copy plugins\email\config.sample.js plugins\email\config.js
 )
+if not exist plugins\demos\config.js (
+    copy plugins\demos\config.sample.js plugins\demos\config.js
+)
 echo "Installing npm packages..."
 npm install

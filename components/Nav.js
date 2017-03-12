@@ -1,7 +1,6 @@
 'use strict';
 import React from 'react';
 import {NavLink} from 'fluxible-router';
-import CookieBanner from 'react-cookie-banner';
 import {appFullTitle, appShortTitle, enableAuthentication, enableDynamicReactorConfiguration,enableDynamicServerConfiguration,enableDynamicfacetsConfiguration, configDatasetURI} from '../configs/general';
 
 class Nav extends React.Component {
@@ -15,6 +14,10 @@ class Nav extends React.Component {
     }
     render() {
         let user = this.context.getUser();
+        let showSettings = 0;
+        if(user && (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1 )){
+            showSettings = 1;
+        }
         // console.log(user);
         let userMenu;
         let configMenu = <a href={'/browse/' + encodeURIComponent(configDatasetURI)} className="ui item link" title="Configuration Manager">
@@ -31,34 +34,32 @@ class Nav extends React.Component {
                                 </div>
                             </div>;
             }else{
-                userMenu = <div className="ui right item"> <a className="ui mini circular teal button" href="/login">Sign-in</a> &nbsp;  <a href="/register" className="ui mini circular yellow button">Register</a> </div>;
                 configMenu = '';
+
+                userMenu = <div className="ui right item"> <a className="ui mini circular teal button" href="/login">Sign-in</a> &nbsp;  <a href="http://datasets.risis.eu/register" className="ui mini circular yellow button">Register</a> </div>;
+
             }
         }
-        let logoStyle = {
-            maxHeight: 19
-        };
         return (
-            <nav ref="defaultNavbar" className="ui black menu inverted navbar page grid">
-                <CookieBanner message='This website uses cookies to ensure you get the best experience on our website.' cookie='user-has-accepted-cookies' dismissOnScroll={true} />
-                <NavLink routeName="home" className="brand item ui blue label" activeClass="active"><img src="/assets/img/sms_logo_t.png" alt={appShortTitle} /></NavLink>
-                <NavLink routeName="about" className="item ui label" activeClass="active">About Us</NavLink>
-                <NavLink routeName="dataset" className="item ui label" activeClass="active" href="/datasets">Datasets Metadata Editor</NavLink>
-                <a className="item ui label" href="http://datasets.risis.eu" target="_blank">Datasets Portal</a>
-                <a className="item ui label" href="http://api.sms.risis.eu" target="_blank">Linked Data API</a>
-                <NavLink routeName="demos" className="item ui label" activeClass="active" href="/demos">Demos</NavLink>
-                <div className="right menu">
-                    <div className="item link" onClick={this.showHelpModal}>
-                            <i className="small help circle icon"></i>
+            <nav ref="defaultNavbar" className="ui blue menu inverted navbar stackable page grid">
+                    <NavLink routeName="home" className="brand item" href='/'>
+                        {this.props.loading ? <img src="/assets/img/loader.gif" alt="loading..." style={{height: 30, width: 30}} /> : <img style={{height: 22, width: 35}} className="ui mini image" src="/assets/img/sms_logo_t.png" alt="SMS" />}
+                    </NavLink>
+                    <a className="item" href="/"> SMS Platform</a>
+                    <NavLink routeName="metadataList" className="item" href="/metadataList"> Metadata Editor</NavLink>
+                    <NavLink routeName="datasets" className="item" href="/datasets"> Datasets</NavLink>
+                    <div className="right menu">
+                        <NavLink routeName="contact" className="item" href="/contact" title="contact us">
+                            <i className="medium mail outline icon"></i>
+                        </NavLink>
+                        <div className="item link" onClick={this.showHelpModal} title="help">
+                                <i className="medium help circle icon"></i>
+                        </div>
+                        {(showSettings && (enableDynamicReactorConfiguration || enableDynamicServerConfiguration || enableDynamicfacetsConfiguration)) ?
+                            configMenu
+                        : ''}
+                        {userMenu}
                     </div>
-                    {(enableDynamicReactorConfiguration || enableDynamicServerConfiguration || enableDynamicfacetsConfiguration) ?
-                        configMenu
-                    : ''}
-                    <a href="http://github.com/risis-eu/sms-platform" className="ui item link">
-                            <i className="github circle icon"></i> Github
-                    </a>
-                    {userMenu}
-                </div>
             </nav>
         );
     }

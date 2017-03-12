@@ -2,7 +2,7 @@ import React from 'react';
 import BasicAggregateView from './viewer/aggregate/BasicAggregateView';
 import DBpediaMapView from './viewer/aggregate/DBpediaMapView';
 import BasicAggregateMapView from './viewer/aggregate/BasicAggregateMapView';
-
+import GeoBoundaryView from './viewer/aggregate/GeoBoundaryView';
 
 class ObjectAViewer extends React.Component {
     render() {
@@ -18,6 +18,9 @@ class ObjectAViewer extends React.Component {
                 break;
             case 'DBpediaMapView':
                 viewer = <DBpediaMapView property={this.props.property} spec={this.props.spec} config={this.props.config}/>;
+                break;
+            case 'GeoBoundaryView':
+                viewer = <GeoBoundaryView property={this.props.property} spec={this.props.spec} config={this.props.config}/>;
                 break;
             case 'BasicAggregateMapView':
                 viewer = <BasicAggregateMapView property={this.props.property} spec={this.props.spec} config={this.props.config}/>;

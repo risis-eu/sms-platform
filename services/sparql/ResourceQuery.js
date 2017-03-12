@@ -11,6 +11,7 @@ class ResourceQuery{
         PREFIX dcterms: <http://purl.org/dc/terms/>
         PREFIX void: <http://rdfs.org/ns/void#>
         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+        PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
         PREFIX DBpedia: <http://dbpedia.org/ontology/>
         PREFIX Schema: <http://schema.org/>
@@ -169,6 +170,81 @@ class ResourceQuery{
         `;
         return this.query;
     }
+    geoEnrichResource(endpointParameters, user, datasetURI, graphName, resourceURI, propertyURI, enrichment, inNewDataset) {
+        //todo: consider different value types
+        let self = this;
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
+        let userSt = '', atypeSt ='';
+        if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
+            userSt=` ldr:createdBy <${user.id}> ;`;
+        }
+        let date = new Date();
+        let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
+        let aresources = [];
+        let eresource;
+        let annotationsSTR = '';
+        let exboundariesSt = '';
+        let newDSt = '';
+        //add more data if it is stored in a different dataset than the original one
+        if(inNewDataset){
+            newDSt = `<${resourceURI}> a  ldr:GeoEnrichedResource .`;
+        }
+        let annotatedByURI = self.createDynamicURI(datasetURI, 'details'+'_'+enrichment.boundarySource+'_'+Math.floor((Math.random() * 1000) + 1));
+        let mainAnnSt = '';
+        if(enrichment.location){
+            eresource = '<'+self.createDynamicURI(datasetURI, 'geo_'+enrichment.boundarySource+'_'+Math.floor((Math.random() * 1000) + 1))+'>';
+            let boundariesSt = '';
+            if(enrichment.boundaries.length){
+                let preURI = '';
+                let preVocab = '';
+                if(enrichment.boundarySource.toLowerCase() === 'gadm'){
+                    preURI = 'http://geo.risis.eu/gadm/';
+                    preVocab = 'http://risis.eu/gadm/ontology/predicate/level_';
+                }else if(enrichment.boundarySource.toLowerCase() === 'osm'){
+                    preURI = 'http://geo.risis.eu/osm/';
+                    preVocab = 'http://risis.eu/osm/ontology/predicate/level_';
+                }else if(enrichment.boundarySource.toLowerCase() === 'flickr'){
+                    preURI = 'http://geo.risis.eu/flickr/';
+                    preVocab = 'http://risis.eu/flickr/ontology/predicate/level_';
+                }
+
+                enrichment.boundaries.forEach((b)=>{
+                    boundariesSt = boundariesSt + '<' +preVocab +''+ b.level + '> <'+preURI + '' + b.id +'> ; ' ;
+                    exboundariesSt = exboundariesSt + ' <'+preURI + '' + b.id +'> a ldr:GeoBoundary ; rdfs:label """' + b.title + '""" . '
+                });
+            }
+            annotationsSTR = `
+                ${eresource} a ldr:GeoEnrichment;
+                             ldr:enrichmentDetail <${annotatedByURI}> ;
+                             ${boundariesSt}
+                             ldr:formattedAddress """${enrichment.location.formattedAddress}""" ;
+                             ldr:country """${enrichment.location.country}""" ;
+                             geo:geometry "POINT(${enrichment.location.longitude} ${enrichment.location.latitude})"^^<http://www.openlinksw.com/schemas/virtrdf#Geometry> .
+             `;
+
+            mainAnnSt = `<${resourceURI}> ldr:geoEnrichments ${eresource} .`;
+        }
+        this.query = `
+        INSERT {
+            ${gStart}
+                <${resourceURI}> ldr:geoEnrichedBy  <${annotatedByURI}> .
+                ${newDSt}
+                <${annotatedByURI}> ${userSt} ldr:createdOn "${currentDate}"^^xsd:dateTime ; ldr:property "${propertyURI}" ; ldr:API "SMS Address to Boundary API" ; ldr:boundarySource "${enrichment.boundarySource}" .
+                ${mainAnnSt}
+                ${annotationsSTR}
+                ${exboundariesSt}
+            ${gEnd}
+        } WHERE {
+            ${gStart}
+                filter not exists {
+                    <${resourceURI}> ldr:geoEnrichedBy ?annotationInfo .
+                    ?annotationInfo ldr:property "${propertyURI}" ; ldr:boundarySource "${enrichment.boundarySource}" .
+                }
+            ${gEnd}
+        }
+        `;
+        return this.query;
+    }
     addTriple(endpointParameters, graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
         //todo: consider different value types
         let newValue, tmp = {};
@@ -275,6 +351,20 @@ class ResourceQuery{
             self.query = self.query + self.addTriple(endpointParameters, graphName, newObjectValue, propURI, detailData[propURI].value, detailData[propURI].valueType, detailData[propURI].dataType)+ ' ; ';
         }
 
+        return this.query;
+    }
+    getBoundaries (instances, datasetURI) {
+        let tmp, output = [];
+        instances.forEach(function(v) {
+            output.push('<' + v.value + '>');
+        });
+        this.query=`
+        SELECT DISTINCT ?s ?geometry WHERE {
+            GRAPH <${datasetURI}> {
+                ?s geo:geometry ?geometry .
+                FILTER (?s IN (${output.join(',')}) )
+            }
+        }`;
         return this.query;
     }
 

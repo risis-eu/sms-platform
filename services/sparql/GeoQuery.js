@@ -449,18 +449,18 @@ class GeoQuery{
         let graph, vocab, depthL, countryC = '';
         depthL = 1;
         switch (source) {
-        case 'osm':
-            graph =  'http://geo.risis.eu/osm';
-            vocab = 'risisOSMV';
-            break;
-        case 'gadm':
-            graph =  'http://geo.risis.eu/gadm';
-            vocab = 'risisGADMV';
-            break;
-        case 'flickr':
-            graph =  'http://geo.risis.eu/flickr';
-            vocab = 'risisFlickrV';
-            break;
+            case 'osm':
+                graph =  'http://geo.risis.eu/osm';
+                vocab = 'risisOSMV';
+                break;
+            case 'gadm':
+                graph =  'http://geo.risis.eu/gadm';
+                vocab = 'risisGADMV';
+                break;
+            case 'flickr':
+                graph =  'http://geo.risis.eu/flickr';
+                vocab = 'risisFlickrV';
+                break;
         }
         if(depth){
             depthL = depth;
@@ -489,18 +489,18 @@ class GeoQuery{
         let graph, vocab, depthL, countryC = '';
         depthL = 1;
         switch (source) {
-        case 'osm':
-            graph =  'http://geo.risis.eu/osm';
-            vocab = 'risisOSMV';
-            break;
-        case 'gadm':
-            graph =  'http://geo.risis.eu/gadm';
-            vocab = 'risisGADMV';
-            break;
-        case 'flickr':
-            graph =  'http://geo.risis.eu/flickr';
-            vocab = 'risisFlickrV';
-            break;
+            case 'osm':
+                graph =  'http://geo.risis.eu/osm';
+                vocab = 'risisOSMV';
+                break;
+            case 'gadm':
+                graph =  'http://geo.risis.eu/gadm';
+                vocab = 'risisGADMV';
+                break;
+            case 'flickr':
+                graph =  'http://geo.risis.eu/flickr';
+                vocab = 'risisFlickrV';
+                break;
         }
         if(depth){
             depthL = depth;
@@ -528,18 +528,18 @@ class GeoQuery{
     getPointToAaptiveFUA(lat, long, country, source, fuaGraph) {
         let graph, vocab, countryC = '';
         switch (source) {
-        case 'osm':
-            graph =  'http://geo.risis.eu/osm';
-            vocab = 'risisOSMV';
-            break;
-        case 'gadm':
-            graph =  'http://geo.risis.eu/gadm';
-            vocab = 'risisGADMV';
-            break;
-        case 'flickr':
-            graph =  'http://geo.risis.eu/flickr';
-            vocab = 'risisFlickrV';
-            break;
+            case 'osm':
+                graph =  'http://geo.risis.eu/osm';
+                vocab = 'risisOSMV';
+                break;
+            case 'gadm':
+                graph =  'http://geo.risis.eu/gadm';
+                vocab = 'risisGADMV';
+                break;
+            case 'flickr':
+                graph =  'http://geo.risis.eu/flickr';
+                vocab = 'risisFlickrV';
+                break;
         }
         let ex1 = '', ex2 = '';
         if(country){

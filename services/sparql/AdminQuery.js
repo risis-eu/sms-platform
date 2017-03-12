@@ -20,14 +20,14 @@ class AdminQuery{
     getUsers(endpointParameters, graphName) {
         let {gStart, gEnd} = this.queryObject.prepareGraphName(graphName);
         this.query = `
-        SELECT DISTINCT ?subject ?username ?isActive ?isSuperUser ?mbox ?firstName ?lastName (group_concat(distinct ?member ; separator = ",") AS ?membership) WHERE {
+        SELECT DISTINCT ?subject ?username ?isActive ?firstName ?lastName (group_concat(distinct ?member ; separator = ",") AS ?membership) ?isSuperUser ?mbox WHERE {
             ${gStart}
-                ?subject a foaf:Person ;
+                ?subject a ldr:User ;
                          foaf:accountName ?username ;
+                         ldr:isActive ?isActive ;
                          foaf:firstName ?firstName ;
                          foaf:lastName ?lastName ;
                          foaf:member ?member ;
-                         ldr:isActive ?isActive ;
                          ldr:isSuperUser ?isSuperUser ;
                          foaf:mbox ?mbox .
             ${gEnd}

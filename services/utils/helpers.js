@@ -1,49 +1,36 @@
-import {
-    listOfCountries
-} from '../../data/countries';
-import {
-    sparqlEndpoint, apiTokens
-} from '../../configs/server';
-import {
-    defaultDatasetURI,
-    enableDynamicServerConfiguration,
-    enableAuthentication
-} from '../../configs/general';
+import {sparqlEndpoint, apiTokens} from '../../configs/server';
+import {defaultDatasetURI, enableDynamicServerConfiguration, enableAuthentication} from '../../configs/general';
 import validUrl from 'valid-url';
 import queryString from 'query-string';
 
-let prepareStaticDGFunc = (datasetURI) => {
-    let d = datasetURI,
-        g = datasetURI;
+let prepareStaticDGFunc = (datasetURI)=>{
+    let d = datasetURI, g = datasetURI;
     //try default graph if no datasetURI is given
-    if (String(defaultDatasetURI[0]) !== '') {
-        if (!d) {
+    if(String(defaultDatasetURI[0]) !==''){
+        if(!d) {
             d = defaultDatasetURI[0];
         }
     }
-    if (sparqlEndpoint[d]) {
-        if (sparqlEndpoint[d].graphName) {
+    if(sparqlEndpoint[d]){
+        if(sparqlEndpoint[d].graphName){
             g = sparqlEndpoint[d].graphName;
-        } else {
-            if (d === 'generic') {
+        }else{
+            if(d === 'generic'){
                 g = 'default';
-            } else {
+            }else{
                 g = d;
             }
         }
-    } else {
+    }else{
         //go for generic SPARQL endpoint
-        if (sparqlEndpoint['generic'].graphName) {
+        if(sparqlEndpoint['generic'].graphName){
             g = sparqlEndpoint['generic'].graphName;
-        } else {
+        }else{
             g = d;
         }
         d = 'generic';
     }
-    return {
-        d: d,
-        g: g
-    };
+    return {d: d, g: g};
 }
 
 let includesDataset= (rights, dataset)=> {
@@ -125,40 +112,29 @@ let includesProperty= (rights, dataset, resource, resourceType, property)=> {
 
 export default {
     //returns dataset and graphName
-    prepareDG(datasetURI) {
+    prepareDG(datasetURI){
         return prepareStaticDGFunc(datasetURI);
     },
     //it is used for users and configs
-    getStaticEndpointParameters(datasetURI) {
-        let httpOptions, {
-            d,
-            g
-        } = prepareStaticDGFunc(datasetURI);
+    getStaticEndpointParameters(datasetURI){
+        let httpOptions, {d, g} = prepareStaticDGFunc(datasetURI);
         httpOptions = {
             host: sparqlEndpoint[d].host,
             port: sparqlEndpoint[d].port,
             path: sparqlEndpoint[d].path
         };
         let useReasoning = 0;
-        if (sparqlEndpoint[d].useReasoning) {
+        if(sparqlEndpoint[d].useReasoning){
             useReasoning = 1;
         }
         let etype = sparqlEndpoint[d].endpointType ? sparqlEndpoint[d].endpointType : 'virtuoso';
-        return {
-            httpOptions: httpOptions,
-            type: etype.toLowerCase(),
-            graphName: g,
-            useReasoning: useReasoning
-        };
+        return {httpOptions: httpOptions, type: etype.toLowerCase(), graphName: g, useReasoning: useReasoning};
     },
     //build the write URI and params for different SPARQL endpoints
     getHTTPQuery(mode, query, endpointParameters, outputFormat) {
-        let outputObject = {
-            uri: '',
-            params: {}
-        };
+        let outputObject = {uri: '', params: {}};
 
-        if (endpointParameters.useReasoning) {
+        if(endpointParameters.useReasoning){
             outputObject.params['reasoning'] = 'true';
         }
 
@@ -207,62 +183,18 @@ export default {
         return outputObject;
     },
     ///builds the HTTP get URL for SPARQL requests
-    getHTTPGetURL(object) {
+    getHTTPGetURL(object){
         let uri = object.uri + '?' + queryString.stringify(object.params);
         return uri;
     },
-    prepareGraphName(graphName) {
-        let gStart = 'GRAPH <' + graphName + '> { ';
+    prepareGraphName(graphName){
+        let gStart = 'GRAPH <'+ graphName +'> { ';
         let gEnd = ' } ';
-        if (!graphName || graphName === 'default') {
-            gStart = ' ';
+        if(!graphName || graphName === 'default'){
+            gStart =' ';
             gEnd = ' ';
         }
-        return {
-            gStart: gStart,
-            gEnd: gEnd
-        }
-    },
-
-    checkAccess(user, dataset, resource, resourceType, property) {
-        //console.log(user.editorOf, dataset, resource, resourceType, property);
-        if(!enableAuthentication){
-            return {
-                access: true,
-                type: 'full'
-            };
-        }
-        if (parseInt(user.isSuperUser)) {
-            return {
-                access: true,
-                type: 'full'
-            };
-        } else {
-            if (dataset && user.editorOf && includesDataset(user.editorOf, dataset)) {
-                return {
-                    access: true,
-                    type: 'full'
-                };
-            } else {
-                if (resource && user.editorOf && includesResource(user.editorOf, dataset, resource, resourceType)) {
-                    return {
-                        access: true,
-                        type: 'full'
-                    };
-                } else {
-                    if (property && user.editorOf && includesProperty(user.editorOf, dataset, resource, resourceType, property)) {
-                        return {
-                            access: true,
-                            type: 'partial'
-                        };
-                    } else {
-                        return {
-                            access: false
-                        };
-                    }
-                }
-            }
-        }
+        return {gStart: gStart, gEnd: gEnd}
     },
     getQueryDataTypeValue(valueType, dataType, objectValue) {
         let newValue, dtype;
@@ -321,13 +253,10 @@ export default {
                 dtype = 'str';
         }
         //fix in virtuoso
-        if (dtype === 'uri') {
+        if(dtype === 'uri'){
             dtype = 'iri';
         }
-        return {
-            dtype: dtype,
-            value: newValue
-        };
+        return {dtype: dtype, value: newValue};
     },
     isValidAPIToken(token) {
         if (apiTokens.indexOf(token) === -1) {

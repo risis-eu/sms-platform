@@ -7,9 +7,11 @@ class DatasetsStore extends BaseStore {
     }
     clearAll() {
         this.datasetsList = [];
+        this.error = '';
     }
     loadDatasetsList(payload) {
         this.datasetsList = this.mergeDatasets(payload.dynamicReactorDS, payload.dynamicFacetsDS, payload.staticReactorDS, payload.staticFacetsDS);
+        this.error = payload.error;
         this.emitChange();
     }
     compareProps(a,b) {
@@ -93,7 +95,8 @@ class DatasetsStore extends BaseStore {
 
     getState() {
         return {
-            datasetsList: this.datasetsList
+            datasetsList: this.datasetsList,
+            error: this.error
         };
     }
     dehydrate() {
@@ -101,6 +104,7 @@ class DatasetsStore extends BaseStore {
     }
     rehydrate(state) {
         this.datasetsList = state.datasetsList;
+        this.error = state.error;
     }
 }
 

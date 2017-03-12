@@ -29,6 +29,27 @@ class DBpediaUtil {
         }
         return output;
     }
+    parseGoogleGeocoding(body) {
+        let parsed = JSON.parse(body);
+        let results = parsed.resources.results;
+        let country;
+        if(results.length){
+            results[0].address_components.forEach((component)=>{
+                if(component.types.indexOf('country') !== -1){
+                    country = component.short_name;
+                }
+            });
+            return {
+                formattedAddress: results[0].formatted_address,
+                country: country,
+                longitude: results[0].geometry.location.lng,
+                latitude: results[0].geometry.location.lat
+            };
+        }else{
+            return 0;
+        }
+        return output;
+    }
     parseDBpediaLookup(body) {
         let output = [];
         let desc = '',

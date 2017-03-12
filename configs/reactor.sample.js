@@ -57,13 +57,6 @@ export default {
                 objectIViewer: ['BasicIndividualView'],
                 objectIEditor: ['BasicIndividualInput'],
                 extendedOEditor: ['BasicIndividualDetailEdit'],
-                extendedOViewer: ['BasicIndividualDetailView']
-            }
-        },
-        //property value = object
-        object: {
-            'generic': {
-                truncateURI: 1
                 extendedOViewer: ['BasicIndividualDetailView'],
                 shortenURI: 1
             },
@@ -281,7 +274,6 @@ export default {
                     allowNewValue: 1,
                     allowExtension: 1,
                     hasBlankNode: 1,
-                    autoLoadDetails: 1,
                     extensions: [
                         {
                             spec: {
@@ -345,7 +337,6 @@ export default {
                     allowNewValue: 1,
                     allowExtension: 1,
                     hasBlankNode: 1,
-                    autoLoadDetails: 1,
                     extensions: [
                         {
                             spec: {

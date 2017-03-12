@@ -19,10 +19,10 @@ import cookieParser from 'cookie-parser';
 import favicon from 'serve-favicon';
 //required for authentication
 import handleAuthentication from './plugins/authentication/handleAuth';
-//required for geo demos
-import handleDemos from './plugins/demos/handleDemos';
 //required for export resources
 import handleExport from './plugins/export/handleExport';
+//required for geo demos
+import handleDemos from './plugins/demos/handleDemos';
 //required for generating docs
 import handleDocumentation from './plugins/documentation/handleDocumentation';
 import {enableAuthentication} from './configs/general';
@@ -36,7 +36,7 @@ import { createElementWithContext } from 'fluxible-addons-react';
 const env = process.env.NODE_ENV;
 const htmlComponent = React.createFactory(HtmlComponent);
 const debug = debugLib('linked-data-reactor');
-const publicRoutes = ['/', '/about', '/demos', '/boundariesMap', '/tripleStore', '/integrationRISIS', '/integrationPublic', '/integrationSocial', '/ner', '/innovativeGeoServices', '/basicGeoServices', '/identityServices', '/categoryServices', '/ACPs', '/PDF2Text', '/otherApps'];
+const publicRoutes = ['/', '/about', '/contact', '/demos', '/boundariesMap', '/dataIngestion', '/conceptualModel', '/ldServices', '/usecases'];
 
 const host = process.env.HOST ? process.env.HOST : 'localhost';
 let port = 3000 ;
@@ -52,16 +52,16 @@ server.use(cookieParser());
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: false }));
 server.use(cookieSession({
-    name: 'LDR',
-    keys: ['u1waegf234ss', 'u2wef23ed5325']
+    name: 'SMS',
+    keys: ['u1waegf234ss', 'u2wef43ed5325']
 }));
-//for demo applications
-handleDemos(server);
 // server.use(csrf({cookie: true}));
 //for authentication: this part is external to the flux architecture
 if(enableAuthentication){
     handleAuthentication(server);
 }
+//for demo applications
+handleDemos(server);
 //handling content export
 handleExport(server);
 //handling docs
@@ -88,9 +88,9 @@ server.use('/leaflet', express.static(path.join(__dirname, '/node_modules/leafle
 server.use('/yasgui-yasqe', express.static(path.join(__dirname, '/node_modules/yasgui-yasqe')));
 server.use('/codemirror', express.static(path.join(__dirname, '/node_modules/codemirror')));
 
+server.use('/jsplumb', express.static(path.join(__dirname, '/node_modules/jsplumb')));
+
 server.use('/assets', express.static(path.join(__dirname, '/assets')));
-server.use('/documentation', express.static(path.join(__dirname, '/documentation')));
-server.use('/geojsonDump', express.static(path.join(__dirname, '/geojsonDump')));
 // Get access to the fetchr plugin instance
 let fetchrPlugin = app.getPlugin('FetchrPlugin');
 // Register our services

@@ -42,19 +42,19 @@ class FileSizeInput extends React.Component {
         switch(source){
             case 'B':
                 v = size;
-            break;
+                break;
             case 'KB':
                 v = size * 1024;
-            break;
+                break;
             case 'MB':
                 v = size * 1024 * 1024;
-            break;
+                break;
             case 'GB':
                 v = size * 1024 * 1024 * 1024;
-            break;
+                break;
             case 'TB':
                 v = size * 1024 * 1024 * 1024 * 1024;
-            break;
+                break;
         }
         return v;
     }
@@ -74,18 +74,18 @@ class FileSizeInput extends React.Component {
     }
     render() {
         let fileSizeUnits = {
-          'B'     : 'Bytes',
-          'KB'    : 'Kilobyte = 1024 bytes',
-          'MB'    : 'Megabyte = 1024 KB',
-          'GB'    : 'Gigabyte = 1024 MB',
-          'TB'    : 'Terabyte = 1024 GB'
+            'B'     : 'Bytes',
+            'KB'    : 'Kilobyte = 1024 bytes',
+            'MB'    : 'Megabyte = 1024 KB',
+            'GB'    : 'Gigabyte = 1024 MB',
+            'TB'    : 'Terabyte = 1024 GB'
         };
         let options=[];
         for (let prop in fileSizeUnits) {
             options.push({short: prop, full: fileSizeUnits[prop]});
         }
         let optionsList= options.map(function(m, index) {
-              return <option key={index} value={m.short}>{m.short} : {m.full}</option>
+            return <option key={index} value={m.short}>{m.short} : {m.full}</option>
         });
         return (
             <div className="ui">

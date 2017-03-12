@@ -1,15 +1,11 @@
 import loadDatasets from '../actions/loadDatasets';
 import loadDataset from '../actions/loadDataset';
-import loadDatasetsList from '../actions/loadDatasetsList';
+import loadDatasetsMetadataList from '../actions/loadDatasetsMetadataList';
+import loadLinkset from '../actions/loadLinkset';
 import loadResource from '../actions/loadResource';
 import loadUsersList from '../actions/loadUsersList';
 import loadFacets from '../actions/loadFacets';
-import {
-    appFullTitle,
-    appShortTitle,
-    authDatasetURI,
-    baseResourceDomain
-} from '../configs/general';
+import {appFullTitle, appShortTitle, authDatasetURI, baseResourceDomain} from '../configs/general';
 
 export default {
     home: {
@@ -18,9 +14,7 @@ export default {
         handler: require('../components/Home'),
         label: appShortTitle,
         action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: appFullTitle + ' | Home'
-            });
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Home'});
             done();
         }
     },
@@ -30,177 +24,57 @@ export default {
         handler: require('../components/About'),
         label: 'About',
         action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: appFullTitle + ' | About'
-            });
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | About'});
             done();
         }
     },
-    tripleStore: {
-        path: '/tripleStore',
+    contact: {
+        path: '/contact',
         method: 'get',
-        handler: require('../components/architecturePages/TripleStore'),
-        label: 'TripleStore',
+        handler: require('../components/Contact'),
+        label: 'Contact Us',
         action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: appFullTitle + ' | Triple Store'
-            });
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Contact Us'});
             done();
         }
     },
-    integrationRISIS: {
-        path: '/integrationRISIS',
+    dataIngestion: {
+        path: '/dataIngestion',
         method: 'get',
-        handler: require('../components/architecturePages/IntegrationRISIS'),
-        label: 'IntegrationRISIS',
+        handler: require('../components/DataIngestion'),
+        label: 'Data Ingestion',
         action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: appFullTitle + ' | Integration RISIS'
-            });
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Data Ingestion, Conversion & Linking'});
             done();
         }
     },
-    integrationPublic: {
-        path: '/integrationPublic',
+    conceptualModel: {
+        path: '/conceptualModel',
         method: 'get',
-        handler: require('../components/architecturePages/IntegrationPublic'),
-        label: 'IntegrationPublic',
+        handler: require('../components/conceptualModel'),
+        label: 'Conceptual Model',
         action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: appFullTitle + ' | Integration Public'
-            });
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Conceptual Model & Technical Architecture'});
             done();
         }
     },
-    integrationSocial: {
-        path: '/integrationSocial',
+    ldServices: {
+        path: '/ldServices',
         method: 'get',
-        handler: require('../components/architecturePages/IntegrationSocial'),
-        label: 'IntegrationSocial',
+        handler: require('../components/ldServices'),
+        label: 'Linked Data Services',
         action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: appFullTitle + ' | Integration Social'
-            });
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Linked Data Services & Applications'});
             done();
         }
     },
-    ner: {
-        path: '/ner',
+    usecases: {
+        path: '/usecases',
         method: 'get',
-        handler: require('../components/architecturePages/NER'),
-        label: 'NER',
+        handler: require('../components/usecases'),
+        label: 'Use Cases',
         action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: appFullTitle + ' | Named Entity Recognition'
-            });
-            done();
-        }
-    },
-    innovativeGeoServices: {
-        path: '/innovativeGeoServices',
-        method: 'get',
-        handler: require('../components/architecturePages/InnovativeGeoServices'),
-        label: 'InnovativeGeoServices',
-        action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: appFullTitle + ' | Innovative Geo Services'
-            });
-            done();
-        }
-    },
-    basicGeoServices: {
-        path: '/basicGeoServices',
-        method: 'get',
-        handler: require('../components/architecturePages/BasicGeoServices'),
-        label: 'BasicGeoServices',
-        action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: appFullTitle + ' | Basic Geo Services'
-            });
-            done();
-        }
-    },
-    identityServices: {
-        path: '/identityServices',
-        method: 'get',
-        handler: require('../components/architecturePages/IdentityServices'),
-        label: 'IdentityServices',
-        action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: appFullTitle + ' | Identity Services'
-            });
-            done();
-        }
-    },
-    categoryServices: {
-        path: '/categoryServices',
-        method: 'get',
-        handler: require('../components/architecturePages/CategoryServices'),
-        label: 'CategoryServices',
-        action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: appFullTitle + ' | Category Services'
-            });
-            done();
-        }
-    },
-    ACPs: {
-        path: '/ACPs',
-        method: 'get',
-        handler: require('../components/architecturePages/ACPs'),
-        label: 'ACPs',
-        action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: appFullTitle + ' | ACPs'
-            });
-            done();
-        }
-    },
-    PDF2Text: {
-        path: '/PDF2Text',
-        method: 'get',
-        handler: require('../components/architecturePages/PDF2Text'),
-        label: 'PDF2Text',
-        action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: appFullTitle + ' | PDF to Text'
-            });
-            done();
-        }
-    },
-    otherApps: {
-        path: '/otherApps',
-        method: 'get',
-        handler: require('../components/architecturePages/OtherApps'),
-        label: 'OtherApps',
-        action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: appFullTitle + ' | Other Apps'
-            });
-            done();
-        }
-    },
-    demos: {
-        path: '/demos',
-        method: 'get',
-        handler: require('../components/Demos'),
-        label: 'Demos',
-        action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: appFullTitle + ' | Demos'
-            });
-            done();
-        }
-    },
-    boundariesMap: {
-        path: '/boundariesMap',
-        method: 'get',
-        handler: require('../components/BoundariesMap'),
-        label: 'boundariesMap',
-        action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: appFullTitle + ' | Example Boundaries Map'
-            });
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Use Cases'});
             done();
         }
     },
@@ -210,9 +84,7 @@ export default {
         handler: require('../components/NewDataset'),
         label: 'NewDataset',
         action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: appFullTitle + ' | Add a new dataset'
-            });
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Add a new dataset'});
             done();
         }
     },
@@ -222,9 +94,16 @@ export default {
         handler: require('../components/DatasetAnnotation'),
         label: 'DatasetAnnotation',
         action: (context, payload, done) => {
-            context.executeAction(loadDatasets, {
-                pageTitle: 'Annotate a dataset'
-            }, done);
+            context.executeAction(loadDatasets, {pageTitle: 'Annotate a dataset'}, done);
+        }
+    },
+    geoEnrichDataset: {
+        path: '/geoEnrichDataset',
+        method: 'get',
+        handler: require('../components/DatasetGeoEnrichment'),
+        label: 'DatasetGeoEnrichment',
+        action: (context, payload, done) => {
+            context.executeAction(loadDatasets, {pageTitle: 'Geo-enrich a dataset'}, done);
         }
     },
     facets: {
@@ -238,22 +117,26 @@ export default {
             if (!datasetURI) {
                 datasetURI = 0;
             }
-            context.executeAction(loadFacets, {
-                mode: 'init',
-                id: decodeURIComponent(datasetURI),
-                selection: 0,
-                page: 1
-            }, done);
+            context.executeAction(loadFacets, {mode: 'init', id: decodeURIComponent(datasetURI), selection: 0, page: 1}, done);
+        }
+    },
+    metadataList: {
+        path: '/metadataList',
+        method: 'get',
+        handler: require('../components/reactors/DatasetReactor'),
+        label: 'Datasets Metadata',
+        action: (context, payload, done) => {
+            context.executeAction(loadDatasetsMetadataList, {}, done);
         }
     },
     datasets: {
         //if no id is provided -> will start by defaultDatasetURI in reactor.config
         path: '/datasets',
         method: 'get',
-        handler: require('../components/DatasetsList'),
-        label: 'RISIS Datasets',
+        handler: require('../components/Datasets'),
+        label: 'Datasets',
         action: (context, payload, done) => {
-            context.executeAction(loadDatasetsList, {}, done);
+            context.executeAction(loadDatasets, {}, done);
         }
     },
     dataset: {
@@ -273,14 +156,28 @@ export default {
                 page = 1;
             }
             //do not allow to browse user graph
-            if (datasetURI === authDatasetURI[0]) {
+            if(datasetURI===authDatasetURI[0]){
                 datasetURI = 0
             }
-            console.log(datasetURI);
-            context.executeAction(loadDataset, {
-                id: datasetURI,
-                page: page
-            }, done);
+            context.executeAction(loadDataset, { id: datasetURI, page: page}, done);
+        }
+    },
+    linkset: {
+        //if no id is provided -> will start by defaultDatasetURI in reactor.config
+        path: '/linkset/:page?/:id/source/:source/target/:target',
+        method: 'get',
+        handler: require('../components/dataset/Linkset'),
+        label: 'Linkset',
+        action: (context, payload, done) => {
+            let datasetURI, source, target, page;
+            datasetURI = decodeURIComponent(payload.params.id);
+            source = decodeURIComponent(payload.params.source);
+            target = decodeURIComponent(payload.params.target);
+            page = payload.params.page;
+            if (!page) {
+                page = 1;
+            }
+            context.executeAction(loadLinkset, { id: datasetURI, source: source, target: target, page: page}, done);
         }
     },
     resource: {
@@ -312,11 +209,7 @@ export default {
         label: 'User',
         action: (context, payload, done) => {
             let category = 0;
-            context.executeAction(loadResource, {
-                dataset: authDatasetURI[0],
-                resource: baseResourceDomain + '/user/' + decodeURIComponent(payload.params.id),
-                category: category
-            }, done);
+            context.executeAction(loadResource, { dataset: authDatasetURI[0], resource: baseResourceDomain + '/user/' + decodeURIComponent(payload.params.id), category: category}, done);
         }
     },
     users: {
@@ -327,5 +220,29 @@ export default {
         action: (context, payload, done) => {
             context.executeAction(loadUsersList, {}, done);
         }
-    }
-}
+    },
+    demos: {
+        path: '/demos',
+        method: 'get',
+        handler: require('../components/Demos'),
+        label: 'Demos',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', {
+                pageTitle: appFullTitle + ' | Demos'
+            });
+            done();
+        }
+    },
+    boundariesMap: {
+        path: '/boundariesMap',
+        method: 'get',
+        handler: require('../components/BoundariesMap'),
+        label: 'boundariesMap',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', {
+                pageTitle: appFullTitle + ' | Example Boundaries Map'
+            });
+            done();
+        }
+    },
+};

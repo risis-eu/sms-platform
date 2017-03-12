@@ -33,14 +33,20 @@ let prepareDGFunc = function (user, datasetURI, callback){
                     options = dynamicConfig.sparqlEndpoint[d];
                 }
             }else{
-                //go for generic SPARQL endpoint
-                options = sparqlEndpoint['generic'];
-                if(sparqlEndpoint['generic'].graphName){
-                    g = sparqlEndpoint['generic'].graphName;
-                }else{
+                if(d.indexOf('void.ttl') !== -1){
+                    //exception for metadata
+                    options = sparqlEndpoint['metadata'];
                     g = d;
+                }else{
+                    //go for generic SPARQL endpoint
+                    options = sparqlEndpoint['generic'];
+                    if(sparqlEndpoint['generic'].graphName){
+                        g = sparqlEndpoint['generic'].graphName;
+                    }else{
+                        g = d;
+                    }
+                    d = 'generic';
                 }
-                d = 'generic';
             }
 
         }
@@ -53,7 +59,6 @@ export default {
             let httpOptions;
             let d = config.d;
             let g = config.g;
-
             httpOptions = {
                 host: config.options.host,
                 port: config.options.port,

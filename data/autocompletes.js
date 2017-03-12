@@ -26,6 +26,7 @@ module.exports = {
             {title: 'ldr:surfaceForm'},
             {title: 'ldr:offser'},
             {title: 'ldr:uri'},
+            {title: 'ldr:metadata'},
             {title: 'ldr:position'},
             {title: 'ldr:graphName'},
             {title: 'ldr:useReasoning'},
@@ -58,6 +59,7 @@ module.exports = {
             {title: 'ldr:allowResourceNew'},
             {title: 'ldr:allowPropertyNew'},
             {title: 'ldr:allowNewValue'},
+            {title: 'ldr:hasLimitedAccess'},
             {title: 'ldr:displayQueries'},
             {title: 'ldr:allowInlineConfig'},
             {title: 'ldr:allowExtension'},
@@ -81,7 +83,8 @@ module.exports = {
             {title: 'ldr:allowUserDefinedValue'},
             {title: 'ldr:calendarFormat'},
             {title: 'ldr:containerDatasetURI'},
-            {title: 'ldr:hasLinkedValue'}
+            {title: 'ldr:hasLinkedValue'},
+            {title: 'ldr:boundarySource'}
         ],
         ldrLiterals: [
             {title: 'OrgResource'},
@@ -111,7 +114,8 @@ module.exports = {
             {title: 'GeoListBrowser'},
             {title: 'CheckListBrowser'},
             {title: 'TaxonomyBrowser'},
-            {title: 'BarChartBrowser'}
+            {title: 'BarChartBrowser'},
+            {title: 'BoundryBrowser'}
         ],
         classes: [
             {title: 'skos:Concept'},

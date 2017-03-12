@@ -20,21 +20,20 @@ class DatasetQuery{
         this.query='';
     }
     //-----------RISIS------------
-    getDatasetsList() {
-      /*jshint multistr: true */
-      this.query = '\
-      SELECT DISTINCT ?dataset ?subject ?title WHERE { \
-        { \
-          GRAPH risisVoid:  { \
-            risisVoid:risis_rdf_dataset void:subset ?dataset . \
-          } \
-          GRAPH ?dataset {?subject a void:Dataset. ?subject dcterms:title ?title .} \
-        } \
-      } ORDER BY ASC(?title) \
-      ';
-      return this.prefixes + this.query;
+    getDatasetsMetadataList() {
+        this.query = `
+        SELECT DISTINCT ?dataset ?resource ?title WHERE {
+          {
+            GRAPH risisVoid:  {
+              risisVoid:risis_rdf_dataset void:subset ?dataset .
+            }
+            GRAPH ?dataset {?resource a void:Dataset ; dcterms:title ?title .}
+          }
+        } ORDER BY ASC(?title)
+        `;
+        return this.prefixes + this.query;
     }
-    //--------------------------------
+//--------------------------------
     prepareGraphName(graphName){
         let gStart = 'GRAPH <'+ graphName +'> { ';
         let gEnd = ' } ';
@@ -76,6 +75,62 @@ class DatasetQuery{
             ${gStart}
                 ${st}
             ${gEnd}
+        }
+        `;
+        return this.prefixes + this.query;
+    }
+    countLinks(endpointParameters, graphName) {
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
+        this.query = `
+        SELECT (count(?source) AS ?total) WHERE {
+            ${gStart}
+                ?source owl:sameAs ?target .
+            ${gEnd}
+        }
+        `;
+        return this.prefixes + this.query;
+    }
+    getLinkset(endpointParameters, graphName, source, target, rconfig, limit, offset) {
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
+        this.query = `
+        SELECT DISTINCT ?source ?target  WHERE {
+            ${gStart}
+                ?source owl:sameAs ?target .
+            ${gEnd}
+        }
+        LIMIT ${limit} OFFSET ${offset}
+        `;
+        return this.prefixes + this.query;
+    }
+    getLinksetDetails(endpointParameters, source, target, entities) {
+        let sourceSt ='';
+        let targetSt ='';
+        let sources = [];
+        let targets = [];
+        entities.forEach((entity, index)=> {
+            sources.push('?s = <' + entity.s + '>');
+            targets.push('?t = <' + entity.t + '>');
+        })
+        sourceSt = 'FILTER ('+ sources.join(' || ') +')';
+        targetSt = 'FILTER ('+ targets.join(' || ') +')';
+        this.query = `
+        SELECT DISTINCT ?s ?sprop ?sobj ?t ?tprop ?tobj WHERE {
+            {
+                GRAPH <${source}> {
+                    ?s ?sprop ?sobj .
+                    FILTER (?sprop != geo:geometry)
+                    ${sourceSt}
+
+                }
+            }
+            UNION
+            {
+                GRAPH <${target}> {
+                    ?t ?tprop ?tobj .
+                    FILTER (?tprop != geo:geometry)
+                    ${targetSt}
+                }
+            }
         }
         `;
         return this.prefixes + this.query;
@@ -162,7 +217,7 @@ class DatasetQuery{
         return this.prefixes + this.query;
     }
     //only gives us unannotated ones
-    getResourcePropForAnnotation(endpointParameters, graphName, type, propertyURI, limit, offset, inNewDataset) {
+    getResourcePropForAnnotation(endpointParameters, graphName, type, propertyURI, limit, offset, inNewDataset, boundarySource, longPropertyURI, latPropertyURI, countryPropertyURI) {
         let self = this;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = '?resource a <'+ type + '> .';
@@ -178,23 +233,51 @@ class DatasetQuery{
             });
             st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
         }
+        let existingCoordsStQ = '';
+        let existingCoordsStS = '';
+        if(longPropertyURI && latPropertyURI){
+            let countrySt = '';
+            if(countryPropertyURI){
+                countrySt = `
+                    ?resource ${self.filterPropertyPath(countryPropertyURI)} ?country .
+                `;
+                existingCoordsStS = ' ?longitude ?latitude ?country ';
+            }else{
+                existingCoordsStS = ' ?longitude ?latitude ';
+            }
+            existingCoordsStQ = `
+                ?resource ${self.filterPropertyPath(longPropertyURI)} ?longitude .
+                ?resource ${self.filterPropertyPath(latPropertyURI)} ?latitude .
+                ${countrySt}
+            `;
+        }
+        let notExistFilterSt= `
+            ?resource ldr:annotatedBy ?annotationD .
+            ?annotationD ldr:property "${propertyURI}" .
+        `;
+        if(boundarySource){
+            notExistFilterSt= `
+                ?resource ldr:geoEnrichedBy ?annotationD .
+                ?annotationD ldr:boundarySource "${boundarySource}" ; ldr:property "${propertyURI}" .
+            `;
+        }
         //do not care about already annotated ones if annotations are stored in a new dataset
         if(inNewDataset){
             this.query = `
-            SELECT DISTINCT ?resource ?objectValue WHERE {
+            SELECT DISTINCT ?resource ?objectValue ${existingCoordsStS} WHERE {
                 {
                     GRAPH <${inNewDataset}> {
                         {
-                            SELECT DISTINCT ?resource ?objectValue WHERE {
+                            SELECT DISTINCT ?resource ?objectValue ${existingCoordsStS} WHERE {
                                     ${gStart}
                                         ${st}
                                         ?resource ${self.filterPropertyPath(propertyURI)} ?objectValue .
+                                        ${existingCoordsStQ}
                                     ${gEnd}
                             } LIMIT ${limit} OFFSET ${offset}
                         }
                         filter not exists {
-                            ?resource ldr:annotatedBy ?annotationD .
-                            ?annotationD ldr:property "${propertyURI}" .
+                            ${notExistFilterSt}
                         }
                     }
                 }
@@ -202,13 +285,13 @@ class DatasetQuery{
             `;
         }else{
             this.query = `
-            SELECT DISTINCT ?resource ?objectValue WHERE {
+            SELECT DISTINCT ?resource ?objectValue ${existingCoordsStS} WHERE {
                 ${gStart}
                     ${st}
                     ?resource ${self.filterPropertyPath(propertyURI)} ?objectValue .
+                    ${existingCoordsStQ}
                     filter not exists {
-                        ?resource ldr:annotatedBy ?annotationD .
-                        ?annotationD ldr:property "${propertyURI}" .
+                        ${notExistFilterSt}
                     }
                 ${gEnd}
             }
@@ -297,6 +380,37 @@ class DatasetQuery{
                 ${st}
                 ?resource ldr:annotatedBy ?annotationD .
                 ?annotationD ldr:property "${propertyURI}" .
+            ${gEnd}
+        }
+        `;
+        return this.prefixes + this.query;
+    }
+    countGeoEnrichedResourcesWithProp(endpointParameters, graphName, type, propertyURI, inNewDataset, boundarySource) {
+        let self = this;
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
+        let st = '?resource a <'+ type + '> .';
+        //will get all the types
+        if(!type.length || (type.length && !type[0]) ){
+            st = '?resource a ?type .';
+        }
+        //if we have multiple type, get all of them
+        let typeURIs = [];
+        if(type.length > 1){
+            type.forEach(function(uri) {
+                typeURIs.push('<' + uri + '>');
+            });
+            st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
+        }
+        //in case of storing a new dataset, ignore the type
+        if(inNewDataset){
+            st = '';
+        }
+        this.query = `
+        SELECT (count(DISTINCT ?resource) AS ?atotal) WHERE {
+            ${gStart}
+                ${st}
+                ?resource ldr:geoEnrichedBy ?annotationD .
+                ?annotationD ldr:boundarySource "${boundarySource}" ; ldr:property "${propertyURI}" .
             ${gEnd}
         }
         `;

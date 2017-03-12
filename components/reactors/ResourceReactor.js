@@ -3,10 +3,10 @@ import {enableAuthentication} from '../../configs/general';
 import ResourceStore from '../../stores/ResourceStore';
 import {connectToStores} from 'fluxible-addons-react';
 import Resource from '../resource/Resource';
-import DatasetMetadataResource from '../resource/DatasetMetadataResource';
 import UserResource from '../resource/UserResource';
 import PersonResource from '../resource/PersonResource';
 import OrgResource from '../resource/OrgResource';
+import MetadataResource from '../resource/MetadataResource';
 import createProperty from '../../actions/createProperty';
 import ReactDOM from 'react-dom';
 import PrefixBasedInput from '../object/editor/individual/PrefixBasedInput';
@@ -55,30 +55,33 @@ class ResourceReactor extends React.Component {
         let currentCategory = this.props.ResourceStore.currentCategory;
         let propertyPath = this.props.ResourceStore.propertyPath;
         let config = this.props.ResourceStore.config;
+        let error = this.props.ResourceStore.error;
         let resourceReactor;
         if (config && config.resourceReactor) {
             switch (config.resourceReactor[0]) {
                 case 'Resource':
-                    resourceReactor = <Resource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    resourceReactor = <Resource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])} error={error}/>;
                     break;
                 case 'UserResource':
-                    resourceReactor = <UserResource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    resourceReactor = <UserResource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])} error={error}/>;
                     break;
                 case 'PersonResource':
-                    resourceReactor = <PersonResource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    resourceReactor = <PersonResource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])} error={error}/>;
                     break;
                 case 'OrgResource':
-                    resourceReactor = <OrgResource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    resourceReactor = <OrgResource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])} error={error}/>;
                     break;
-                case 'DatasetMetadataResource':
-                    resourceReactor = <DatasetMetadataResource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
+                case 'MetadataResource':
+                    resourceReactor = <MetadataResource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])} error={error}/>;
                     break;
                 default:
-                    resourceReactor = <Resource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    resourceReactor = <Resource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])} error={error}/>;
             }
+        }else{
+            resourceReactor = <Resource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])} error={error}/>;
         }
         let newPropDIV = '';
-        if(config && config.allowPropertyNew && !config.readOnly && (config.userIsCreator || config.userIsEditor)){
+        if(!error && config && config.allowPropertyNew && !config.readOnly && (config.userIsCreator || config.userIsEditor)){
             newPropDIV =  <div className="ui page grid">
                                 <div className="ui column"><div className="ui grey message form">
                                 <PrefixBasedInput includeOnly={['ldrProperties','properties']} noFocus={true} spec={{value:''}} onDataEdit={this.handleNewPropertyEdit.bind(this)} placeholder="Enter the URI of the property. You can use common prefixes e.g. foaf:name"/>

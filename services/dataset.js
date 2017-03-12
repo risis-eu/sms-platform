@@ -1,5 +1,6 @@
 'use strict';
 import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
+import {checkViewAccess, checkEditAccess} from './utils/accessManagement';
 import {getDynamicEndpointParameters, getDynamicDatasets} from './utils/dynamicHelpers';
 import {enableAuthentication, authDatasetURI, configDatasetURI, defaultDatasetURI} from '../configs/general';
 import staticReactor from '../configs/reactor';
@@ -22,38 +23,7 @@ export default {
     name: 'dataset',
     // At least one of the CRUD methods is Required
     read: (req, resource, params, config, callback) => {
-        if(resource === 'dataset.list'){
-            datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
-            //control access on authentication
-            if(enableAuthentication){
-                if(!req.user){
-                    callback(null, {graphName: graphName, resources: [], page: 1, config: {}});
-                    return 0;
-                }else{
-                    user = req.user;
-                }
-            }else{
-                user = {accountName: 'open'};
-            }
-            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
-                graphName = endpointParameters.graphName;
-                //SPARQL QUERY
-                query = queryObject.getDatasetsList();
-                //console.log(query);
-                //send request
-                rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
-                    callback(null, {
-                        graphName: graphName,
-                        resources: utilObject.parseDatasetsList(res),
-                        page: 1,
-                        config: {}
-                    });
-                }).catch(function (err) {
-                    console.log(err);
-                    callback(null, {graphName: graphName, resources: [], page: 1, config: {}});
-                });
-            });
-        } else if (resource === 'dataset.resourcesByType') {
+        if (resource === 'dataset.resourcesByType') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
             //control access on authentication
             if(enableAuthentication){
@@ -74,6 +44,20 @@ export default {
                     if(!maxOnPage){
                         maxOnPage = 20;
                     }
+
+                    if(enableAuthentication && rconfig && rconfig.hasLimitedAccess && parseInt(rconfig.hasLimitedAccess)){
+                        //need to handle access to the dataset
+                        //if user is the editor by default he already has view access
+                        let editAccess = checkEditAccess(user, datasetURI, 0, 0, 0);
+                        if(!editAccess.access){
+                            let viewAccess = checkViewAccess(user, datasetURI, 0, 0, 0);
+                            if(!viewAccess.access){
+                                callback(null, {datasetURI: datasetURI, graphName: graphName, resources: [], page: params.page, config: rconfig, resourceQuery: '', error: 'You do not have enough permision to access this dataset!'});
+                                return 0;
+                            }
+                        }
+                    }
+
                     let page = params.page ? params.page : 1;
                     let offset = (page - 1) * maxOnPage;
                     let searchTerm = params.searchTerm ? params.searchTerm : '';
@@ -95,6 +79,147 @@ export default {
                     });
                 });
             });
+        } else if (resource === 'dataset.metadataList') {
+            datasetURI = 'metadata';
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI, resources: [], page: 1, config: {}});
+                    return 0;
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+                //SPARQL QUERY
+                query = queryObject.getDatasetsMetadataList();
+                //console.log(query);
+                //send request
+                rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat))}).then(function(res){
+                    let tmp = utilObject.parseDatasetsMetadataList(user, res, datasetURI);
+                    callback(null, {
+                        resources: tmp.resources,
+                        total: tmp.total,
+                        datasetURI: datasetURI,
+                        page: 1,
+                        config: {datasetReactor: ['DatasetMetadata']}
+                    });
+                }).catch(function (err) {
+                    console.log(err);
+                    callback(null, {datasetURI: datasetURI, resources: [], page: 1, config: {}});
+                });
+            });
+        } else if (resource === 'dataset.linkset') {
+            datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI, graphName: graphName, resources: [], page: params.page, config: rconfig});
+                    return 0;
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+                //config handler
+                configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
+                    let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
+                    if(!maxOnPage){
+                        maxOnPage = 20;
+                    }
+                    let offset = (params.page - 1) * maxOnPage;
+                    query = queryObject.getLinkset(endpointParameters, graphName, decodeURIComponent(params.source), decodeURIComponent(params.target), rconfig, maxOnPage, offset);
+                    //build http uri
+                    //send request
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                        callback(null, {
+                            datasetURI: datasetURI,
+                            graphName: graphName,
+                            source: params.source,
+                            target: params.target,
+                            resources: utilObject.parseLinkset(user, res, datasetURI),
+                            page: params.page,
+                            config: rconfig
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {datasetURI: datasetURI, graphName: graphName, resources: [], page: params.page, config: rconfig});
+                    });
+                });
+            });
+        } else if (resource === 'dataset.linksCount') {
+            datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI, graphName: graphName, total: 0});
+                    return 0;
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+
+                //config handler
+                configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
+                    query = queryObject.countLinks(endpointParameters, graphName);
+                    //console.log(query);
+                    //build http uri
+                    //send request
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                        callback(null, {
+                            datasetURI: datasetURI,
+                            graphName: graphName,
+                            total: utilObject.parseCountResourcesByType(res)
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {datasetURI: datasetURI, graphName: graphName, total: 0});
+                    });
+                });
+            });
+        } else if (resource === 'dataset.linksetDetails') {
+            datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI, graphName: graphName, total: 0});
+                    return 0;
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+
+                //config handler
+                configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
+                    query = queryObject.getLinksetDetails(endpointParameters, decodeURIComponent(params.source), decodeURIComponent(params.target), params.entities);
+                    //console.log(query);
+                    //build http uri
+                    //send request
+
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                        callback(null, {
+                            details: utilObject.parseLinksetDetails(res)
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {details: {}});
+                    });
+
+                });
+            });
 
         } else if (resource === 'dataset.countResourcesByType') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
@@ -114,6 +239,20 @@ export default {
 
                 //config handler
                 configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
+
+                    if(enableAuthentication && rconfig && rconfig.hasLimitedAccess && parseInt(rconfig.hasLimitedAccess)){
+                        //need to handle access to the dataset
+                        //if user is the editor by default he already has view access
+                        let editAccess = checkEditAccess(user, datasetURI, 0, 0, 0);
+                        if(!editAccess.access){
+                            let viewAccess = checkViewAccess(user, datasetURI, 0, 0, 0);
+                            if(!viewAccess.access){
+                                callback(null, {datasetURI: datasetURI, graphName: graphName, total: 0});
+                                return 0;
+                            }
+                        }
+                    }
+
                     query = queryObject.countResourcesByType(endpointParameters, graphName, rconfig.resourceFocusType);
                     //console.log(query);
                     //build http uri
@@ -157,7 +296,7 @@ export default {
                     maxOnPage = params.maxOnPage ? parseInt(params.maxOnPage) : maxOnPage;
                     let page = params.page ? params.page : 1;
                     let offset = (page - 1) * maxOnPage;
-                    query = queryObject.getResourcePropForAnnotation(endpointParameters, graphName, resourceType ? [resourceType] : rconfig.resourceFocusType, propertyURI, maxOnPage, offset, params.inNewDataset);
+                    query = queryObject.getResourcePropForAnnotation(endpointParameters, graphName, resourceType ? [resourceType] : rconfig.resourceFocusType, propertyURI, maxOnPage, offset, params.inNewDataset, params.boundarySource, params.longPropertyURI, params.latPropertyURI, params.countryPropertyURI);
                     //console.log(query);
                     //build http uri
                     //send request
@@ -199,6 +338,47 @@ export default {
                 //config handler
                 configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
                     query = queryObject.countAnnotatedResourcesWithProp(endpointParameters, graphName, resourceType ? [resourceType] : rconfig.resourceFocusType, propertyURI, params.inANewDataset);
+                    //console.log(query);
+                    //build http uri
+                    //send request
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                        callback(null, {
+                            datasetURI: datasetURI,
+                            resourceType : resourceType ? [resourceType] : rconfig.resourceFocusType,
+                            propertyURI: propertyURI,
+                            graphName: graphName,
+                            annotated: utilObject.parseCountAnnotatedResourcesWithProp(res)
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {datasetURI: datasetURI, propertyURI: propertyURI, annotated: 0});
+                    });
+                });
+            });
+        } else if (resource === 'dataset.countGeoEnrichedResourcesWithProp') {
+            datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
+            let resourceType = (params.resourceType ? decodeURIComponent(params.resourceType) : 0);
+            let propertyURI= (params.propertyURI ? decodeURIComponent(params.propertyURI) : 0);
+            if(!datasetURI || !propertyURI){
+                callback(null, {datasetURI: datasetURI, propertyURI: propertyURI, annotated: 0, total: 0});
+                return 0;
+            }
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI, propertyURI: propertyURI, annotated: 0});
+                    return 0;
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+                //config handler
+                configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
+                    query = queryObject.countGeoEnrichedResourcesWithProp(endpointParameters, graphName, resourceType ? [resourceType] : rconfig.resourceFocusType, propertyURI, params.inANewDataset, params.boundarySource);
                     //console.log(query);
                     //build http uri
                     //send request
@@ -266,6 +446,11 @@ export default {
                     return 0;
                 }else{
                     user = req.user;
+                    //check if user has access to datasets page
+                    if(user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') === -1 && user.member.indexOf('http://rdf.risis.eu/user/SMSVisitors') === -1){
+                        callback(null, {dynamicReactorDS: {datasets: {}}, dynamicFacetsDS: {facets: {}}, staticReactorDS: staticReactorDS, staticFacetsDS: staticFacetsDS, error: 'This page is only open to SMS visitors. Please contact us to arrange a visit. The public online access will be available soon after we finish the initial user testing.'});
+                        return 0;
+                    }
                 }
             }else{
                 user = {accountName: 'open'};

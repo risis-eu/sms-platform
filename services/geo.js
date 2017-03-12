@@ -749,7 +749,7 @@ export default {
                         //console.log(res);
                         let resFUA = utilObject.parsePointToOECDFUA(res);
                         //if(!resGADM.error){
-                            redisClient.set(hashID, JSON.stringify(resFUA));
+                        redisClient.set(hashID, JSON.stringify(resFUA));
                         //}
                         callback(null, {
                             latitude: parseFloat(params.lat),

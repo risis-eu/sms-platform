@@ -4,64 +4,64 @@ function onOpen() {
     var menuEntries = [];
 
     menuEntries.push({
-        name: "Step 1. Initialize",
-        functionName: "createSpreadsheets"
+        name: 'Step 1. Initialize',
+        functionName: 'createSpreadsheets'
     });
     menuEntries.push(null); // line separator
     menuEntries.push({
-        name: "Step 2. Geocode addresses",
-        functionName: "geoCodeAddresses"
+        name: 'Step 2. Geocode addresses',
+        functionName: 'geoCodeAddresses'
     });
     menuEntries.push(null); // line separator
     menuEntries.push({
-        name: "Step 3. Find GADM boundaries",
-        functionName: "findGADMBoundaries"
+        name: 'Step 3. Find GADM boundaries',
+        functionName: 'findGADMBoundaries'
     });
     menuEntries.push({
-        name: "Step 3. Find Flickr boundaries",
-        functionName: "findFlickrBoundaries"
+        name: 'Step 3. Find Flickr boundaries',
+        functionName: 'findFlickrBoundaries'
     });
     menuEntries.push({
-        name: "Step 3. Find OSM boundaries",
-        functionName: "findOSMBoundaries"
-    });
-    menuEntries.push(null); // line separator
-    menuEntries.push({
-        name: "Step 4. Find OECD FUAs using Google",
-        functionName: "findOECDFUAsFromGoogle"
-    });
-    menuEntries.push({
-        name: "Step 4. Find OECD FUAs using GADM",
-        functionName: "findOECDFUAsFromGADM"
-    });
-    menuEntries.push({
-        name: "Step 4. Find OECD FUAs using Flickr",
-        functionName: "findOECDFUAsFromFlickr"
-    });
-    menuEntries.push({
-        name: "Step 4. Find OECD FUAs using OSM",
-        functionName: "findOECDFUAsFromOSM"
+        name: 'Step 3. Find OSM boundaries',
+        functionName: 'findOSMBoundaries'
     });
     menuEntries.push(null); // line separator
     menuEntries.push({
-        name: "Add Metadata for OSM levels",
-        functionName: "generateOSMMetadata"
+        name: 'Step 4. Find OECD FUAs using Google',
+        functionName: 'findOECDFUAsFromGoogle'
     });
     menuEntries.push({
-        name: "Export Coordinates as GeoJSON",
-        functionName: "exportPointsGeoJSON"
+        name: 'Step 4. Find OECD FUAs using GADM',
+        functionName: 'findOECDFUAsFromGADM'
     });
     menuEntries.push({
-        name: "Export Boundaries as GeoJSON",
-        functionName: "exportBoundariesGeoJSON"
+        name: 'Step 4. Find OECD FUAs using Flickr',
+        functionName: 'findOECDFUAsFromFlickr'
+    });
+    menuEntries.push({
+        name: 'Step 4. Find OECD FUAs using OSM',
+        functionName: 'findOECDFUAsFromOSM'
+    });
+    menuEntries.push(null); // line separator
+    menuEntries.push({
+        name: 'Add Metadata for OSM levels',
+        functionName: 'generateOSMMetadata'
+    });
+    menuEntries.push({
+        name: 'Export Coordinates as GeoJSON',
+        functionName: 'exportPointsGeoJSON'
+    });
+    menuEntries.push({
+        name: 'Export Boundaries as GeoJSON',
+        functionName: 'exportBoundariesGeoJSON'
     });
 
     menuEntries.push(null); // line separator
     menuEntries.push({
-        name: "About SMS Platform",
-        functionName: "showAbout"
+        name: 'About SMS Platform',
+        functionName: 'showAbout'
     });
-    ss.addMenu("SMS Web Services", menuEntries);
+    ss.addMenu('SMS Web Services', menuEntries);
 }
 
 function createSpreadsheets() {
@@ -69,10 +69,10 @@ function createSpreadsheets() {
 
     ss.insertSheet('api config', 0);
     var configSheet = ss.getSheetByName('api config');
-    configSheet.setTabColor("ff0000");
+    configSheet.setTabColor('ff0000');
     configSheet.getRange('A1:B1').setValues([
         ['parameter', 'value']
-    ]).setFontWeight("bold");
+    ]).setFontWeight('bold');
     configSheet.getRange('A2:B2').setValues([
         ['googleAPIKey', 'replace this with your Google Geocoding API key']
     ]).setWrap(true);
@@ -93,7 +93,7 @@ function createSpreadsheets() {
     var geocodingSheet = ss.getSheetByName('geocoding');
     geocodingSheet.getRange('A1:H1').setValues([
         ['ID', 'address', 'longitude', 'latitude', 'countryShort', 'countryLong', 'localityShort', 'localityLong']
-    ]).setFontWeight("bold");
+    ]).setFontWeight('bold');
     geocodingSheet.getRange('A2:B2').setValues([
         ['1', 'Vrije Universiteit Amsterdam']
     ]).setWrap(true);
@@ -102,26 +102,26 @@ function createSpreadsheets() {
     var gadmSheet = ss.getSheetByName('GADM boundaries');
     gadmSheet.getRange('A1:O1').setValues([
         ['ID', 'address', 'level_0_name', 'level_1_name', 'level_2_name', 'level_3_name', 'level_4_name', 'level_5_name', '', 'level_0_id', 'level_1_id', 'level_2_id', 'level_3_id', 'level_4_id', 'level_5_id']
-    ]).setFontWeight("bold");
+    ]).setFontWeight('bold');
 
 
     ss.insertSheet('Flickr boundaries', 3);
     var flickrSheet = ss.getSheetByName('Flickr boundaries');
     flickrSheet.getRange('A1:M1').setValues([
         ['ID', 'address', 'level_1_name', 'level_2_name', 'level_3_name', 'level_4_name', 'level_5_name', '', 'level_1_id', 'level_2_id', 'level_3_id', 'level_4_id', 'level_5_id']
-    ]).setFontWeight("bold");
+    ]).setFontWeight('bold');
 
     ss.insertSheet('OSM boundaries', 4);
     var osmSheet = ss.getSheetByName('OSM boundaries');
     osmSheet.getRange('A1:Y1').setValues([
         ['ID', 'address', 'level_1_name', 'level_2_name', 'level_3_name', 'level_4_name', 'level_5_name', 'level_6_name', 'level_7_name', 'level_8_name', 'level_9_name', 'level_10_name', 'level_11_name', '', 'level_1_id', 'level_2_id', 'level_3_id', 'level_4_id', 'level_5_id', 'level_6_id', 'level_7_id', 'level_8_id', 'level_9_id', 'level_10_id', 'level_11_id']
-    ]).setFontWeight("bold");
+    ]).setFontWeight('bold');
 
     ss.insertSheet('OSM metadata', 5);
     var osmmSheet = ss.getSheetByName('OSM metadata');
     osmmSheet.getRange('A1:L1').setValues([
         ['country', 'level_1', 'level_2', 'level_3', 'level_4', 'level_5', 'level_6', 'level_7', 'level_8', 'level_9', 'level_10', 'level_11']
-    ]).setFontWeight("bold");
+    ]).setFontWeight('bold');
 
 }
 
@@ -467,7 +467,7 @@ function findOECDFUAsFromOSM() {
     var ftmp2 = new Array();
     osmSheet.getRange('AA1:AE1').setValues([
         ['OECD_FUA_name', 'OECD_FUA_id', 'Municipality_name', 'Municipality_id', 'is_core?']
-    ]).setFontWeight("bold");
+    ]).setFontWeight('bold');
 
     for (var i = 0; i < osmInfo.length; i++) {
         checkIfValue = osmSheet.getRange(i + 2, 27, 1, 2).getValues();
@@ -540,7 +540,7 @@ function findOECDFUAsFromFlickr() {
     var ftmp2 = new Array();
     flickrSheet.getRange('O1:S1').setValues([
         ['OECD_FUA_name', 'OECD_FUA_id', 'Municipality_name', 'Municipality_id', 'is_core?']
-    ]).setFontWeight("bold");
+    ]).setFontWeight('bold');
 
     for (var i = 0; i < flickrInfo.length; i++) {
         checkIfValue = flickrSheet.getRange(i + 2, 15, 1, 2).getValues();
@@ -606,7 +606,7 @@ function findOECDFUAsFromGADM() {
     var checkIfValue;
     gadmSheet.getRange('Q1:U1').setValues([
         ['OECD_FUA_name', 'OECD_FUA_id', 'Municipality_name', 'Municipality_id', 'is_core?']
-    ]).setFontWeight("bold");
+    ]).setFontWeight('bold');
 
     for (var i = 0; i < gadmInfo.length; i++) {
         checkIfValue = gadmSheet.getRange(i + 2, 17, 1, 2).getValues();
@@ -651,7 +651,7 @@ function findOECDFUAsFromGoogle() {
     var checkIfValue;
     locSheet.getRange('J1:N1').setValues([
         ['OECD_FUA_name', 'OECD_FUA_id', 'Municipality_name', 'Municipality_id', 'is_core?']
-    ]).setFontWeight("bold");
+    ]).setFontWeight('bold');
 
     for (var i = 0; i < locationInfo.length; i++) {
         checkIfValue = locSheet.getRange(i + 2, 10, 1, 2).getValues();
@@ -683,11 +683,11 @@ function exportBoundariesGeoJSON() {
     var geojsonExportSource = configSheet.getRange(5, 2).getValues()[0];
     var geojsonExportLevel = configSheet.getRange(6, 2).getValues()[0];
     if (geojsonExportSource == 'undefined' || geojsonExportSource == '' || geojsonExportSource == 'none' || geojsonExportLevel == 'undefined' || geojsonExportLevel == '' || geojsonExportLevel == 'none') {
-        Browser.msgBox("Go to api config sheet and set the right paramter values for geojsonExportSource and geojsonExportLevel e.g. GADM and 2");
+        Browser.msgBox('Go to api config sheet and set the right paramter values for geojsonExportSource and geojsonExportLevel e.g. GADM and 2');
         return 0;
     }
     var data = new Array();
-    if (geojsonExportSource == "GADM") {
+    if (geojsonExportSource == 'GADM') {
         var gadmSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('GADM boundaries');
         var gadmInfo = gadmSheet.getRange(2, 1, gadmSheet.getLastRow() - 1, gadmSheet.getLastColumn() - 1).getValues();
         for (var i = 0; i < gadmInfo.length; i++) {
@@ -697,12 +697,12 @@ function exportBoundariesGeoJSON() {
                 continue;
             };
             data.push({
-                "id": checkIfValue[0][geojsonExportLevel],
-                "relation":{"address_id": gadmSheet.getRange(i + 2, 1, 1, 1).getValue(), "address": gadmSheet.getRange(i + 2, 2, 1, 1).getValue()}
+                'id': checkIfValue[0][geojsonExportLevel],
+                'relation':{'address_id': gadmSheet.getRange(i + 2, 1, 1, 1).getValue(), 'address': gadmSheet.getRange(i + 2, 2, 1, 1).getValue()}
             })
         }
     }
-    if (geojsonExportSource == "OSM") {
+    if (geojsonExportSource == 'OSM') {
         var osmSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('OSM boundaries');
         var osmInfo = osmSheet.getRange(2, 1, osmSheet.getLastRow() - 1, osmSheet.getLastColumn() - 1).getValues();
         for (var i = 0; i < osmInfo.length; i++) {
@@ -712,12 +712,12 @@ function exportBoundariesGeoJSON() {
                 continue;
             };
             data.push({
-                "id": checkIfValue[0][parseInt(geojsonExportLevel) - 1],
-                "relation":{"address_id": osmSheet.getRange(i + 2, 1, 1, 1).getValue(), "address": osmSheet.getRange(i + 2, 2, 1, 1).getValue()}
+                'id': checkIfValue[0][parseInt(geojsonExportLevel) - 1],
+                'relation':{'address_id': osmSheet.getRange(i + 2, 1, 1, 1).getValue(), 'address': osmSheet.getRange(i + 2, 2, 1, 1).getValue()}
             })
         }
     }
-    if (geojsonExportSource == "Flickr") {
+    if (geojsonExportSource == 'Flickr') {
         var flickrSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Flickr boundaries');
         var flickrInfo = flickrSheet.getRange(2, 1, flickrSheet.getLastRow() - 1, flickrSheet.getLastColumn() - 1).getValues();
         for (var i = 0; i < flickrInfo.length; i++) {
@@ -727,18 +727,18 @@ function exportBoundariesGeoJSON() {
                 continue;
             };
             data.push({
-              "id": checkIfValue[0][parseInt(geojsonExportLevel) - 1],
-              "relation":{"address_id": flickrSheet.getRange(i + 2, 1, 1, 1).getValue(), "address": flickrSheet.getRange(i + 2, 2, 1, 1).getValue()}
+                'id': checkIfValue[0][parseInt(geojsonExportLevel) - 1],
+                'relation':{'address_id': flickrSheet.getRange(i + 2, 1, 1, 1).getValue(), 'address': flickrSheet.getRange(i + 2, 2, 1, 1).getValue()}
             })
         }
     }
     var smsAPI = 'http://sms.risis.eu/demos/geo/exportToGeoJSON';
     var options = {
-        "muteHttpExceptions": true,
-        "method": "post",
-        "payload": {
-            "source": geojsonExportSource[0],
-            "boundaries": JSON.stringify(data)
+        'muteHttpExceptions': true,
+        'method': 'post',
+        'payload': {
+            'source': geojsonExportSource[0],
+            'boundaries': JSON.stringify(data)
         }
     };
     //Browser.msgBox(JSON.stringify(options.payload));
@@ -754,25 +754,25 @@ function exportPointsGeoJSON() {
     var locSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('geocoding');
     var locationInfo = locSheet.getRange(2, 1, locSheet.getLastRow() - 1, locSheet.getLastColumn() - 1).getValues();
     for (var i = 0; i < locationInfo.length; i++) {
-            checkIfValue = locSheet.getRange(i + 2, 1, 1, 4).getValues();
+        checkIfValue = locSheet.getRange(i + 2, 1, 1, 4).getValues();
             //only send requests for the ones which are not processed yet
-            if (checkIfValue[0][2] == '') {
-                continue;
-            };
-            data.push({
-                "id": checkIfValue[0][0],
-                "longitude": checkIfValue[0][2],
-                "latitude": checkIfValue[0][3],
-                "relation":{"name": checkIfValue[0][1]}
-            })
+        if (checkIfValue[0][2] == '') {
+            continue;
+        };
+        data.push({
+            'id': checkIfValue[0][0],
+            'longitude': checkIfValue[0][2],
+            'latitude': checkIfValue[0][3],
+            'relation':{'name': checkIfValue[0][1]}
+        })
     }
     var smsAPI = 'http://sms.risis.eu/demos/geo/exportPointsToGeoJSON';
     var options = {
-        "muteHttpExceptions": true,
-        "method": "post",
-        "payload": {
-            "source": geojsonExportSource,
-            "points": JSON.stringify(data)
+        'muteHttpExceptions': true,
+        'method': 'post',
+        'payload': {
+            'source': geojsonExportSource,
+            'points': JSON.stringify(data)
         }
     };
     //Browser.msgBox(JSON.stringify(options.payload));

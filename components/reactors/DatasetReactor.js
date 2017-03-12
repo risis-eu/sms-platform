@@ -4,6 +4,7 @@ import {connectToStores} from 'fluxible-addons-react';
 import {enableAuthentication} from '../../configs/general';
 import getResourcesCount from '../../actions/getResourcesCount';
 import Dataset from '../dataset/Dataset';
+import DatasetMetadata from '../dataset/DatasetMetadata';
 import cloneResource from '../../actions/cloneResource';
 import createResource from '../../actions/createResource';
 
@@ -41,14 +42,21 @@ class DatasetReactor extends React.Component {
         let isComplete = this.props.DatasetStore.isComplete;
         let config = this.props.DatasetStore.dataset.config;
         let resourceQuery = this.props.DatasetStore.dataset.resourceQuery;
+        let error = this.props.DatasetStore.dataset.error;
         let datasetReactor;
+        if(config && !config.datasetReactor){
+            config.datasetReactor = 'Dataset';
+        }
         if(config && config.datasetReactor){
             switch(config.datasetReactor[0]){
                 case 'Dataset':
-                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])} resourceQuery={resourceQuery} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)}/>;
+                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} error={error} config={this.configMinus(config, ['datasetReactor'])} resourceQuery={resourceQuery} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)}/>;
+                    break;
+                case 'DatasetMetadata':
+                    datasetReactor = <DatasetMetadata enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} error={error} config={this.configMinus(config, ['datasetReactor'])} resourceQuery={resourceQuery} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)}/>;
                     break;
                 default:
-                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])} resourceQuery={resourceQuery} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)}/>;
+                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} error={error} config={this.configMinus(config, ['datasetReactor'])} resourceQuery={resourceQuery} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)}/>;
             }
         }
 

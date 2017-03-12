@@ -52,6 +52,15 @@ class Configurator{
                     output[prop] = config.dataset[datasetURI][prop];
                 }
             }
+            //exception for metadata
+            if(datasetURI.indexOf('void.ttl') !== -1){
+                if(config.dataset['metadata']){
+                    //there is a user-defined config, overwrite default config then
+                    for(let prop in config.dataset['metadata']) {
+                        output[prop] = config.dataset['metadata'][prop];
+                    }
+                }
+            }
             //design decision: dynamic configs can overwrite existing local configs
             if(dynamicConfig.dataset[datasetURI]) {
                 for(let prop in dynamicConfig.dataset[datasetURI]) {
@@ -183,6 +192,16 @@ class Configurator{
                     if(config.dataset_property[datasetURI][propertyURI]){
                         for(let prop in config.dataset_property[datasetURI][propertyURI]) {
                             output[prop] = config.dataset_property[datasetURI][propertyURI][prop];
+                        }
+                    }
+                }
+                //exception for metadata
+                if(datasetURI.indexOf('void.ttl') !== -1){
+                    if(config.dataset_property['metadata']){
+                        if(config.dataset_property['metadata'][propertyURI]){
+                            for(let prop in config.dataset_property['metadata'][propertyURI]) {
+                                output[prop] = config.dataset_property['metadata'][propertyURI][prop];
+                            }
                         }
                     }
                 }

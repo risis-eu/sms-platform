@@ -2,6 +2,7 @@ import {enableDynamicReactorConfiguration, enableDynamicServerConfiguration, ena
 import {getStaticEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
 import rp from 'request-promise';
 const ldr_prefix = 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#';
+
 class DynamicConfigurator {
     getDynamicDatasets(user, callback) {
         let dynamicReactorDS  = {dataset:{}};
@@ -35,29 +36,17 @@ class DynamicConfigurator {
             if(enableDynamicReactorConfiguration){
                 if(userSt){
                     query = `
-                    SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType WHERE {
+                    SELECT DISTINCT ?config1 ?dataset ?setting ?settingValue WHERE {
                         ${graph}
                             {
                             ?config1 a ldr:ReactorConfig ;
                                     ${userSt}
-                                    ldr:dataset ?dataset .
-                                    OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
-                                    OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
-                                    OPTIONAL { ?config1 ldr:position ?position . }
-                                    OPTIONAL { ?config1 ldr:datasetCategory ?datasetCategory . }
-                                    OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
-                                    OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                                    ldr:dataset ?dataset ; ?setting ?settingValue .
                             }
                             UNION
                             {
                             ?config1 a ldr:ReactorConfig ;
-                                    ldr:dataset ?dataset .
-                                    OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
-                                    OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
-                                    OPTIONAL { ?config1 ldr:position ?position . }
-                                    OPTIONAL { ?config1 ldr:datasetCategory ?datasetCategory . }
-                                    OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
-                                    OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                                    ldr:dataset ?dataset ; ?setting ?settingValue .
                                     filter not exists {
                                         ?config1 ldr:createdBy ?user.
                                     }
@@ -67,16 +56,10 @@ class DynamicConfigurator {
                     `;
                 }else{
                     query = `
-                    SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType WHERE {
+                    SELECT DISTINCT ?config1 ?setting ?settingValue WHERE {
                         ${graph}
                             ?config1 a ldr:ReactorConfig ;
-                                    ldr:dataset ?dataset .
-                                    OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
-                                    OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
-                                    OPTIONAL { ?config1 ldr:position ?position . }
-                                    OPTIONAL { ?config1 ldr:datasetCategory ?datasetCategory . }
-                                    OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
-                                    OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                                    ldr:dataset ?dataset ; ?setting ?settingValue .
                         ${graphEnd}
                     }
                     `;
@@ -117,17 +100,11 @@ class DynamicConfigurator {
             if(enableDynamicReactorConfiguration && enableDynamicFacetsConfiguration){
                 if(userSt){
                     query = `
-                    SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType WHERE { ${graph}
+                    SELECT DISTINCT ?config1 ?config2 ?dataset ?setting ?settingValue WHERE { ${graph}
                             {
                             ?config1 a ldr:ReactorConfig ;
                                     ${userSt}
-                                    ldr:dataset ?dataset .
-                                    OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
-                                    OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
-                                    OPTIONAL { ?config1 ldr:position ?position . }
-                                    OPTIONAL { ?config1 ldr:datasetCategory ?datasetCategory . }
-                                    OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
-                                    OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                                    ldr:dataset ?dataset ; ?setting ?settingValue .
                             }
                             UNION
                             {
@@ -138,13 +115,7 @@ class DynamicConfigurator {
                             UNION
                             {
                             ?config1 a ldr:ReactorConfig ;
-                                    ldr:dataset ?dataset .
-                                    OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
-                                    OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
-                                    OPTIONAL { ?config1 ldr:position ?position . }
-                                    OPTIONAL { ?config1 ldr:datasetCategory ?datasetCategory . }
-                                    OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
-                                    OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                                    ldr:dataset ?dataset ; ?setting ?settingValue .
                                     filter not exists {
                                         ?config1 ldr:createdBy ?user.
                                     }
@@ -162,16 +133,10 @@ class DynamicConfigurator {
                     `;
                 }else{
                     query = `
-                    SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType WHERE { ${graph}
+                    SELECT DISTINCT ?config1 ?config2 ?dataset ?setting ?settingValue WHERE { ${graph}
                             {
                             ?config1 a ldr:ReactorConfig ;
-                                    ldr:dataset ?dataset .
-                                    OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
-                                    OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
-                                    OPTIONAL { ?config1 ldr:position ?position . }
-                                    OPTIONAL { ?config1 ldr:datasetCategory ?datasetCategory . }
-                                    OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
-                                    OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                                    ldr:dataset ?dataset ; ?setting ?settingValue .
                             }
                             UNION
                             {
@@ -947,6 +912,11 @@ class DynamicConfigurator {
                 <http://ld-r.org/fpcs${rnc}> a ldr:FacetsPropertyConfig ; ldr:label "NER Entities" ; rdfs:label "NER Entities config ${rnc}" ; ldr:objectBrowser "TagListBrowser" ; ldr:property "https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#annotations->https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#surfaceForm" . ${graphEnd}
                 `;
             }
+            if(options && options.geoEnrichmentFacets){
+                annotationSt = ` ${graph} <${configURI}> ldr:list "https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#geoEnrichments->https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#country" .
+                 ${graphEnd}
+                `;
+            }
             const query = `
             INSERT DATA {
             ${graph}
@@ -1109,6 +1079,9 @@ class DynamicConfigurator {
         return output;
     }
     parseDatasetConfigs(config, datasetURI, body) {
+        //list of properties which should be taken into account for access management
+        const viewProps = ['hasLimitedAccess', 'readOnly'];
+        const editProps = ['allowResourceClone', 'allowPropertyDelete', 'allowResourceNew', 'allowPropertyNew', 'allowNewValue'];
         let output = config;
         let parsed = JSON.parse(body);
         let settingProp = '';
@@ -1121,7 +1094,23 @@ class DynamicConfigurator {
                 settingProp = el.setting.value.replace(ldr_prefix, '').trim();
                 //assume that all values will be stored in an array expect numbers: Not-a-Number
                 if(!isNaN(el.settingValue.value)){
-                    output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value);
+                    if(viewProps.indexOf(settingProp) !== -1){
+                        if(typeof output.dataset[datasetURI][settingProp] === 'undefined'){
+                            output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value);
+                        }else{
+                            //user cannot overwrite these properties if they have 1 as value
+                            output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value) || output.dataset[datasetURI][settingProp];
+                        }
+                    }else if(editProps.indexOf(settingProp) !== -1){
+                        if(typeof output.dataset[datasetURI][settingProp] === 'undefined'){
+                            output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value);
+                        }else{
+                            //user cannot overwrite these properties if they have 0 as value
+                            output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value) && output.dataset[datasetURI][settingProp];
+                        }
+                    }else{
+                        output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value);
+                    }
                 }else{
                     if(!output.dataset[datasetURI][settingProp]){
                         output.dataset[datasetURI][settingProp] = []
@@ -1219,6 +1208,7 @@ class DynamicConfigurator {
         let dynamicReactorDS  = {dataset:{}};
         let dynamicFacetsDS = {facets:{}};
         let parsed = JSON.parse(body);
+        let settingProp = '';
         parsed.results.bindings.forEach(function(el) {
             if(el.config2 && el.config2.value){
                 //facets
@@ -1230,38 +1220,32 @@ class DynamicConfigurator {
                 if(!dynamicReactorDS.dataset[el.dataset.value]){
                     dynamicReactorDS.dataset[el.dataset.value] = {};
                 }
-                if(el.datasetLabel && el.datasetLabel.value){
-                    if(!dynamicReactorDS.dataset[el.dataset.value].datasetLabel){
-                        dynamicReactorDS.dataset[el.dataset.value].datasetLabel = [];
+                if(el.setting && el.setting.value){
+                    settingProp = el.setting.value.replace(ldr_prefix, '').trim();
+                    if(settingProp === 'readOnly'){
+                        if(typeof dynamicReactorDS.dataset[el.dataset.value][settingProp] === 'undefined'){
+                            dynamicReactorDS.dataset[el.dataset.value][settingProp] = parseInt(el.settingValue.value);
+                        }else{
+                            //this is used to prevent people to switch access
+                            dynamicReactorDS.dataset[el.dataset.value][settingProp] = parseInt(el.settingValue.value) || dynamicReactorDS.dataset[el.dataset.value][settingProp];
+                        }
+                    }else if(settingProp === 'hasLimitedAccess'){
+                        if(typeof dynamicReactorDS.dataset[el.dataset.value][settingProp] === 'undefined'){
+                            dynamicReactorDS.dataset[el.dataset.value][settingProp] = parseInt(el.settingValue.value);
+                        }else{
+                            //this is used to prevent people to switch access
+                            dynamicReactorDS.dataset[el.dataset.value][settingProp] = parseInt(el.settingValue.value) || dynamicReactorDS.dataset[el.dataset.value][settingProp];
+                        }
+                    }else if(settingProp === 'position' || settingProp === 'isHidden'){
+                        dynamicReactorDS.dataset[el.dataset.value][settingProp] = parseInt(el.settingValue.value);
+                    } else {
+                        if(!dynamicReactorDS.dataset[el.dataset.value][settingProp]){
+                            dynamicReactorDS.dataset[el.dataset.value][settingProp] = [];
+                        }
+                        if(dynamicReactorDS.dataset[el.dataset.value][settingProp].indexOf(el.settingValue.value) === -1){
+                            dynamicReactorDS.dataset[el.dataset.value][settingProp].push(el.settingValue.value);
+                        }
                     }
-                    if(dynamicReactorDS.dataset[el.dataset.value].datasetLabel.indexOf(el.datasetLabel.value) === -1){
-                        dynamicReactorDS.dataset[el.dataset.value].datasetLabel.push(el.datasetLabel.value);
-                    }
-                }
-                if(el.resourceFocusType && el.resourceFocusType.value){
-                    if(!dynamicReactorDS.dataset[el.dataset.value].resourceFocusType){
-                        dynamicReactorDS.dataset[el.dataset.value].resourceFocusType = [];
-                    }
-                    if(dynamicReactorDS.dataset[el.dataset.value].resourceFocusType.indexOf(el.resourceFocusType.value) === -1){
-                        dynamicReactorDS.dataset[el.dataset.value].resourceFocusType.push(el.resourceFocusType.value);
-                    }
-                }
-                if(el.datasetCategory && el.datasetCategory.value){
-                    if(!dynamicReactorDS.dataset[el.dataset.value].datasetCategory){
-                        dynamicReactorDS.dataset[el.dataset.value].datasetCategory = [];
-                    }
-                    if(dynamicReactorDS.dataset[el.dataset.value].datasetCategory.indexOf(el.datasetCategory.value) === -1){
-                        dynamicReactorDS.dataset[el.dataset.value].datasetCategory.push(el.datasetCategory.value);
-                    }
-                }
-                if(el.readOnly && el.readOnly.value){
-                    dynamicReactorDS.dataset[el.dataset.value].readOnly = parseInt(el.readOnly.value);
-                }
-                if(el.position && el.position.value){
-                    dynamicReactorDS.dataset[el.dataset.value].position = parseInt(el.position.value);
-                }
-                if(el.isHidden && el.isHidden.value){
-                    dynamicReactorDS.dataset[el.dataset.value].isHidden = parseInt(el.isHidden.value);
                 }
             }
 

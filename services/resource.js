@@ -1,9 +1,11 @@
 'use strict';
 import {getHTTPQuery, getHTTPGetURL, prepareDG} from './utils/helpers';
+import {checkViewAccess, checkEditAccess} from './utils/accessManagement';
 import {getDynamicEndpointParameters, createASampleReactorConfig, createASampleFacetsConfig, createASampleServerConfig} from './utils/dynamicHelpers';
 import {enableLogs, enableAuthentication, authDatasetURI, configDatasetURI} from '../configs/general';
 import ResourceQuery from './sparql/ResourceQuery';
 import ResourceUtil from './utils/ResourceUtil';
+import Configurator from './utils/Configurator';
 import rp from 'request-promise';
 import fs from 'fs';
 import Log from 'log';
@@ -27,6 +29,7 @@ const headers = {'Accept': 'application/sparql-results+json'};
 let endpointParameters, category, cGraphName, datasetURI, dg, graphName, propertyURI, resourceURI, objectURI, objectValue, query, queryObject, utilObject, configurator, propertyPath, HTTPQueryObject;
 queryObject = new ResourceQuery();
 utilObject = new ResourceUtil();
+configurator = new Configurator();
 
 export default {
     name: 'resource',
@@ -56,39 +59,57 @@ export default {
                 if(propertyPath.length > 1){
                     propertyPath = propertyPath.split(',');
                 }
-                query = queryObject.getPrefixes() + queryObject.getProperties(endpointParameters, graphName, resourceURI);
-                //console.log(query);
-                //build http uri
-                //send request
-                let props;
-                rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
-                    //exceptional case for user properties: we hide some admin props from normal users
-                    utilObject.parseProperties(user, res, datasetURI, resourceURI, category, propertyPath, (cres)=> {
-                        if(datasetURI === authDatasetURI[0] && !parseInt(user.isSuperUser)){
-                            props = utilObject.deleteAdminProperties(cres.props);
-                        }else{
-                            props = cres.props;
-                        }
-                        //------------------------------------
-                        callback(null, {
-                            datasetURI: datasetURI,
-                            graphName: graphName,
-                            resourceURI: resourceURI,
-                            resourceType: cres.resourceType,
-                            title: cres.title,
-                            currentCategory: category,
-                            propertyPath: propertyPath,
-                            properties: props,
-                            config: cres.rconfig
-                        });
-                    });
+                //for now only check the dataset access levele
+                //todo: extend view access to resource and property level
+                configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
 
-                }).catch(function (err) {
-                    console.log(err);
-                    if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                    if(enableAuthentication && rconfig && rconfig.hasLimitedAccess && parseInt(rconfig.hasLimitedAccess)){
+                        //need to handle access to the dataset
+                        //if user is the editor by default he already has view access
+                        let editAccess = checkEditAccess(user, datasetURI, 0, 0, 0);
+                        if(!editAccess.access || editAccess.type === 'partial'){
+                            let viewAccess = checkViewAccess(user, datasetURI, 0, 0, 0);
+                            if(!viewAccess.access){
+                                callback(null, {datasetURI: datasetURI, graphName: graphName, resourceURI: resourceURI, resourceType: '', currentCategory: 0, propertyPath: [], properties: [], config: {}, error: 'You do not have enough permision to access this dataset/resource!'});
+                                return 0;
+                            }
+                        }
                     }
-                    callback(null, {datasetURI: datasetURI, graphName: graphName, resourceURI: resourceURI, resourceType: '', title: '', currentCategory: 0, propertyPath: [], properties: [], config: {}});
+
+                    query = queryObject.getPrefixes() + queryObject.getProperties(endpointParameters, graphName, resourceURI);
+                    //console.log(query);
+                    //build http uri
+                    //send request
+                    let props;
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                        //exceptional case for user properties: we hide some admin props from normal users
+                        utilObject.parseProperties(user, res, datasetURI, resourceURI, category, propertyPath, (cres)=> {
+                            if(datasetURI === authDatasetURI[0] && !parseInt(user.isSuperUser)){
+                                props = utilObject.deleteAdminProperties(cres.props);
+                            }else{
+                                props = cres.props;
+                            }
+                            //------------------------------------
+                            callback(null, {
+                                datasetURI: datasetURI,
+                                graphName: graphName,
+                                resourceURI: resourceURI,
+                                resourceType: cres.resourceType,
+                                title: cres.title,
+                                currentCategory: category,
+                                propertyPath: propertyPath,
+                                properties: props,
+                                config: cres.rconfig
+                            });
+                        });
+
+                    }).catch(function (err) {
+                        console.log(err);
+                        if(enableLogs){
+                            log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                        }
+                        callback(null, {datasetURI: datasetURI, graphName: graphName, resourceURI: resourceURI, resourceType: '', title: '', currentCategory: 0, propertyPath: [], properties: [], config: {}});
+                    });
                 });
             });
 
@@ -97,7 +118,6 @@ export default {
             propertyURI = params.propertyURI;
             resourceURI = params.resourceURI;
             datasetURI = params.dataset;
-
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -130,6 +150,75 @@ export default {
                     callback(null, {objectURI: objectURI, objectType: '', properties: []});
                 });
             });
+        } else if(resource === 'resource.boundaries'){
+            let uris = params.uris;
+            let tmpS, source = 'GADM';
+            if(params.source){
+                tmpS = params.source;
+            }
+            if(tmpS){
+                if(Array.isArray(tmpS)){
+                    source = tmpS[0];
+                }else{
+                    source = tmpS;
+                }
+            }
+            let tmp, instances= [];
+            if(source.toLowerCase() === 'gadm'){
+                datasetURI = 'http://geo.risis.eu/gadm';
+                uris.forEach(function(uri) {
+                    tmp = uri;
+                    if(tmp.value.indexOf('http://') === -1){
+                        tmp.value = 'http://geo.risis.eu/gadm/' + uri.value;
+                    }
+                    instances.push(tmp);
+                });
+            }else if(source.toLowerCase() === 'osm'){
+                datasetURI = 'http://geo.risis.eu/osm';
+                uris.forEach(function(uri) {
+                    tmp = uri;
+                    if(tmp.value.indexOf('http://') === -1){
+                        tmp.value  = 'http://geo.risis.eu/osm/' + uri.value;
+
+                        if(tmp.value.indexOf('relation_') === -1){
+                            tmp.value  = 'http://geo.risis.eu/osm/relation_' + uri.value;
+                        }else{
+                            tmp.value  = 'http://geo.risis.eu/osm/' + uri.value;
+                        }
+                    }
+                    instances.push(tmp);
+                });
+            }
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {boundaries: [], property: ''});
+                    return 0;
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+                query = queryObject.getPrefixes() + queryObject.getBoundaries(instances, datasetURI);
+                //build http uri
+                //send request
+                HTTPQueryObject = getHTTPQuery('read', query, endpointParameters, outputFormat);
+                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                    callback(null, {
+                        boundaries: utilObject.parseBoundaries(instances, res),
+                        property: params.property
+                    });
+                }).catch(function (err) {
+                    console.log(err);
+                    if(enableLogs){
+                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                    }
+                    callback(null, {boundaries: [], property: ''});
+                });
+            });
         }
 
     },
@@ -147,7 +236,7 @@ export default {
                     //check if user permitted to do the update action
                     user = req.user;
                     /*todo:fix permission on update!
-                    accessLevel = utilObject.checkAccess(user, datasetURI, params.resourceURI, params.propertyURI);
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
@@ -188,7 +277,7 @@ export default {
                 }else{
                     user = req.user;
                     /*todo:fix permission on update!
-                    accessLevel = utilObject.checkAccess(user, datasetURI, params.resourceURI, params.propertyURI);
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
@@ -372,6 +461,43 @@ export default {
                     callback(null, {datasetURI: datasetURI, resourceURI: params.resource, annotations: params.annotations});
                 });
             });
+        //adds ld-r annotations to a resource for a certain property if set
+        } else if (resource === 'resource.geoEnrichment') {
+            datasetURI = params.dataset;
+            resourceURI = params.resource;
+            propertyURI = params.property;
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI});
+                    return 0;
+                }else{
+                    user = req.user;
+                    //todo: think about the access level in the case of clone
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+                query = queryObject.getPrefixes() + queryObject.geoEnrichResource(endpointParameters, user, datasetURI, graphName, params.resource, propertyURI, params.enrichment, params.inNewDataset);
+                //console.log(query);
+                //build http uri
+                //send request
+                HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
+                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                    if(enableLogs){
+                        log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                    }
+                    callback(null, {datasetURI: datasetURI, resourceURI: params.resource, annotations: params.annotations});
+                }).catch(function (err) {
+                    console.log(err);
+                    if(enableLogs){
+                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                    }
+                    callback(null, {datasetURI: datasetURI, resourceURI: params.resource, annotations: params.annotations});
+                });
+            });
 
         } else if (resource === 'resource.newReactorConfig') {
             datasetURI = params.dataset;
@@ -403,7 +529,7 @@ export default {
                 }else{
                     user = req.user;
                     /*todo:fix permission on update!
-                    accessLevel = utilObject.checkAccess(user, datasetURI, params.resourceURI, params.propertyURI);
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
@@ -445,14 +571,14 @@ export default {
                 }else{
                     user = req.user;
                     /*todo:fix permission on update!
-                    accessLevel = utilObject.checkAccess(user, datasetURI, params.resourceURI, params.propertyURI);
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
                         return 0;
                     }
                     //check access for detail object
-                    accessLevel = utilObject.checkAccess(user, datasetURI, params.oldObjectValue, '');
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, params.oldObjectValue, '');
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
@@ -494,7 +620,7 @@ export default {
                 }else{
                     user = req.user;
                     /*todo:fix permission on update!
-                    accessLevel = utilObject.checkAccess(user, datasetURI, datasetURI, params.propertyURI);
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, datasetURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
@@ -539,7 +665,7 @@ export default {
                 }else{
                     user = req.user;
                     /*todo:fix permission on update!
-                    accessLevel = utilObject.checkAccess(user, datasetURI, params.resourceURI, params.propertyURI);
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
@@ -580,7 +706,7 @@ export default {
                 }else{
                     user = req.user;
                     /*todo:fix permission on update!
-                    accessLevel = utilObject.checkAccess(user, datasetURI, params.resourceURI, params.propertyURI);
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
@@ -619,7 +745,7 @@ export default {
                 }else{
                     user = req.user;
                     /*todo:fix permission on update!
-                    accessLevel = utilObject.checkAccess(user, datasetURI, params.resourceURI, params.propertyURI);
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});

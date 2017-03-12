@@ -1,7 +1,7 @@
 'use strict';
 import async from 'async';
 import Configurator from './Configurator';
-import {checkAccess} from './helpers';
+import {checkEditAccess} from './accessManagement';
 function compareProps(a,b) {
     if (a.property < b.property)
         return -1;
@@ -25,6 +25,36 @@ class ResourceUtil {
         //make first letter capital case
         property = property.charAt(0).toUpperCase() + property.slice(1);
         return property;
+    }
+    findOriginB(instances, value){
+        let out = 0;
+        instances.forEach(function(el, key) {
+            if(el.value == value){
+                out = el;
+                return el;
+            }
+        });
+        return out;
+    }
+    parseBoundaries(instances, body) {
+        let self = this;
+        let output=[];
+        let desc='',parsed = JSON.parse(body);
+        if(!parsed){
+            return output;
+        }
+        let tmp;
+        parsed.results.bindings.forEach(function(el, key) {
+            tmp = self.findOriginB(instances, el.s.value);
+            if(tmp){
+                output.push({uri: el.s.value, value: el.geometry.value, weight: tmp.weight ? tmp.weight: 1, total: tmp.total ? tmp.total: 1, hint: tmp.hint ? tmp.hint : self.getPropertyLabel(el.s.value)});
+
+            }else{
+                output.push({uri: el.s.value, value: el.geometry.value, hint: self.getPropertyLabel(el.s.value)});
+            }
+
+        });
+        return output;
     }
     parseProperties(user, body, datasetURI, resourceURI, category, propertyPath, callback) {
         let configurator = new Configurator();
@@ -108,7 +138,7 @@ class ResourceUtil {
             }
             let userIsEditor = 0, checkEditorship;
             if(user){
-                checkEditorship=checkAccess(user, datasetURI, resourceURI, resourceType, 0);
+                checkEditorship=checkEditAccess(user, datasetURI, resourceURI, resourceType, 0);
                 if(checkEditorship.access && checkEditorship.type === 'full'){
                     userIsEditor = 1;
                 }
@@ -133,7 +163,7 @@ class ResourceUtil {
                         if(el.propertyURI==='https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy' && user.id === el.instances[0].value) {
                             userIsCreator = 1;
                         }
-                        accessLevel=checkAccess(user, datasetURI, resourceURI, resourceType, el.propertyURI);
+                        accessLevel=checkEditAccess(user, datasetURI, resourceURI, resourceType, el.propertyURI);
                         modifiedConfig.access =accessLevel.access;
                     }
 
@@ -354,7 +384,7 @@ class ResourceUtil {
         //------ permission check functions---------------
     deleteAdminProperties(list) {
         let out = []
-        const adminProps = ['https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isSuperUser', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isActive', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOf', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#viewerOf'];
+        const adminProps = ['https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isSuperUser', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isActive', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOf', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#viewerOf', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfGraph','https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfDataset', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfProperty'];
         list.forEach(function(el) {
             if (adminProps.indexOf(el.propertyURI) === -1) {
                 out.push(el);

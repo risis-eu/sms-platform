@@ -4,6 +4,7 @@ import TagListBrowser from './browser/TagListBrowser';
 import CheckListBrowser from './browser/CheckListBrowser';
 import GeoListBrowser from './browser/GeoListBrowser';
 import BarChartBrowser from './browser/BarChartBrowser';
+import BoundryBrowser from './browser/BoundryBrowser';
 import TaxonomyBrowser from './browser/TaxonomyBrowser';
 
 class ObjectBrowser extends React.Component {
@@ -27,6 +28,9 @@ class ObjectBrowser extends React.Component {
                 break;
             case 'GeoListBrowser':
                 browser = <GeoListBrowser selection={self.props.selection} expanded={self.props.expanded} datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;
+                break;
+            case 'BoundryBrowser':
+                browser = <BoundryBrowser selection={self.props.selection} expanded={self.props.expanded} datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;
                 break;
             case 'BarChartBrowser':
                 browser = <BarChartBrowser selection={self.props.selection} expanded={self.props.expanded} datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;

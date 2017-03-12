@@ -39,6 +39,7 @@ module.exports = {
                                 message: 'Unknown user ' + username
                             });
                         }
+			//console.log(user);
                         if (!passwordHash.verify(password, user.password)) {
                             return done(null, false, {
                                 message: 'Invalid password'

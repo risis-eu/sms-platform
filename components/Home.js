@@ -1,43 +1,129 @@
 'use strict';
-var React = require('react');
+import React from 'react';
+import {NavLink} from 'fluxible-router';
 
 class Home extends React.Component {
+    handleOverPics(obj, effect) {
+        $('.img-' + obj).addClass('animated ' + effect);
+    }
+    handleOutPics(obj, effect) {
+        $('.img-' + obj).removeClass('animated ' + effect);
+    }
     render() {
         return (
-            <div className="ui page grid" ref="home">
+            <div className="ui stackable page grid" ref="home">
               <div className="ui row">
                 <div className="column">
-                    <div className="ui segment content">
-                        <h2 className="ui header">SMS Platform</h2>
-                        <p>Welcome to SMS Platform!</p>
-                        <p>
-                        The Semantically Mapping Science (SMS) platform supports access to heterogeneous data on science and innovation, and it supports combining, integrating and analyzing those Data. SMS is one of the facilities in the <a target="_blank" href="http://risis.eu">RISIS project</a>, a distributed data infrastructure for research and innovation dynamics and policy studies. Click on the components in the below architecture to get more information about the component.
-                        </p>
-                        <img id="Image-Maps-Com-image-maps-2016-07-31-052107" src="/assets/img/architecture.jpeg"  width="664" height="638" useMap="#image-maps-2016-07-31-052107" alt="SMS Architecture" className="ui bordered centered image" />
-                        <map name="image-maps-2016-07-31-052107" id="ImageMapsCom-image-maps-2016-07-31-052107">
-                        <area  alt="" title="RISIS Datasets Portal" href="http://datasets.risis.eu" shape="rect" coords="29,35,153,99" style={{'outline':'none'}} target="_self"     />
-                        <area  alt="" title="SMS Spreadsheet add-ons" href="https://docs.google.com/document/d/1JoJM7VF_ZaaAPbSjtgpydzRDYLvr-tROzhITGj0cH3w/edit?usp=sharing" shape="rect" coords="158,36,276,100" style={{'outline':'none'}} target="_self"     />
-                        <area  alt="" title="Cortext" href="http://cortext.risis.eu" shape="rect" coords="284,49,413,90" style={{'outline':'none'}} target="_self"     />
-                        <area  alt="" title="SMS Demos" href="http://sms.risis.eu/demos" shape="rect" coords="417,50,517,95" style={{'outline':'none'}} target="_self"     />
-                        <area  alt="" title="Other SMS apps" href="/otherApps" shape="rect" coords="523,50,632,95" style={{'outline':'none'}} target="_self"     />
-                        <area  alt="" title="PDF to Text" href="/PDF2Text" shape="rect" coords="529,7,628,49" style={{'outline':'none'}} target="_self"     />
-                        <area  alt="" title="SMS Linked Data API" href="http://api.sms.risis.eu" shape="rect" coords="29,101,632,146" style={{'outline':'none'}} target="_self"     />
-                        <area  alt="" title="Access Control Points" href="/ACPs" shape="rect" coords="16,465,638,509" style={{'outline':'none'}} target="_self"     />
-                        <area  alt="" title="Category Services" href="/categoryServices" shape="rect" coords="65,154,215,200" style={{'outline':'none'}} target="_self"     />
-                        <area  alt="" title="Basic Geo Services" href="/basicGeoServices" shape="rect" coords="221,154,397,202" style={{'outline':'none'}} target="_self"     />
-                        <area  alt="" title="Identity Resolution/Management Services" href="/identityServices" shape="rect" coords="403,156,579,204" style={{'outline':'none'}} target="_self"     />
-                        <area  alt="" title="Metadata services" href="/datasets" shape="rect" coords="65,207,215,251" style={{'outline':'none'}} target="_self"     />
-                        <area  alt="" title="Innovative Geo Services" href="/innovativeGeoServices" shape="rect" coords="222,206,395,250" style={{'outline':'none'}} target="_self"     />
-                        <area  alt="" title="NER services" href="/ner" shape="rect" coords="405,208,575,251" style={{'outline':'none'}} target="_self"     />
-                        <area  alt="" title="Integration with Social Data" href="/integrationSocial" shape="rect" coords="65,260,215,306" style={{'outline':'none'}} target="_self"     />
-                        <area  alt="" title="Integration with Public Datasets" href="/integrationPublic" shape="rect" coords="220,260,394,306" style={{'outline':'none'}} target="_self"     />
-                        <area  alt="" title="Integration with local RISIS datasets" href="/integrationRISIS" shape="rect" coords="403,258,576,305" style={{'outline':'none'}} target="_self"     />
-                        <area  alt="" title="Triple Store" href="/tripleStore" shape="rect" coords="38,319,604,366" style={{'outline':'none'}} target="_self"     />
-                        <area shape="rect" coords="662,636,664,638" alt="Image Map" style={{'outline':'none'}} title="Image Map" href="http://www.image-maps.com/index.php?aff=mapped_users_0" />
-                        </map>
+                    <h1>Welcome to SMS Platform.</h1>
+                    <div className="ui segment">
+                      <img className="ui medium right floated image bordered animated pulse" src="/assets/img/docs/goal.jpeg" />
+                      <p style={{textAlign: 'justify', fontSize: '1.2em'}}>
+                          Up to now, <b>STI</b> (<b>S</b>cience, <b>T</b>echnology, <b>I</b>nnovation) studies are either rich but small scale (qualitative case studies) or large scale and under-complex – because they generally use only a single dataset like <a target="_blank" href="http://www.epo.org/searching-for-patents/business/patstat.html">Patstat</a>, <a target="_blank" href="https://www.scopus.com">Scopus</a>, <a target="_blank" href="http://www.isiknowledge.com/">WoS (Web of Science)</a>, <a target="_blank" href="http://www.oecd.org/">OECD</a> STI indicators, etc., and therefore deploying only a few variables – determined by the data available. However, progress in the STI research field depends in our view on the ability to do <b>large-scale</b> studies with often many variables specified by relevant theories: There is a need for studies which are at the same time big and rich. To enable that, combining and integration of STI data and beyond is needed – in order to exploit the huge amount of data that are ‘out there’ in an innovative and meaningful way. <br/>The aim of the <b>S</b>emantically <b>M</b>aping <b>S</b>cience (SMS) platform as the technical core within the <a target="_blank" href="https://risis.eu">RISIS EU project</a> is to produce richer data to be used in social research – through the integration of heterogeneous datasets, ranging from tabular statistical data to unstructured data found on the Web.
+                          &nbsp;<a className="" href="/assets/pdf/sms_documentation.pdf">Read more...</a>
+                      </p>
+                    </div>
+                    <div className="ui stackable four cards">
+                      <div className="green card slideInUp animated" onMouseOver={this.handleOverPics.bind(this, 'conceptualModel', 'bounce')} onMouseOut={this.handleOutPics.bind(this, 'conceptualModel', 'bounce')}>
+                          <div className="content center aligned">
+                            <NavLink routeName="conceptualModel" className="header" href="/conceptualModel">Conceptual Model & Technical Architecture</NavLink>
+                          </div>
+                        <NavLink className="img-conceptualModel image" routeName="conceptualModel" href="/conceptualModel">
+                            <img src="/assets/img/docs/conceptualModel.jpg"/>
+                        </NavLink>
+                      </div>
+
+                      <div className="green card slideInUp animated" onMouseOver={this.handleOverPics.bind(this, 'dataIngestion', 'bounce')} onMouseOut={this.handleOutPics.bind(this, 'dataIngestion', 'bounce')}>
+                          <div className="content center aligned">
+                            <NavLink routeName="dataIngestion" className="header" href="/dataIngestion">Data Ingestion, Conversion & Linking</NavLink>
+                          </div>
+                        <NavLink className="image" routeName="dataIngestion" href="/dataIngestion">
+                            <img className="img-dataIngestion" src="/assets/img/docs/ingestion.png"/>
+                        </NavLink>
+                      </div>
+
+                      <div className="green card slideInUp animated" onMouseOver={this.handleOverPics.bind(this, 'ldServices', 'bounce')} onMouseOut={this.handleOutPics.bind(this, 'ldServices', 'bounce')}>
+                          <div className="content center aligned">
+                            <NavLink routeName="ldServices" className="header" href="/ldServices">Linked Data Services & Applications</NavLink>
+                          </div>
+                        <NavLink className="image" routeName="ldServices" href="/ldServices">
+                          <img className="img-ldServices" src="/assets/img/docs/sa.png"/>
+                        </NavLink>
+                      </div>
+
+                      <div className="blue card slideInUp animated">
+                        <div className="content center aligned" onMouseOver={this.handleOverPics.bind(this, 'demos', 'pulse')} onMouseOut={this.handleOutPics.bind(this, 'demos', 'pulse')}>
+                          <NavLink routeName="demos" className="header" href="/demos">Demos</NavLink>
+                        </div>
+                        <NavLink className="image" routeName="demos" href="/demos">
+                          <img className="img-demos" src="/assets/img/docs/demos.jpg"/>
+                        </NavLink>
+                        <div className="ui horizontal divider"></div>
+                        <div className="content center aligned" onMouseOver={this.handleOverPics.bind(this, 'usecases', 'pulse')} onMouseOut={this.handleOutPics.bind(this, 'usecases', 'pulse')}>
+                          <NavLink routeName="usecases" className="header" href="/usecases">Use Cases</NavLink>
+                        </div>
+                        <NavLink className="image" routeName="usecases" href="/usecases">
+                          <img className="img-usecases" src="/assets/img/docs/usecases.jpg"/>
+                        </NavLink>
+                      </div>
+
+                    </div>
+                    <div className="ui segment">
+                        <h2>Quick Links:</h2>
+                        <div className="ui list">
+                          <div className="item">
+                            <i className="external green icon"></i>
+                            <div className="content">
+                              <a className="header" href="http://risis.eu" target="_blank">RISIS Project Website</a>
+                              <div className="description">RISIS EU project aims to build a distributed infrastructure on data relevant for research and innovation dynamics and policies.</div>
+                            </div>
+                          </div>
+                          <div className="item">
+                            <i className="external green icon"></i>
+                            <div className="content">
+                              <a className="header" href="http://datasets.risis.eu" target="_blank">RISIS Datasets Portal</a>
+                              <div className="description">A portal with list of metadata about RISIS datasets where users can request for access/visit to a dataset.</div>
+                            </div>
+                          </div>
+                          <div className="item">
+                            <i className="file pdf green icon"></i>
+                            <div className="content">
+                              <a className="header" href="/assets/pdf/sms_documentation.pdf" target="_blank">SMS Platform Documentation</a>
+                              <div className="description">Complete documentation of SMS platform.</div>
+                            </div>
+                          </div>
+                          <div className="item">
+                            <i className="external green icon"></i>
+                            <div className="content">
+                              <a className="header" href="http://api.sms.risis.eu" target="_blank">SMS Linked Data APIs</a>
+                              <div className="description">List of exposed SMS Web APIs with documentation.</div>
+                            </div>
+                          </div>
+                          <div className="item">
+                            <i className="github green icon"></i>
+                            <div className="content">
+                              <a className="header" href="https://github.com/risis-eu" target="_blank">SMS/RISIS Github Repositories</a>
+                              <div className="description">Open source code of RISIS platforms.</div>
+                            </div>
+                          </div>
+                          <div className="item">
+                            <i className="wizard green icon"></i>
+                            <div className="content">
+                              <a className="header" href="http://ld-r.org" target="_blank">Linked Data Reactor</a>
+                              <div className="description">An open source software framework which empowers SMS platform for linked data view, browse and editing.</div>
+                            </div>
+                          </div>
+                          <div className="item">
+                            <i className="youtube green icon"></i>
+                            <div className="content">
+                              <a className="header" href="https://www.youtube.com/watch?list=PLg3CFD-pkOFs3dt-mABKpi-NmCJjSZvE_&v=H76afW67qy8" target="_blank">SMS Youtube Channel</a>
+                              <div className="description">A list of tutorials on how to use SMS services and applications.</div>
+                            </div>
+                          </div>
+
+                        </div>
                     </div>
                 </div>
-                </div>
+              </div>
             </div>
         );
     }
