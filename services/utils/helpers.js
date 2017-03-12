@@ -1,5 +1,6 @@
 import {sparqlEndpoint, apiTokens} from '../../configs/server';
 import {defaultDatasetURI, enableDynamicServerConfiguration, enableAuthentication} from '../../configs/general';
+import {listOfCountries} from '../../data/countries';
 import validUrl from 'valid-url';
 import queryString from 'query-string';
 
