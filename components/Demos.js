@@ -3,9 +3,11 @@ import ReactDOM from 'react-dom';
 
 class Demos extends React.Component {
     componentDidMount() {
-
+        //scroll to top of the page
+        let body = $('html, body');
+        body.stop().animate({scrollTop:0}, '500', 'swing', function() {
+        });
     }
-
     render() {
 
         return (

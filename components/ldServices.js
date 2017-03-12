@@ -3,6 +3,12 @@ import React from 'react';
 import {NavLink} from 'fluxible-router';
 
 class ldServices extends React.Component {
+    componentDidMount() {
+        //scroll to top of the page
+        let body = $('html, body');
+        body.stop().animate({scrollTop:0}, '500', 'swing', function() {
+        });
+    }
     render() {
         return (
             <div className="ui page stacked grid" ref="home">
