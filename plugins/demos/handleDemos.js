@@ -1224,12 +1224,16 @@ module.exports = function handleDemos(server) {
                             var parsed2 = JSON.parse(body2);
                             var parsed3 = JSON.parse(body3);
                             //console.log(parsed2.result.primaryTopic.label);
-                            var input = parsed3.resources[0].polygon;
-                            polygons.push({
-                                geometry: input,
-                                id: item.id,
-                                name: item.title
-                            });
+                            var input='';
+                            if(parsed3.resources[0]){
+                                input = parsed3.resources[0].polygon;
+                                polygons.push({
+                                    geometry: input,
+                                    id: item.id,
+                                    name: item.title
+                                });
+                            }
+
                             callback();
                         }).catch(function(err3) {
                             console.log('atomic3: ', err3);
@@ -1277,7 +1281,7 @@ module.exports = function handleDemos(server) {
                     'type': 'FeatureCollection',
                     'features': features
                 };
-                finalScript = finalScript + '</head><body><div class="ui segments"><div class="ui segment"><h3><a target="_blank" href="/demos/geo/AdminCountryLevels/' + req.params.country + '/' + req.params.level + '/' + req.params.source + '">Administrative Areas Per Country</a></h3></div><div class="ui segment"><div id="map" style="width:' + width + 'px;height:' + height + 'px;"></div><b></b>' + nutsLinks.length + ' boundaries found:<br/> ' + nutsLinks.join(' ') + '</div></div><script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script><script> var colorObject = ' + JSON.stringify(colorsObject) + '; function getColor(d) { return colorObject[d];}	function style(feature) {return {weight: 2,opacity: 1,color: "black",dashArray: "3",fillOpacity: 0.35, fillColor: "#CD0074"};} var map = L.map("map").setView([ ' + (focusPoint ? focusPoint[1] : 0) + ', ' + (focusPoint ? focusPoint[0] : 1) + '], 7); var info = L.control();info.onAdd = function (map) {this._div = L.DomUtil.create("div", "info");this.update();return this._div;};info.update = function (props) {this._div.innerHTML = "<h4>Municipality: </h4>" +  (props ? ("<b>" + props.name + "</b>") : "Hover over a region");}; info.addTo(map);function highlightFeature(e) {var layer = e.target;layer.setStyle({weight: 5,color: "#666",dashArray: "",fillOpacity: 0.7}); if (!L.Browser.ie && !L.Browser.opera) { layer.bringToFront(); } info.update(layer.feature.properties); } function resetHighlight(e) { geojson.resetStyle(e.target); info.update();} function zoomToFeature(e) {map.fitBounds(e.target.getBounds());} function onEachFeature(feature, layer) {layer.on({mouseover: highlightFeature,mouseout: resetHighlight,click: zoomToFeature});}  L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {attribution: \'Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"http://mapbox.com\">Mapbox</a>\',maxZoom: 18,id: "mapbox.light",accessToken: "' + mapboxAccessToken + '"}).addTo(map); var geojson = L.geoJson(' + JSON.stringify(mcpData) + ', {style: style, onEachFeature: onEachFeature}).addTo(map);</script></body></html>';
+                finalScript = finalScript + '</head><body><div class="ui segments"><div class="ui segment"><h3><a target="_blank" href="/demos/geo/AdminCountryLevels/' + req.params.country + '/' + req.params.level + '/' + req.params.source + '">Administrative Areas Per Country</a></h3></div><div class="ui segment"><div id="map" style="width:' + width + 'px;height:' + height + 'px;"></div><b></b>' + nutsLinks.length + ' boundaries found:<br/> ' + nutsLinks.join(' ') + '</div></div><script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script><script> var colorObject = ' + JSON.stringify(colorsObject) + '; function getColor(d) { return colorObject[d];}	function style(feature) {return {weight: 2,opacity: 1,color: "black",dashArray: "3",fillOpacity: 0.35, fillColor: "#CD0074"};} var map = L.map("map").setView([ ' + (focusPoint ? focusPoint[1] : 0) + ', ' + (focusPoint ? focusPoint[0] : 1) + '], 7); var info = L.control();info.onAdd = function (map) {this._div = L.DomUtil.create("div", "info");this.update();return this._div;};info.update = function (props) {this._div.innerHTML = "<h4>Boundary: </h4>" +  (props ? ("<b>" + props.name + "</b>") : "Hover over a region");}; info.addTo(map);function highlightFeature(e) {var layer = e.target;layer.setStyle({weight: 5,color: "#666",dashArray: "",fillOpacity: 0.7}); if (!L.Browser.ie && !L.Browser.opera) { layer.bringToFront(); } info.update(layer.feature.properties); } function resetHighlight(e) { geojson.resetStyle(e.target); info.update();} function zoomToFeature(e) {map.fitBounds(e.target.getBounds());} function onEachFeature(feature, layer) {layer.on({mouseover: highlightFeature,mouseout: resetHighlight,click: zoomToFeature});}  L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {attribution: \'Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"http://mapbox.com\">Mapbox</a>\',maxZoom: 18,id: "mapbox.light",accessToken: "' + mapboxAccessToken + '"}).addTo(map); var geojson = L.geoJson(' + JSON.stringify(mcpData) + ', {style: style, onEachFeature: onEachFeature}).addTo(map);</script></body></html>';
                 res.send(finalScript);
             });
         }).catch(function(err) {

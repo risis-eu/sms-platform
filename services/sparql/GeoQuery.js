@@ -341,14 +341,15 @@ class GeoQuery{
         this.query = '\
         SELECT DISTINCT ?polygon ?name WHERE { \
             GRAPH <http://geo.risis.eu/urau> {\
-            <'+uri+'> a risisOECDV:FunctionalUrbanArea ;\
+            <'+uri+'> a risisOECDV:FunctionalUrbanArea ; <http://geo.risis.eu/vocabulary/oecd/fuaID> ?furi ; \
                 geo:geometry ?polygon .\
             }\
             GRAPH <http://geo.risis.eu/oecd> { \
-            <'+uri+'> dcterms:title ?name . \
+            ?uri2 <http://geo.risis.eu/vocabulary/oecd/fuaID> ?furi ; dcterms:title ?name . \
             } \
           } \
         ';
+        //console.log(this.prefixes + this.query);
         return this.prefixes + this.query;
     }
     //source: flickr, osm, gadm
@@ -388,13 +389,16 @@ class GeoQuery{
                 GRAPH <http://geo.risis.eu/urau> { \
                     ?uri a risisOECDV:FunctionalUrbanArea ;\
                         risisOECDV:fuaCatefory "'+level+'" ; \
+                        <http://geo.risis.eu/vocabulary/oecd/fuaID> ?furi ;\
                         '+vocab+':ISO "'+convertToISO3(country)+'" .\
                 } \
                 GRAPH <http://geo.risis.eu/oecd> { \
-                    ?uri dcterms:title ?title . \
+                    ?uri2 <http://geo.risis.eu/vocabulary/oecd/fuaID> ?furi ;\
+                     dcterms:title ?title . \
                 } \
             }';
         }
+        //console.log(this.prefixes + this.query);
         return this.prefixes + this.query;
     }
     getOECDFUAList(country) {
