@@ -439,10 +439,11 @@ class GeoQuery{
                 ?uri a risisOECDV:FunctionalUrbanArea ;\
                     risisOECDV:fuaCatefory ?category ; '+ex1+'\
                     risisOECDV:ISO ?country ;\
+                    <http://geo.risis.eu/vocabulary/oecd/fuaID> ?furi;\
                     geo:geometry ?polygon .\
             } \
             GRAPH <http://geo.risis.eu/oecd> { \
-                ?uri dcterms:title ?title . \
+                ?uri2 <http://geo.risis.eu/vocabulary/oecd/fuaID> ?furi; dcterms:title ?title . \
             } \
             FILTER (bif:st_intersects (bif:st_geomfromtext(STR(?polygon)), bif:st_point (xsd:double('+long+'), xsd:double('+lat+'))))\
         } LIMIT 100 \
