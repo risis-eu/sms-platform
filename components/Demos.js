@@ -55,7 +55,7 @@ class Demos extends React.Component {
                             </div>
                             <div className="blue card slideInUp animated">
                               <a className="img-conceptualModel image" href="/metadataList">
-                                  <img src="/assets/img/docs/metadataEditor.png"/>
+                                  <img src="/assets/img/docs/metadataeditor.png"/>
                               </a>
                               <div className="content center aligned">
                                 <a className="ui" href="/metadataList">SMS Metadata Editor</a>
