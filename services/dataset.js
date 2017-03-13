@@ -447,7 +447,7 @@ export default {
                 }else{
                     user = req.user;
                     //check if user has access to datasets page
-                    if(user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') === -1 && user.member.indexOf('http://rdf.risis.eu/user/SMSVisitors') === -1){
+                    if(user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') === -1 && user.member.indexOf('http://rdf.risis.eu/user/SMSVisitor') === -1){
                         callback(null, {dynamicReactorDS: {datasets: {}}, dynamicFacetsDS: {facets: {}}, staticReactorDS: staticReactorDS, staticFacetsDS: staticFacetsDS, error: 'This page is only open to SMS visitors. Please contact us to arrange a visit. The public online access will be available soon after we finish the initial user testing.'});
                         return 0;
                     }
