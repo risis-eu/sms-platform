@@ -23,7 +23,7 @@ class Demos extends React.Component {
                         <div className="ui stackable four cards">
                             <div className="blue card slideInUp animated">
                               <a className="img-conceptualModel image" href="/demos/geo/addressToAdmin">
-                                  <img src="/assets/img/docs/addr2boundary.jpg"/>
+                                  <img src="/assets/img/docs/addr2boundary.jpg" style={{height: 150}}/>
                               </a>
                               <div className="content center aligned">
                                 <a className="ui" href="/demos/geo/addressToAdmin">Address to Administrative Boundaries (using all open shape files)</a>
@@ -31,7 +31,7 @@ class Demos extends React.Component {
                             </div>
                             <div className="blue card slideInUp animated">
                               <a className="img-conceptualModel image" href="/boundariesMap">
-                                  <img src="/assets/img/docs/image17.jpg"/>
+                                  <img src="/assets/img/docs/image17.jpg" style={{height: 150}}/>
                               </a>
                               <div className="content center aligned">
                                 <a className="ui" href="/boundariesMap">Example of Administrative Boundaries extracted for a specific country</a>
@@ -39,7 +39,7 @@ class Demos extends React.Component {
                             </div>
                             <div className="blue card slideInUp animated">
                               <a className="img-conceptualModel image" href="https://docs.google.com/document/d/1JoJM7VF_ZaaAPbSjtgpydzRDYLvr-tROzhITGj0cH3w/edit?usp=sharing">
-                                  <img src="/assets/img/docs/image37.png"/>
+                                  <img src="/assets/img/docs/image37.png" style={{height: 150}}/>
                               </a>
                               <div className="content center aligned">
                                 <a className="ui" href="https://docs.google.com/document/d/1JoJM7VF_ZaaAPbSjtgpydzRDYLvr-tROzhITGj0cH3w/edit?usp=sharing">Google spreadsheet's add-ons for geocoding addresses in a spreadsheet</a>
@@ -47,7 +47,7 @@ class Demos extends React.Component {
                             </div>
                             <div className="blue card slideInUp animated">
                               <a className="img-conceptualModel image" href="http://datasets.risis.eu">
-                                  <img src="/assets/img/docs/dsp.png"/>
+                                  <img src="/assets/img/docs/dsp.png" style={{height: 150}}/>
                               </a>
                               <div className="content center aligned">
                                 <a className="ui" href="http://datasets.risis.eu">RISIS Datasets Portal derived from the RISIS datasets metadata</a>
@@ -55,7 +55,7 @@ class Demos extends React.Component {
                             </div>
                             <div className="blue card slideInUp animated">
                               <a className="img-conceptualModel image" href="/metadataList">
-                                  <img src="/assets/img/docs/metadataeditor.png"/>
+                                  <img src="/assets/img/docs/metadataeditor.png" style={{height: 150}}/>
                               </a>
                               <div className="content center aligned">
                                 <a className="ui" href="/metadataList">SMS Metadata Editor</a>
@@ -63,15 +63,15 @@ class Demos extends React.Component {
                             </div>
                             <div className="blue card slideInUp animated">
                               <a className="img-conceptualModel image" href="/datasets">
-                                  <img src="/assets/img/docs/image20.jpg"/>
+                                  <img src="/assets/img/docs/image20.jpg" style={{height: 150}}/>
                               </a>
                               <div className="content center aligned">
                                 <a className="ui" href="/datasets">Dataset Browser, Editor and Annotator</a>
                               </div>
                             </div>
-                            <div className="blue card slideInUp animated">
+                            <div className="black card slideInUp animated">
                               <a className="img-conceptualModel image" href="/datasets">
-                                  <iframe width="190" height="180" src="https://www.youtube.com/embed/videoseries?list=PLSBPxopOi20XPOn1sGBthbNtXIUOqM_4b" frameBorder="0" allowFullScreen></iframe>
+                                  <iframe width="200" height="150" src="https://www.youtube.com/embed/videoseries?list=PLSBPxopOi20XPOn1sGBthbNtXIUOqM_4b" frameBorder="0" allowFullScreen></iframe>
                               </a>
                               <div className="content center aligned">
                                 <a className="ui" href="https://www.youtube.com/playlist?list=PLSBPxopOi20XPOn1sGBthbNtXIUOqM_4b">Video Tutorials</a>

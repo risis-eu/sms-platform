@@ -203,7 +203,7 @@ class usecases extends React.Component {
                                 className="c6">Fig 42. Linking the relevant datasets</span></p>
                         <p className="c1 c20"><span className="c0"></span></p>
                         <p className="c1 c20"><span className="c0"></span></p>
-                        <p className="c1"><span ><img className="ui image big" alt="RISISWeek2017_SMS.051.jpeg" src="/assets/img/docs/image11.jpg" title=""/></span></p>
+                        <p className="c1"><span ><img alt="RISISWeek2017_SMS.051.jpeg" src="/assets/img/docs/image11.jpg" title=""/></span></p>
                         <p
                             className="c7"><span className="c2">Fig 43. Detecting the other relevant institutions within the environment of an HE institution</span></p>
                         <p className="c7 c20"><span className="c2"></span></p>
