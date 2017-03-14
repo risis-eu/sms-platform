@@ -78,6 +78,46 @@ export default {
             done();
         }
     },
+    usecase1: {
+        path: '/usecase1',
+        method: 'get',
+        handler: require('../components/usecase1'),
+        label: 'Use Case 1',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Use Case 1'});
+            done();
+        }
+    },
+    usecase2: {
+        path: '/usecase2',
+        method: 'get',
+        handler: require('../components/usecase2'),
+        label: 'Use Case 2',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Use Case 2'});
+            done();
+        }
+    },
+    usecase3: {
+        path: '/usecase3',
+        method: 'get',
+        handler: require('../components/usecase3'),
+        label: 'Use Case 3',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Use Case 3'});
+            done();
+        }
+    },
+    usecase4: {
+        path: '/usecase4',
+        method: 'get',
+        handler: require('../components/usecase4'),
+        label: 'Use Case 4',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Use Case 4'});
+            done();
+        }
+    },
     newDataset: {
         path: '/newDataset',
         method: 'get',
