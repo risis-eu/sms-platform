@@ -20,7 +20,7 @@ class usecase1 extends React.Component {
                         <NavLink routeName="home" className="section" href="/usecases">Use Cases</NavLink>
                       </div>
                       <div className="ui segment" style={{textAlign: 'justify', fontSize: '1.2em'}}>
-                      <h3 className="c25" id="h.8oflk55ccwsx"><span>Example 1: </span><span className="c33">Using the faceted browser for analyzing change in the research/HE system. </span></h3>
+                      <h2 className="c25" id="h.8oflk55ccwsx">Using the faceted browser for analyzing change in the research/HE system.</h2>
                       <p className="c1 c20"><span className="c0"></span></p>
                       <p className="c9"><span className="c0">The datastore contains many datasets with information about organizations. Assume that one is interested in structural change in higher education systems, one may want to browse through those datasets. The faceted browser can be of great help, as it enables to explore the available information in graphical form. While browsing the datasets, we find a property &lsquo;foundation year&rsquo;. Selecting that property for a country, one gets the frequency of new foundations of Higher Education institutions per year (figure 24), and one sees immediately a high concentration in a two consecutive years: in 1986 and 1987 some 21 new HE institutions were founded in the Netherlands, on a total (now) of 114:. So some substantial changes in the HE system seem to have taken place.</span></p>
                       <p

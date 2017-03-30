@@ -25,35 +25,35 @@ class usecases extends React.Component {
                           </p>
                           <div className="ui stackable four cards">
                               <div className="blue card pulse animated">
-                                <NavLink routeName="usecase1" className="img-conceptualModel image" href="/usecase1">
+                                <NavLink routeName="usecase1" className="img-conceptualModel image" href="/usecase_analyzing_change_in_research_system">
                                     <img src="/assets/img/docs/usecase1.jpg" style={{height: 150}}/>
                                 </NavLink>
                                 <div className="content center aligned">
-                                  <NavLink routeName="usecase1" className="ui" href="/usecase1">Using the faceted browser for analyzing change in the research/HE system.</NavLink>
+                                  <NavLink routeName="usecase1" className="ui" href="/usecase_analyzing_change_in_research_system">Using the faceted browser for analyzing change in the research/HE system.</NavLink>
                                 </div>
                               </div>
                               <div className="blue card pulse animated">
-                                <NavLink routeName="usecase2" className="img-conceptualModel image" href="/usecase2">
+                                <NavLink routeName="usecase2" className="img-conceptualModel image" href="/usecase_study_links_between_organizations">
                                     <img src="/assets/img/docs/usecase2.jpg" style={{height: 150}}/>
                                 </NavLink>
                                 <div className="content center aligned">
-                                  <NavLink routeName="usecase2" className="ui" href="/usecase2">Using the open data on organizations for studying links between organizations</NavLink>
+                                  <NavLink routeName="usecase2" className="ui" href="/usecase_study_links_between_organizations">Using the open data on organizations for studying links between organizations.</NavLink>
                                 </div>
                               </div>
                               <div className="blue card pulse animated">
-                                <NavLink routeName="usecase3" className="img-conceptualModel image" href="/usecase3">
+                                <NavLink routeName="usecase3" className="img-conceptualModel image" href="/usecase_flexible_urban_areas_innovation">
                                     <img src="/assets/img/docs/usecase3.jpg" style={{height: 150}}/>
                                 </NavLink>
                                 <div className="content center aligned">
-                                  <NavLink routeName="usecase3" className="ui" href="/usecase3">Using flexible urban areas for studying the localization of innovation</NavLink>
+                                  <NavLink routeName="usecase3" className="ui" href="/usecase_flexible_urban_areas_innovation">Using flexible urban areas for studying the localization of innovation.</NavLink>
                                 </div>
                               </div>
                               <div className="blue card pulse animated">
-                                <NavLink routeName="usecase4" className="img-conceptualModel image" href="/usecase4">
+                                <NavLink routeName="usecase4" className="img-conceptualModel image" href="/usecase_universities_environemnt_relation_performance">
                                     <img src="/assets/img/docs/usecase4.jpg" style={{height: 150}}/>
                                 </NavLink>
                                 <div className="content center aligned">
-                                  <NavLink routeName="usecase4" className="ui" href="/usecase4">Using several sources: does the environment of universities relate to performance?</NavLink>
+                                  <NavLink routeName="usecase4" className="ui" href="/usecase_universities_environemnt_relation_performance">Using several sources: does the environment of universities relate to performance?</NavLink>
                                 </div>
                               </div>
                           </div>

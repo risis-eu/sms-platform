@@ -20,7 +20,7 @@ class usecase4 extends React.Component {
                         <NavLink routeName="home" className="section" href="/usecases">Use Cases</NavLink>
                       </div>
                       <div className="ui segment" style={{textAlign: 'justify', fontSize: '1.2em'}}>
-                      <h3 className="c25" id="h.15gk5cr682id"><span className="c33">Example 4: Using several sources: does the environment of universities relate to performance?</span></h3>
+                      <h2 className="c25" id="h.15gk5cr682id"> Using several sources: does the environment of universities relate to performance?</h2>
                       <p className="c1 c20"><span className="c0"></span></p>
                       <p className="c9"><span className="c0">The last example asks the following question: What characteristics of universities and what characteristics of the environment of universities influence the quality of universities? There are about 2500 higher education institutions in Europe. A few of those are the outstanding - the top ranked - universities, but most of them are much more &lsquo;normal&rsquo;. Why some universities have been the outstanding one&rsquo;s forever is one question, what influences the performance of the large majority is another. One may think of characteristics of the HE institutions, such as size, number of undergraduate and graduate students, student-staff ratio, amount of externally funded research, and so on. </span></p>
                       <p

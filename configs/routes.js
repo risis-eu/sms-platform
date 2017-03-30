@@ -79,42 +79,42 @@ export default {
         }
     },
     usecase1: {
-        path: '/usecase1',
+        path: '/usecase_analyzing_change_in_research_system',
         method: 'get',
         handler: require('../components/usecase1'),
         label: 'Use Case 1',
         action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Use Case 1'});
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Using the faceted browser for analyzing change in the research/HE system.'});
             done();
         }
     },
     usecase2: {
-        path: '/usecase2',
+        path: '/usecase_study_links_between_organizations',
         method: 'get',
         handler: require('../components/usecase2'),
         label: 'Use Case 2',
         action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Use Case 2'});
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Using the open data on organizations for studying links between organizations.'});
             done();
         }
     },
     usecase3: {
-        path: '/usecase3',
+        path: '/usecase_flexible_urban_areas_innovation',
         method: 'get',
         handler: require('../components/usecase3'),
         label: 'Use Case 3',
         action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Use Case 3'});
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Using flexible urban areas for studying the localization of innovation'});
             done();
         }
     },
     usecase4: {
-        path: '/usecase4',
+        path: '/usecase_universities_environemnt_relation_performance',
         method: 'get',
         handler: require('../components/usecase4'),
         label: 'Use Case 4',
         action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Use Case 4'});
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Does the environment of universities relate to performance?'});
             done();
         }
     },

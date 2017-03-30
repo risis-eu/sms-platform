@@ -20,7 +20,7 @@ class usecase3 extends React.Component {
                         <NavLink routeName="home" className="section" href="/usecases">Use Cases</NavLink>
                       </div>
                       <div className="ui segment" style={{textAlign: 'justify', fontSize: '1.2em'}}>
-                      <h3 className="c25" id="h.qzy3qsy3r612"><span className="c33">Example 3. Using flexible urban areas for studying the localization of innovation</span></h3>
+                      <h2 className="c25" id="h.qzy3qsy3r612"> Using flexible urban areas for studying the localization of innovation.</h2>
                       <p className="c1 c20"><span className="c0"></span></p>
                       <p className="c9"><span>Geography of innovation is another interesting topic. Here we show this might be studied, using the SMS platform. The example we chose is a core element of current science and innovation policy in the Netherlands, where a very large part of public research money is distributed to the so-called &lsquo;top sectors&rsquo;, that is the economic sectors of which Dutch government expects that they will be the core of future economic growth. Money is competitively distributed among consortia that focus on one of the top sectors </span><span>(such as energy, water, chemistry, life sciences, logistics, etc.)</span><span
                               className="c0">, and within the consortia companies have a leading role. Some information about the grated research consortia is available in the RVO project database.</span></p>
