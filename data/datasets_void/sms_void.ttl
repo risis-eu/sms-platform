@@ -1,0 +1,90 @@
+@prefix : <http://rdf.risis.eu/dataset/sms/1.0/void.ttl#> .
+@prefix risis: <http://risis.eu/> .
+@prefix risisEx: <http://risis.eu/> .
+@prefix risisV: <http://rdf.risis.eu/metadata/> .
+@prefix risisDs: <http://rdf.risis.eu/dataset/risis/1.0/void.ttl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix wv: <http://vocab.org/waiver/terms/> .
+@prefix sd: <http://www.w3.org/ns/sparql-service-description#> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix disco: <http://rdf-vocabulary.ddialliance.org/discovery#> .
+
+:sms_rdf_dataset a void:Dataset ;
+      pav:version "1.0" ;
+      risisV:accessType "Visit Only" ;
+      risisV:nonDisclosureAgreement "not applicable" ;
+      risisV:openingStatus "Open" ;
+      risisV:accessRequestForm <http://risis.eu/wp-content/uploads/2015/07/ETER_RISIS_call_and_application_template.docx>;
+      risisV:visitRequestForm <http://risis.eu/wp-content/uploads/2015/07/ETER_RISIS_call_and_application_template.docx>;
+      dcat:byteSize "100000000000"^^xsd:decimal;
+      dcat:accessURL <http://sms.risis.eu/> ;
+      foaf:homepage <http://sms.risis.eu/> ;
+      foaf:page <http://sms.risis.eu/> ;
+      dcterms:title "The SMS Datasets"@en ;
+      dcterms:description """The Semantically Maping Science (SMS) platform provides access to 40+ datasets related to science, technology and innovation studies."""@en ;
+      dcterms:subject <http://dbpedia.org/resource/Computer_science> .
+
+:sms_rdf_dataset dcterms:creator <http://dbpedia.org/resource/VU_University_Amsterdam> ;
+      dcterms:contributor <http://dbpedia.org/resource/VU_University_Amsterdam> .
+
+risis: a foaf:Organization ;
+      rdfs:label "Research Infrastructure for Science and Innovation Studies"@en ;
+      foaf:mbox <p.a.a.vanden.besselaar@vu.nl> .
+
+<http://dbpedia.org/resource/VU_University_Amsterdam>  a foaf:Organization ;
+      rdfs:label "VU University Amsterdam"@en ;
+      foaf:mbox <p.a.a.vanden.besselaar@vu.nl> .
+
+:sms_rdf_dataset dcterms:source <http://sms.risis.eu>;
+      dcterms:created "2017-03-30"^^xsd:date ;
+      dcterms:issued "2017-03-30"^^xsd:date ;
+      dcterms:modified "2017-03-30"^^xsd:date ;
+      dcterms:license <http://www.opendatacommons.org/licenses/pddl/> ;
+      dcterms:rights risis:rights ;
+      wv:norms <http://www.opendatacommons.org/norms/odc-by-sa/> ;
+      wv:waiver """To the extent possible under law, The Example Organisation has waived all opyright and related or neighboring rights to The Example Dataset."""@en ;
+      dcterms:format  "application/rdf"@en .
+
+## File format reference: <http://www.iana.org/assignments/media-types/media-types.xhtml>
+
+##########################################################################################################################
+#                                                                                                                        #
+#   3. Access metadata	 [1]		 									         										 #
+#                                                                                                                        #
+##########################################################################################################################
+
+#	void:dataDump <http://downloadedFromAddress.com> ;
+
+##########################################################################################################################
+#                                                                                                                        #
+#   4. Structural metadata [5]		 									         										 #
+#                                                                                                                        #
+##########################################################################################################################
+
+
+	:sms_rdf_dataset a void:Dataset ;
+							risisV:dataModel "RDF Model" .
+#                                                                                                                        #
+#   6. Describing Creator, Publisher and Contributor using rdfs:type, rdfs:label and foaf:mbox							 #
+#                                                                                                                        #
+##########################################################################################################################
+
+risis:al a foaf:Person ;
+  rdfs:label "Al Koudous"@en ;
+  foaf:mbox <o.a.k.idrissou@vu.nl> .
+
+risis: a foaf:Organization;
+  rdfs:label "Research Infrastructure for Science and Innovation Studies"@en ;
+  foaf:mbox <p.a.a.vanden.besselaar@vu.nl> .

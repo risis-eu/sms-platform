@@ -31,6 +31,7 @@
 @prefix jorepVoid: <http://rdf.risis.eu/dataset/jorep/1.0/void.ttl#> .
 @prefix euproVoid: <http://rdf.risis.eu/dataset/eupro/1.0/void.ttl#> .
 @prefix eterVoid: <http://rdf.risis.eu/dataset/eter/1.0/void.ttl#> .
+@prefix smsVoid: <http://rdf.risis.eu/dataset/sms/1.0/void.ttl#> .
 
 :risis_rdf_dataset a void:Dataset ;
             dcterms:title "RISIS Dataset"@en ;
@@ -39,4 +40,4 @@
             pav:version "1.0" ;
             void:sparqlEndpoint <http://sparql.risis.eu> ;
             foaf:page <http://risis.eu/dataset/risis/> ;
-            void:subset  cibVoid: , exampleVoid:, eterVoid:, euproVoid:, jorepVoid:, leidenRankingVoid:, nanoVoid:, more1Void:, profileVoid:, vicoVoid:, siperVoid: .
+            void:subset  cibVoid: , exampleVoid:, eterVoid:, euproVoid:, jorepVoid:, leidenRankingVoid:, nanoVoid:, more1Void:, profileVoid:, vicoVoid:, siperVoid:, smsVoid: .
