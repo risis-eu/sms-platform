@@ -11,3 +11,4 @@ plugins/demos/config.js
 *.rdb
 .DS_Store
 *.lock
+react-codemod

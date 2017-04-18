@@ -1,5 +1,6 @@
 'use strict';
 import React from 'react';
+import PropTypes from 'prop-types';
 import {NavLink} from 'fluxible-router';
 import {appFullTitle, appShortTitle, enableAuthentication, enableDynamicReactorConfiguration,enableDynamicServerConfiguration,enableDynamicfacetsConfiguration, configDatasetURI} from '../configs/general';
 
@@ -65,6 +66,6 @@ class Nav extends React.Component {
     }
 }
 Nav.contextTypes = {
-    getUser: React.PropTypes.func
+    getUser: PropTypes.func
 };
 export default Nav;
