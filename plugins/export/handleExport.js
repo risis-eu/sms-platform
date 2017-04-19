@@ -7,7 +7,12 @@ let appShortTitle = generalConfig.appShortTitle;
 let appFullTitle = generalConfig.appFullTitle;
 
 let exportResource = function(format, datasetURI, resourceURI, req, res) {
-    helpers2.getDynamicEndpointParameters(req.user, [datasetURI], (endpoint) => {
+    let ds = datasetURI;
+    if(datasetURI.indexOf('http://rdf.risis.eu/dataset/') !== -1){
+        ds='metadata';
+    }
+    helpers2.getDynamicEndpointParameters(req.user, [ds], (endpoint) => {
+        //console.log(endpoint);
         let httpOptions = endpoint.httpOptions;
         let outputFormat;
         switch (format.toLowerCase()) {
@@ -26,7 +31,12 @@ let exportResource = function(format, datasetURI, resourceURI, req, res) {
         if(endpoint.type === 'cliopatria'){
             outputFormat = 'rdf+xml';
         }
-        let {gStart, gEnd} = helpers.prepareGraphName(endpoint.graphName);
+        //solve the issue with metadata graphs
+        let graphName = endpoint.graphName;
+        if(ds==='metadata'){
+            graphName = datasetURI;
+        }
+        let {gStart, gEnd} = helpers.prepareGraphName(graphName);
         let primaryTopic = '<http://' + req.headers.host + '/dataset/' + encodeURIComponent(datasetURI) + '> foaf:primaryTopic <' + datasetURI + '> . ?s ?p ?o .';
         let selectPhrase = '?s ?p ?o .';
         if (resourceURI) {
@@ -44,6 +54,7 @@ let exportResource = function(format, datasetURI, resourceURI, req, res) {
         `;
         //console.log(query);
         let rpPath = helpers.getHTTPGetURL(helpers.getHTTPQuery('read', query, endpoint, outputFormat));
+        //console.log(rpPath);
         rp.get({
             uri: rpPath
         }).then(function(result) {
