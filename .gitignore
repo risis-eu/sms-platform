@@ -12,3 +12,4 @@ plugins/demos/config.js
 .DS_Store
 *.lock
 react-codemod
+.DS_Store

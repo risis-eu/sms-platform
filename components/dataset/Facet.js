@@ -4,6 +4,7 @@ import ObjectBrowser from '../object/ObjectBrowser';
 import SearchInput from 'react-search-input';
 import URIUtil from '../utils/URIUtil';
 import YASQEViewer from '../object/viewer/individual/YASQEViewer';
+import {Dropdown, Icon} from 'semantic-ui-react';
 
 class Facet extends React.Component {
     constructor(props){
@@ -16,6 +17,11 @@ class Facet extends React.Component {
     handleToggleExpand() {
         this.setState({expanded: !this.state.expanded});
         this.props.toggleExpandFacet(this.props.spec.propertyURI);
+    }
+    handleDropDownClick(e, data){
+        if(data.value==='invert'){
+            this.props.onInvert();
+        }
     }
     handleToggleVerticalResize() {
         this.setState({verticalResized: !this.state.verticalResized});
@@ -36,6 +42,11 @@ class Facet extends React.Component {
                 selected.push(URIUtil.getURILabel(item.value));
             });
             out = selected.join(',');
+            if(this.props.invert[this.props.spec.propertyURI]){
+                out = '!= '+out;
+            }else{
+                out = '= '+out;
+            }
             return out;
         }else{
             return out;
@@ -52,6 +63,17 @@ class Facet extends React.Component {
     }
     render() {
         let self = this;
+        //dropdown setting
+        let invertStat = this.props.invert[this.props.spec.propertyURI] ? 'Revert' : 'invert';
+        let d_options = [
+              { key: 1, text: invertStat + ' the selection', value: 'invert' },
+              { key: 2, text: 'Shuffle the values', value: 'shuffle' }
+        ]
+        const d_trigger = (
+          <span>
+            <Icon name='lightning' />
+          </span>
+        );
         //change header color of facet: Violet -> for property chains , Purple -> multigraphs
         let defaultColor = 'blue';
         if(this.props.spec.propertyURI.indexOf('->') !== -1){
@@ -59,6 +81,9 @@ class Facet extends React.Component {
         }
         if(this.props.spec.propertyURI.indexOf('->[') !== -1){
             defaultColor = 'purple';
+        }
+        if(this.props.invert[this.props.spec.propertyURI]){
+            defaultColor = 'red';
         }
         //-----------------------
         let contentClasses = 'content', extraContentClasses='extra content', cardClasses = 'ui segment ' + (this.props.color ? this.props.color : defaultColor);
@@ -111,9 +136,18 @@ class Facet extends React.Component {
                         <div className="item">
                             <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.props.config} size="3" />
                         </div>
-                        <div className="item">
+                        <div className="item" style={{
+                            'wordBreak': 'break-all',
+                            'wordWrap': 'break-word'
+                        }}>
                             {this.createSelecedList()}
                         </div>
+                        {this.props.spec.property ?
+                            <div className="item">
+                              <Dropdown onChange={this.handleDropDownClick.bind(this)} trigger={d_trigger} options={d_options} icon={null} upward floating />
+                            </div>
+                            : ''
+                        }
                     </div>
                     <div className="meta">
                     </div>
