@@ -12,7 +12,8 @@ class Demos extends React.Component {
     render() {
 
         return (
-            <div className="ui page grid" ref="demos">
+            <div className="ui fluid container ldr-padding-more" ref="demos">
+            <div className="ui grid" ref="demos">
                 <div className="ui column">
                     <div className="ui massive breadcrumb">
                       <NavLink routeName="home" className="section" href="/">SMS Platform</NavLink>
@@ -78,6 +79,7 @@ class Demos extends React.Component {
                               </div>
                             </div>
                         </div>
+                    </div>
                     </div>
 
                 </div>

@@ -268,13 +268,15 @@ class DatasetGeoEnrichment extends React.Component {
             </div>
         }
         return (
-            <div className="ui page grid" ref="datasets">
+            <div className="ui fluid container ldr-padding-more" ref="datasets">
+            <div className="ui grid">
                 <div className="ui column">
                     <h2>Geo-enrich dataset</h2>
                     {errorDIV}
                     {formDIV}
                     {progressDIV}
                 </div>
+            </div>
             </div>
         );
     }

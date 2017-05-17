@@ -11,7 +11,8 @@ class DataIngestion extends React.Component {
     }
     render() {
         return (
-            <div className="ui page stacked grid" ref="home">
+            <div className="ui fluid container ldr-padding-more" ref="home">
+            <div className="ui stacked grid" ref="home">
               <div className="ui row">
                 <div className="column">
                     <div className="ui massive breadcrumb">
@@ -81,6 +82,7 @@ class DataIngestion extends React.Component {
                       <a href="http://5stardata.info/en/"><img className="ui centered large image" src="/assets/img/docs/image48.png" /></a>
                     </div>
                 </div>
+              </div>
               </div>
             </div>
         );

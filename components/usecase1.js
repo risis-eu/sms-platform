@@ -11,7 +11,8 @@ class usecase1 extends React.Component {
     }
     render() {
         return (
-            <div className="ui page stacked grid" ref="home">
+            <div className="ui fluid container ldr-padding-more" ref="home">
+            <div className="ui stacked grid" ref="home">
               <div className="ui row">
                   <div className="ui column">
                       <div className="ui massive breadcrumb">
@@ -67,6 +68,7 @@ class usecase1 extends React.Component {
                       <h3 className="c25 c27" id="h.j7dcoahotuv"><span className="c33"></span></h3>
                       </div>
                   </div>
+              </div>
               </div>
             </div>
         );

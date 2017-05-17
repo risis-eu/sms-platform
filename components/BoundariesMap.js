@@ -9,7 +9,8 @@ class BoundariesMap extends React.Component {
     render() {
 
         return (
-            <div className="ui page grid" ref="demos">
+            <div className="ui fluid container ldr-padding-more" ref="demos">
+            <div className="ui grid">
                 <div className="ui column">
                     <h2 className="ui header">Examples of extracted boundaries from GADM, OpenStreetMap and Flickr datasets</h2>
                     <div className="ui link cards">
@@ -190,6 +191,7 @@ class BoundariesMap extends React.Component {
 
                     </div>
                 </div>
+            </div>
             </div>
         );
     }

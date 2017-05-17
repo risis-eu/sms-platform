@@ -11,7 +11,8 @@ class ldServices extends React.Component {
     }
     render() {
         return (
-            <div className="ui page stacked grid" ref="home">
+            <div className="ui fluid container ldr-padding-more" ref="home">
+            <div className="ui stacked grid" ref="home">
               <div className="ui row">
                 <div className="column">
                     <div className="ui massive breadcrumb">
@@ -171,6 +172,7 @@ class ldServices extends React.Component {
                         <img className="ui centered image" src="/assets/img/docs/image33.jpg" />
                     </div>
                 </div>
+              </div>
               </div>
             </div>
         );

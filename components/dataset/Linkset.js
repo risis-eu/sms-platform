@@ -82,7 +82,8 @@ class Linkset extends React.Component {
             );
         });
         return (
-            <div className="ui three column page centered grid" ref="linkset">
+            <div className="ui fluid container ldr-padding-more" ref="linkset">
+            <div className="ui three column centered grid">
                 <h3><span className="ui big black circular label">{this.addCommas(this.props.LinksetStore.dataset.total)}</span> Links found.</h3>
                     <div className="row">
                         <div className="column right attached" >
@@ -96,6 +97,7 @@ class Linkset extends React.Component {
                         </div>
                     </div>
                 {list}
+            </div>
             </div>
         );
     }

@@ -11,7 +11,8 @@ class usecase4 extends React.Component {
     }
     render() {
         return (
-            <div className="ui page stacked grid" ref="home">
+            <div className="ui fluid container ldr-padding-more" ref="home">
+            <div className="ui stacked grid">
               <div className="ui row">
                   <div className="ui column">
                       <div className="ui massive breadcrumb">
@@ -64,6 +65,7 @@ class usecase4 extends React.Component {
                           className="c7"><span className="c6">Fig 44.</span><span className="c6">&nbsp;Part of the resulting dataset (Dutch universites only, and a few of the variables)</span></p>
                       </div>
 
+                  </div>
                   </div>
               </div>
             </div>
