@@ -28,7 +28,7 @@ class Dataset extends React.Component {
         if(this.props.error){
             return (
                 <div className="ui fluid container ldr-padding-more" ref="dataset">
-                    <div className="ui page grid">
+                    <div className="ui grid">
                         <div className="ui column">
                             <div className="ui warning message"><h2>{this.props.error}</h2></div>
                         </div>
@@ -39,9 +39,11 @@ class Dataset extends React.Component {
         let user = this.context.getUser();
         if(enableAuthentication && !user){
             return (
-                <div className="ui page grid" ref="dataset">
-                    <div className="ui column">
-                        <div className="ui warning message"><div className="header"> Please <a href="http://datasets.risis.eu/register">Register</a> or <a href="/login">Login</a> to see the datasets/resources.</div></div>
+                <div className="ui fluid container ldr-padding-more" ref="dataset">
+                    <div className="ui grid">
+                        <div className="ui column">
+                            <div className="ui warning message"><div className="header"> Please <a href="http://datasets.risis.eu/register">Register</a> or <a href="/login">Login</a> to see the datasets/resources.</div></div>
+                        </div>
                     </div>
                 </div>
             )

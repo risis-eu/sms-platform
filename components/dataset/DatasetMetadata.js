@@ -25,9 +25,11 @@ class DatasetMetadata extends React.Component {
         //check erros first
         if(this.props.error){
             return (
-                <div className="ui page grid" ref="dataset">
-                    <div className="ui column">
-                        <div className="ui warning message"><h2>{this.props.error}</h2></div>
+                <div className="ui fluid container ldr-padding" ref="DatasetMetadata">
+                    <div className="ui grid">
+                        <div className="ui column">
+                            <div className="ui warning message"><h2>{this.props.error}</h2></div>
+                        </div>
                     </div>
                 </div>
             )
@@ -65,14 +67,16 @@ class DatasetMetadata extends React.Component {
              </div>;
         }
         return (
-            <div className="ui page grid" ref="DatasetMetadata">
-                <div className="ui column">
-                    <h3 className="ui header">
-                        {this.props.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI)}><span className="ui big blue circular label">{this.state.searchMode ? this.addCommas(this.props.resources.length) + '/' :''}{this.addCommas(this.props.total)}</span></a> : ''} Dataset's Metadata
-                    </h3>
-                    <div className="ui segments">
-                        <div className="ui segment">
-                            <ResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={true} config={this.props.config} onCloneResource={this.props.onCloneResource}/>
+            <div className="ui fluid container ldr-padding" ref="DatasetMetadata">
+                <div className="ui grid" ref="DatasetMetadata">
+                    <div className="ui column">
+                        <h3 className="ui header">
+                            {this.props.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI)}><span className="ui big blue circular label">{this.state.searchMode ? this.addCommas(this.props.resources.length) + '/' :''}{this.addCommas(this.props.total)}</span></a> : ''} Dataset's Metadata
+                        </h3>
+                        <div className="ui segments">
+                            <div className="ui segment">
+                                <ResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={true} config={this.props.config} onCloneResource={this.props.onCloneResource}/>
+                            </div>
                         </div>
                     </div>
                 </div>
