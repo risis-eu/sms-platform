@@ -17,16 +17,20 @@ class UsersList extends React.Component {
         let currentComponent = this;
         if((!user || (user.member.indexOf('http://rdf.risis.eu/user/PRB') === -1 && user.member.indexOf('http://rdf.risis.eu/user/FCB') === -1)) && !parseInt(user.isSuperUser)){
             return (
-              <div className="ui page grid">
-                <div className="row">
-                  <div className="column">
-                    <h1 className="ui header">Permission denied!</h1>
-                      <div className="ui segment">
-                          <div className="ui warning message"><div className="header">Sorry! You do not have enough permission to access this page!</div></div>
-                      </div>
-                  </div>
+                <div className="ui fluid container ldr-padding-more">
+                    <div className="ui grid">
+                        <div className="row">
+                            <div className="column">
+                                <h1 className="ui header">Permission denied!</h1>
+                                <div className="ui segment">
+                                    <div className="ui warning message">
+                                        <div className="header">Sorry! You do not have enough permission to access this page!</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             )
         }
         let i = 0;
@@ -90,19 +94,27 @@ class UsersList extends React.Component {
             list=<div className="ui warning message"><div className="header"> Sorry! No user found!</div></div>
         }
         return (
-          <div className="ui page grid">
-            <div className="row">
-              <div className="column">
-                <h1 className="ui header"><a target="_blank" href={'/export/NTriples/' + encodeURIComponent(currentComponent.props.UserStore.graphName)}><span className="ui big black circular label">{i}</span></a> Registered Users</h1>
-                  <div className="ui segment">
-                    <div className="ui huge divided animated list">
-                      {list}
-                    </div>
-                    {emailHint ? <div>* A notification email will be sent to the user after activation.</div> : ''}
+            <div className="ui fluid container ldr-padding-more" ref="dataset">
+                <div className="ui grid">
+                    <div className="row">
+                        <div className="column">
+                            <h1 className="ui header">
+                                <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(currentComponent.props.UserStore.datasetURI)}>
+                                    <span className="ui big black circular label">{i}</span>
+                                </a>
+                                Registered Users</h1>
+                            <div className="ui segment">
+                                <div className="ui huge divided animated list">
+                                    {list}
+                                </div>
+                                {emailHint
+                                    ? <div>* A notification email will be sent to the user after activation.</div>
+                                    : ''}
+                            </div>
+                        </div>
                   </div>
               </div>
             </div>
-          </div>
         );
     }
 }
