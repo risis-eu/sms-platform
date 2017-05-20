@@ -91,7 +91,7 @@ class ResourceReactor extends React.Component {
                         </div></div></div></div>;
         }
         return (
-            <div ref="resourceReactor">
+            <div ref="resourceReactor" itemScope itemType={resourceType.join(' ')} itemID={resourceURI}>
                 {resourceReactor}
                 {newPropDIV}
             </div>

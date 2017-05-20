@@ -149,7 +149,7 @@ class UserResource extends React.Component {
         }
         return (
             <div className="ui fluid container ldr-padding-more" ref="resource">
-                <div className="ui grid" ref="resource" itemScope itemType={this.props.resourceType} itemID={this.props.resource}>
+                <div className="ui grid" ref="resource">
                     <div className="ui column">
                     <h2>
                         <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon user"></i></a> <a href={this.props.resource} target="_blank">{uname} ({firstName} {lastName})</a>&nbsp;&nbsp;
