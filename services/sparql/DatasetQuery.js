@@ -206,7 +206,7 @@ class DatasetQuery{
                     }
                     ${limitOffsetPharse}
                 }
-                OPTIONAL { ?resource rdfs:label ?label .}
+                OPTIONAL { ?resource rdfs:label ?label . FILTER langMatches( lang(?label), "EN" )}
                 ${optPhase}
                 ${bindPhase}
                 ${searchPhase}
