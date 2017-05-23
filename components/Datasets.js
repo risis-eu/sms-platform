@@ -546,18 +546,6 @@ class Datasets extends React.Component {
                             </div>
                              : ''}
                         </div>
-                        <div className= "ui bottom attached">
-                            {errorDIV ? '' : datasetActionsDIV}
-                        </div>
-                        {dss.length ?
-                        <div className="ui grey message form">
-                            <select ref="datasetURI" className="ui search dropdown">
-                                {optionsList}
-                            </select>
-                            <input ref="resourceURI" type="text" className="input" placeholder="Enter the URI of the resource e.g. http://dbpedia.org/resource/VU_University_Amsterdam"/>
-                            <button className="fluid ui primary button" onClick={this.displayResource.bind(this)}>Display resource in the selected dataset</button>
-                        </div>
-                         : ''}
                     </div>
                 </div>
             </div>
