@@ -57,6 +57,14 @@ class usecases extends React.Component {
                                   <NavLink routeName="usecase4" className="ui" href="/usecase_universities_environemnt_relation_performance">Using several sources: does the environment of universities relate to performance?</NavLink>
                                 </div>
                               </div>
+                              <div className="blue card pulse animated">
+                                <NavLink routeName="usecase5" className="img-conceptualModel image" href="/usecase_evaluating_research_portfolios">
+                                    <img src="/assets/img/docs/usecase5.png" style={{height: 150}}/>
+                                </NavLink>
+                                <div className="content center aligned">
+                                  <NavLink routeName="usecase5" className="ui" href="/usecase_evaluating_research_portfolios"> Evaluating research portfolios</NavLink>
+                                </div>
+                              </div>
                           </div>
                       </div>
 

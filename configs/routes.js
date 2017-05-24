@@ -118,6 +118,16 @@ export default {
             done();
         }
     },
+    usecase5: {
+        path: '/usecase_evaluating_research_portfolios',
+        method: 'get',
+        handler: require('../components/usecase5'),
+        label: 'Use Case 5',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Evaluating research portfolios'});
+            done();
+        }
+    },
     newDataset: {
         path: '/newDataset',
         method: 'get',
