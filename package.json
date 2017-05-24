@@ -1,6 +1,6 @@
 {
   "name": "linked-data-reactor",
-  "version": "0.9.88",
+  "version": "0.9.89",
   "description": "Linked Data Reactor helps to create adaptive Semantic Web UIs.",
   "private": false,
   "repository": {
@@ -36,7 +36,7 @@
     "compression": "^1.6.2",
     "continuation-local-storage": "^3.2.0",
     "cookie-parser": "^1.4.3",
-    "cookie-session": "^2.0.0-beta.1",
+    "cookie-session": "^2.0.0-beta.2",
     "csurf": "^1.9.0",
     "debug": "^2.6.8",
     "es5-shim": "^4.5.9",
@@ -67,7 +67,7 @@
     "redis": "^2.6.5",
     "react-leaflet": "^1.1.7",
     "react-search-input": "^0.11.2",
-    "recharts": "^0.22.4",
+    "recharts": "^1.0.0-alpha.0",
     "request-promise": "^4.2.1",
     "semantic-ui-css": "^2.2.10",
     "semantic-ui-react": "^0.68.3",
