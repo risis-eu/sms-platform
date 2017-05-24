@@ -82,6 +82,11 @@ export default {
                 objectIViewer: ['PrefixBasedView'],
                 objectIEditor: ['PrefixBasedInput']
             },
+            'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#dataType': {
+                allowPropertyDelete: 0,
+                objectIViewer: ['PrefixBasedView'],
+                objectIEditor: ['PrefixBasedInput']
+            },
             'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy' : {
                 isHidden: 0,
                 allowNewValue: 0,
@@ -330,6 +335,57 @@ export default {
                     objectIViewer: ['PrefixBasedView'],
                     objectIEditor: ['PrefixBasedInput']
                 },
+'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#constraint': {
+                    label: ['Constraint'],
+                    allowExtension: 1,
+                    hasBlankNode: 1,
+                    extensions: [
+                        {
+                            spec: {
+                                propertyURI: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+                                instances: [{value: 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#Constraint', valueType: 'uri'}]
+                            },
+                            config: {
+                                label: ['Type'],
+                                objectIViewer: ['PrefixBasedView'],
+                                objectIEditor: ['PrefixBasedInput']
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#property',
+                                instances: [{value: 'http://exampleProperty.com', valueType: 'uri'}]
+                            },
+                            config: {
+                                label: ['Property'],
+                                objectIViewer: ['PrefixBasedView'],
+                                objectIEditor: ['PrefixBasedInput']
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#object',
+                                instances: [{value: 'value', valueType: 'literal'}]
+                            },
+                            config: {
+                                label: ['Object Value']
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#enabled',
+                                instances: [{value: '1', valueType: 'literal'}]
+                            },
+                            config: {
+                                label: ['Enabled'],
+                                objectIViewer:['ToggleView'],
+                                objectIEditor:['ToggleEdit'],
+                                onValue: ['1'],
+                                offValue: ['0'],
+                            }
+                        },
+                    ]
+                },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#config': {
                     label: ['Configuration'],
                     allowExtension: 1,
@@ -414,6 +470,7 @@ export default {
                         {label: 'ClioPatria', value: 'cliopatria'},
                         {label: 'Virtuoso', value: 'virtuoso'},
                         {label: 'Stardog', value: 'stardog'},
+			{label: 'Blazegraph', value: 'blazegraph'},
                         {label: 'Sesame', value: 'sesame'}
                     ]
                 }
