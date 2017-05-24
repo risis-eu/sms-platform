@@ -335,7 +335,7 @@ export default {
                     objectIViewer: ['PrefixBasedView'],
                     objectIEditor: ['PrefixBasedInput']
                 },
-'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#constraint': {
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#constraint': {
                     label: ['Constraint'],
                     allowExtension: 1,
                     hasBlankNode: 1,
