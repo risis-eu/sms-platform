@@ -65,21 +65,6 @@ export default {
                 }
             }
         },
-        'http://risis.eu/wos': {
-            list: [
-                'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-                'http://risis.eu/wos/vocab/PY',
-                'http://risis.eu/wos/vocab/WC',
-                'http://risis.eu/wos/vocab/SC',
-                'http://risis.eu/wos/vocab/LA'
-            ],
-            config: {
-                'http://risis.eu/wos/vocab/PY': { label: 'Publication year' },
-                'http://risis.eu/wos/vocab/WC': { label: 'WoS Category' },
-                'http://risis.eu/wos/vocab/SC': { label: 'Subject Category' },
-                'http://risis.eu/wos/vocab/LA': { label: 'Language' }
-            }
-        },
         'http://risis.eu/dataset/Eter': {
             list: [
                 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
