@@ -267,6 +267,7 @@ class DatasetQuery{
         let self = this;
         let type = resourceType ? [resourceType] : rconfig.resourceFocusType;
         let rconfig2 = {};
+        rconfig2 = rconfig;
         rconfig2.resourceFocusType = type;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = this.makeExtraTypeFilters(endpointParameters, rconfig2);
@@ -366,6 +367,7 @@ class DatasetQuery{
         let type = resourceType ? [resourceType] : rconfig.resourceFocusType;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let rconfig2 = {};
+        rconfig2 = rconfig;
         rconfig2.resourceFocusType = type;
         let st = this.makeExtraTypeFilters(endpointParameters, rconfig2);
         //in case of storing a new dataset, ignore the type
@@ -387,6 +389,7 @@ class DatasetQuery{
         let type = resourceType ? [resourceType] : rconfig.resourceFocusType;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let rconfig2 = {};
+        rconfig2 = rconfig;
         rconfig2.resourceFocusType = type;
         let st = this.makeExtraTypeFilters(endpointParameters, rconfig2);
         //in case of storing a new dataset, ignore the type
