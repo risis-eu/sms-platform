@@ -264,6 +264,7 @@ class DatasetQuery{
     }
     //only gives us unannotated ones
     getResourcePropForAnnotation(endpointParameters, graphName, rconfig, resourceType, propertyURI, limit, offset, inNewDataset, boundarySource, longPropertyURI, latPropertyURI, countryPropertyURI) {
+    //todo: does not work if new and original graphs are on different endpoints
         let self = this;
         let type = resourceType ? [resourceType] : rconfig.resourceFocusType;
         let rconfig2 = {};
@@ -387,11 +388,7 @@ class DatasetQuery{
     countAnnotatedResourcesWithProp(endpointParameters, graphName, rconfig, resourceType, propertyURI, inNewDataset) {
         let self = this;
         let type = resourceType ? [resourceType] : rconfig.resourceFocusType;
-        let targetGraph = graphName;
-        if(inNewDataset){
-            targetGraph = inNewDataset;
-        }
-        let {gStart, gEnd} = this.prepareGraphName(targetGraph);
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
         let rconfig2 = {};
         rconfig2 = rconfig;
         rconfig2.resourceFocusType = type;
