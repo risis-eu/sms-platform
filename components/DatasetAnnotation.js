@@ -125,7 +125,7 @@ class DatasetAnnotation extends React.Component {
         let user = this.context.getUser();
         let allowChangingNewDataset= false;
         //only admin can change the random new dataset!
-        if (user || parseInt(user.isSuperUser)) {
+        if (user && (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1)) {
             allowChangingNewDataset = true;
         }
         if(enableAuthentication && !user){

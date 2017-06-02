@@ -146,10 +146,10 @@ class DatasetGeoEnrichment extends React.Component {
         let optionsList, dss = this.props.DatasetsStore.datasetsList;
         let self = this, errorDIV='', formDIV='';
         let user = this.context.getUser();
-        allowChaningNewDataset= false;
+        let allowChangingNewDataset= false;
         //only admin can change the random new dataset!
-        if (user || parseInt(user.isSuperUser)) {
-            allowChaningNewDataset = true;
+        if (user && (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1)) {
+            allowChangingNewDataset = true;
         }
         if(enableAuthentication && !user){
             errorDIV = <div className="ui warning message"><div className="header"> Please <a href="/register">Register</a> or <a href="/login">Login</a> to see the datasets.</div></div>;
@@ -233,7 +233,7 @@ class DatasetGeoEnrichment extends React.Component {
                     </Form.Group>
                 </div>
                 <Divider hidden />
-                {allowChaningNewDataset && this.state.storeInNewDataset ?
+                {allowChangingNewDataset && this.state.storeInNewDataset ?
                     <input ref="newDatasetInput" type="text" value={this.state.storingDataset} placeholder="Add URI of the new dataset" onChange={this.handleNewDatasetChange.bind(this)} />
                 : ''}
                 <Divider hidden />
