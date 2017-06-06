@@ -388,15 +388,15 @@ export default {
                     //send request
                     rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                         callback(null, {
-                            datasetURI: datasetURI,
+                            datasetURI: targetDataset,
                             resourceType : resourceType ? [resourceType] : rconfig.resourceFocusType,
                             propertyURI: propertyURI,
-                            graphName: graphName,
+                            graphName: endpointParameters.graphName,
                             annotated: utilObject.parseCountAnnotatedResourcesWithProp(res)
                         });
                     }).catch(function (err) {
                         console.log(err);
-                        callback(null, {datasetURI: datasetURI, propertyURI: propertyURI, annotated: 0});
+                        callback(null, {datasetURI: targetDataset, propertyURI: propertyURI, annotated: 0});
                     });
                 });
             });
