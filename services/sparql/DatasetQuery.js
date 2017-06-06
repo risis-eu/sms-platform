@@ -305,7 +305,6 @@ class DatasetQuery{
             this.query = `
             SELECT DISTINCT ?resource ?objectValue ${existingCoordsStS} WHERE {
                 {
-                    GRAPH <${inNewDataset}> {
                         {
                             SELECT DISTINCT ?resource ?objectValue ${existingCoordsStS} WHERE {
                                     ${gStart}
@@ -313,12 +312,13 @@ class DatasetQuery{
                                         ?resource ${self.filterPropertyPath(propertyURI)} ?objectValue .
                                         ${existingCoordsStQ}
                                     ${gEnd}
+                                    GRAPH <${inNewDataset}> {
+                                        filter not exists {
+                                            ${notExistFilterSt}
+                                        }
+                                    }
                             } LIMIT ${limit} OFFSET ${offset}
                         }
-                        filter not exists {
-                            ${notExistFilterSt}
-                        }
-                    }
                 }
             }
             `;
