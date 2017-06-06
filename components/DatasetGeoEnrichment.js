@@ -102,7 +102,8 @@ class DatasetGeoEnrichment extends React.Component {
                 resourceType: self.state.resourceType,
                 propertyURI: self.state.propertyURI,
                 boundarySource: self.state.boundarySource,
-                inANewDataset: self.state.storingDataset
+                inANewDataset: self.state.storingDataset,
+                storingDataset: self.state.storingDataset
             });
             if(self.props.DatasetGeoEnrichmentStore.stats.annotated && self.props.DatasetGeoEnrichmentStore.stats.annotated===self.props.DatasetGeoEnrichmentStore.stats.total){
                 clearInterval(intervalId);
