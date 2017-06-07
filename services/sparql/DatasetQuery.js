@@ -317,7 +317,7 @@ class DatasetQuery{
                                             ${notExistFilterSt}
                                         }
                                     }
-                            } LIMIT ${limit} OFFSET ${offset}
+                            } LIMIT ${limit}
                         }
                 }
             }
@@ -334,7 +334,7 @@ class DatasetQuery{
                     }
                 ${gEnd}
             }
-            LIMIT ${limit} OFFSET ${offset}
+            LIMIT ${limit}
             `;
         }
         //console.log(this.prefixes + this.query);

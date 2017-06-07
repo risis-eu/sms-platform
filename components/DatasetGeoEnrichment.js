@@ -16,7 +16,7 @@ import countGeoEnrichedResourcesWithProp from '../actions/countGeoEnrichedResour
 class DatasetGeoEnrichment extends React.Component {
     constructor(props){
         super(props);
-        this.state = {storingDataset: '', datasetURI: '', resourceType: '', propertyURI: '', longPropertyURI: '', latPropertyURI: '', countryPropertyURI: '', annotationMode: 0, storeInNewDataset : false, boundarySource: 'GADM', hasCoords: false};
+        this.state = {storingDataset: '', datasetURI: '', resourceType: '', propertyURI: '', longPropertyURI: '', latPropertyURI: '', countryPropertyURI: '', annotationMode: 0, storeInNewDataset : false, boundarySource: 'GADM', hasCoords: false, noDynamicConfig: 0};
     }
     componentDidMount() {
     }
@@ -78,9 +78,9 @@ class DatasetGeoEnrichment extends React.Component {
             if(baseResourceDomain[0].slice(-1) === '/'){
                 newDatasetURI = baseResourceDomain[0] + 'gestore' + Math.round(+new Date() / 1000);
             }
-            this.setState({storeInNewDataset: true, storingDataset: newDatasetURI});
+            this.setState({storeInNewDataset: true, storingDataset: newDatasetURI, noDynamicConfig: 0});
         }else{
-            this.setState({storeInNewDataset: false, storingDataset: ''});
+            this.setState({storeInNewDataset: false, storingDataset: '', noDynamicConfig: 0});
         }
     }
     handleIsGeocodedCheckBox(e, t){
@@ -103,7 +103,8 @@ class DatasetGeoEnrichment extends React.Component {
                 propertyURI: self.state.propertyURI,
                 boundarySource: self.state.boundarySource,
                 inANewDataset: self.state.storingDataset,
-                storingDataset: self.state.storingDataset
+                storingDataset: self.state.storingDataset,
+                noDynamicConfig: self.state.noDynamicConfig
             });
             if(self.props.DatasetGeoEnrichmentStore.stats.annotated && self.props.DatasetGeoEnrichmentStore.stats.annotated===self.props.DatasetGeoEnrichmentStore.stats.total){
                 clearInterval(intervalId);
@@ -141,7 +142,7 @@ class DatasetGeoEnrichment extends React.Component {
         return label;
     }
     handleNewDatasetChange(event) {
-        this.setState({storingDataset: event.target.value});
+        this.setState({storingDataset: event.target.value, noDynamicConfig: 1});
     }
     render() {
         let optionsList, dss = this.props.DatasetsStore.datasetsList;
