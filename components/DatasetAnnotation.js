@@ -154,6 +154,7 @@ class DatasetAnnotation extends React.Component {
                 }
             });
         }
+
         if(enableAuthentication && !this.state.annotationMode && !user){
             errorDIV = <div className="ui warning message"><div className="header"> Please <a href="/register">Register</a> or <a href="/login">Login</a> to see the datasets.</div></div>;
         }else{
@@ -163,6 +164,7 @@ class DatasetAnnotation extends React.Component {
                 errorDIV = <div className="ui warning message"><div className="header"> No dataset found for annotations!</div></div>;
             }
         }
+
         let tagsDIV = self.generateTagArray(this.props.DatasetAnnotationStore.tags).map((node, index)=>{
             return (<div className='ui basic label' key={index}><a href={node.uri} target="_blank">{node.text}</a> ({node.count})</div>);
         });
