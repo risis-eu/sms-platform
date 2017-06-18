@@ -79,14 +79,14 @@ class UsersList extends React.Component {
                 if(node.v !== user.id && !parseInt(node.isSuperUser)){
                     i++;
                     return (
-                      <div className="item fadeIn" key={index}>
-                          <div className="ui horizontal list">
-                              <NavLink className="item" routeName="resource" href={'/dataset/'+ encodeURIComponent(currentComponent.props.UserStore.graphName) +'/resource/' + encodeURIComponent(node.v)} >
-                              <div className="content"> <span className="ui black circular label">{i}</span> <i className={dbClass}></i> {node.firstName} {node.lastName} ({node.username}) {DSODIV} {PRBDIV} {FCBDIV} {SMSTEAMDIV} {SMSVISITOR} </div>
-                              </NavLink>
-                               {actBtn}
-                          </div>
-                      </div>
+                        <div className="item fadeIn" key={index}>
+                            <div className="ui horizontal list">
+                                <NavLink className="item" routeName="resource" href={'/dataset/'+ encodeURIComponent(currentComponent.props.UserStore.graphName) +'/resource/' + encodeURIComponent(node.v)} >
+                                    <div className="content"> <span className="ui black circular label">{i}</span> <i className={dbClass}></i> {node.firstName} {node.lastName} ({node.username}) {DSODIV} {PRBDIV} {FCBDIV} {SMSTEAMDIV} {SMSVISITOR} </div>
+                                </NavLink>
+                                {actBtn}
+                            </div>
+                        </div>
                     )
                 }
             });
@@ -112,8 +112,8 @@ class UsersList extends React.Component {
                                     : ''}
                             </div>
                         </div>
-                  </div>
-              </div>
+                    </div>
+                </div>
             </div>
         );
     }

@@ -61,10 +61,10 @@ class DatasetMetadata extends React.Component {
                 <div className="item">
                     <div  className="medium ui basic icon labeled button" onClick={this.props.onCreateResource.bind(this, this.props.datasetURI)}>
                         <i className="cube square large blue icon "></i> <i className="add black icon"></i> Add a New Resource
-                        </div>
                     </div>
+                </div>
                 <br/>
-             </div>;
+            </div>;
         }
         return (
             <div className="ui fluid container ldr-padding" ref="DatasetMetadata">

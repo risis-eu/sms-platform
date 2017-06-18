@@ -56,11 +56,11 @@ class MediaTypeInput extends React.Component {
         }else{
             let optionList = this.buildOptions(list);
             output = <div className="field">
-                                <select className="ui search dropdown" ref="mediaTypeInputSelect" value={this.state.value} onChange={this.handleChange.bind(this)}>
-                                    {optionList}
-                                    {(this.props.config.allowUserDefinedValue? <option value="other"> **Other** </option>: '' )}
-                                </select>
-                     </div>
+                <select className="ui search dropdown" ref="mediaTypeInputSelect" value={this.state.value} onChange={this.handleChange.bind(this)}>
+                    {optionList}
+                    {(this.props.config.allowUserDefinedValue? <option value="other"> **Other** </option>: '' )}
+                </select>
+            </div>
         }
         return (
             <div className="content ui form" ref="mediaTypeInput">

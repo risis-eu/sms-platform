@@ -184,23 +184,23 @@ class Datasets extends React.Component {
         }else{
             if(enableAddingNewDatasets){
                 createDatasetDIV = <div className="item">
-                        <div  className={'medium ui basic icon labeled button ' + (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1 ? '': 'disabled')} onClick={this.handleCreateDataset.bind(this)}>
-                            <i className="cubes square large blue icon "></i> <i className="add black icon"></i>Add a New Dataset
-                        </div>
-                 </div>;
+                    <div  className={'medium ui basic icon labeled button ' + (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1 ? '': 'disabled')} onClick={this.handleCreateDataset.bind(this)}>
+                        <i className="cubes square large blue icon "></i> <i className="add black icon"></i>Add a New Dataset
+                    </div>
+                </div>;
             }
             if(enableDatasetAnnotation){
                 annotateDatasetDIV = <div className="item">
-                        <a  className={'medium ui basic icon labeled button ' + (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1 ? '': 'disabled')} href="/annotateDataset">
-                            <i className="cubes square large blue icon "></i> <i className="hashtag black icon"></i>Annotate a Dataset
-                        </a>
+                    <a  className={'medium ui basic icon labeled button ' + (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1 ? '': 'disabled')} href="/annotateDataset">
+                        <i className="cubes square large blue icon "></i> <i className="hashtag black icon"></i>Annotate a Dataset
+                    </a>
                 </div>;
             }
             if(enableDatasetGeoEnrichment){
                 geoEnrichDatasetDIV = <div className="item">
-                        <a  className={'medium ui basic icon labeled button ' + (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1 ? '': 'disabled')} href="/geoEnrichDataset">
-                            <i className="cubes square large blue icon "></i> <i className="marker black icon"></i>Geo-enrich a Dataset
-                        </a>
+                    <a  className={'medium ui basic icon labeled button ' + (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1 ? '': 'disabled')} href="/geoEnrichDataset">
+                        <i className="cubes square large blue icon "></i> <i className="marker black icon"></i>Geo-enrich a Dataset
+                    </a>
                 </div>;
             }
             datasetActionsDIV = <div className="ui horizontal divided list">
@@ -284,10 +284,10 @@ class Datasets extends React.Component {
                     }
                     if(ds.d !== 'metadata'){
                         return <div className="ui item" key={ds.d}> <div className="content"> <i className={'ui icon ' + dsIcon + color}></i> {dsLink} {ds.features && ds.features.resourceFocusType ? <span className="ui small circular label"> {self.prepareFocusList(ds.features.resourceFocusType)} </span> : ''}
-                        {ds.features && ds.features.isBrowsable ? brwsLink : ''} {ds.features && ds.features.metadata ? <a className="ui basic grey label rounded" href={ds.features.metadata} title="metadata" target="_blank"><i className="info icon"></i>metadata</a> : ''}
-                        {ds.features && ds.features.isStaticDynamic ? <i className="ui brown theme icon" title="loaded from both static and dynamic config"></i> :''}
-                        {ds.features && ds.features.isDynamic && !ds.features.isStaticDynamic ? <i className="ui orange theme icon" title="loaded from dynamic config"></i> :''}
-                        {ds.features && ds.features.isDefaultDataset ? <i className="ui teal flag icon" title="default dataset"></i> :''}</div> </div>;
+                            {ds.features && ds.features.isBrowsable ? brwsLink : ''} {ds.features && ds.features.metadata ? <a className="ui basic grey label rounded" href={ds.features.metadata} title="metadata" target="_blank"><i className="info icon"></i>metadata</a> : ''}
+                            {ds.features && ds.features.isStaticDynamic ? <i className="ui brown theme icon" title="loaded from both static and dynamic config"></i> :''}
+                            {ds.features && ds.features.isDynamic && !ds.features.isStaticDynamic ? <i className="ui orange theme icon" title="loaded from dynamic config"></i> :''}
+                            {ds.features && ds.features.isDefaultDataset ? <i className="ui teal flag icon" title="default dataset"></i> :''}</div> </div>;
                     }
                 });
             }
@@ -397,137 +397,137 @@ class Datasets extends React.Component {
                                         <td>
                                         </td>
                                     </tr>
-                                <tr>
-                                    <td colSpan="7">
+                                    <tr>
+                                        <td colSpan="7">
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <br/>
-                                        <br/>
-                                        <br/>
-                                        <br/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div style={{cursor: 'pointer', minHeight: 200, minWidth: 160}} className={containerOrgsClass} ref="containerOrgs" onMouseOver={this.handleMouseOver.bind(this, 'orgs')} onMouseOut={this.handleMouseOut.bind(this, 'orgs')} onClick={this.handleMouseClick.bind(this, 'orgs')}>
-                                            <div className="ui top left attached small label">{dsCategoryObj.orgs.length}</div>
+                                            <br/>
+                                            <br/>
+                                            <br/>
+                                            <br/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div style={{cursor: 'pointer', minHeight: 200, minWidth: 160}} className={containerOrgsClass} ref="containerOrgs" onMouseOver={this.handleMouseOver.bind(this, 'orgs')} onMouseOut={this.handleMouseOut.bind(this, 'orgs')} onClick={this.handleMouseClick.bind(this, 'orgs')}>
+                                                <div className="ui top left attached small label">{dsCategoryObj.orgs.length}</div>
                                             Organizations
-                                            <br/>
-                                            <div className="ui inverted disabled black small circular label">Geo</div>
+                                                <br/>
+                                                <div className="ui inverted disabled black small circular label">Geo</div>
                                             </div>
-                                    </td>
-                                    <td>
+                                        </td>
+                                        <td>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    </td>
-                                    <td>
-                                        <div style={{cursor: 'pointer', minHeight: 200, minWidth: 160}} className={containerProjectslass} ref="containerProjects" onMouseOver={this.handleMouseOver.bind(this, 'projects')} onMouseOut={this.handleMouseOut.bind(this, 'projects')} onClick={this.handleMouseClick.bind(this, 'projects')}>
-                                            <div className="ui top left attached small label">{dsCategoryObj.projects.length}</div>
+                                        </td>
+                                        <td>
+                                            <div style={{cursor: 'pointer', minHeight: 200, minWidth: 160}} className={containerProjectslass} ref="containerProjects" onMouseOver={this.handleMouseOver.bind(this, 'projects')} onMouseOut={this.handleMouseOut.bind(this, 'projects')} onClick={this.handleMouseClick.bind(this, 'projects')}>
+                                                <div className="ui top left attached small label">{dsCategoryObj.projects.length}</div>
                                             Projects
-                                            <br/>
-                                            <div className="ui inverted disabled black small circular label">Geo</div>
+                                                <br/>
+                                                <div className="ui inverted disabled black small circular label">Geo</div>
                                             </div>
-                                    </td>
-                                    <td>
+                                        </td>
+                                        <td>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    </td>
-                                    <td>
-                                        <div style={{cursor: 'pointer', minHeight: 200, minWidth: 160}} className={containerGeoBoundariesClass} ref="containerGeoBoundaries" onMouseOver={this.handleMouseOver.bind(this, 'geoBoundaries')} onMouseOut={this.handleMouseOut.bind(this, 'geoBoundaries')} onClick={this.handleMouseClick.bind(this, 'geoBoundaries')}>
-                                            <div className="ui top left attached small label">{dsCategoryObj.geoBoundaries.length}</div>
-                                            <span style={{color: '#000'}}>Geo Boundaries</span>
-                                        </div>
-                                    </td>
-                                    <td>
+                                        </td>
+                                        <td>
+                                            <div style={{cursor: 'pointer', minHeight: 200, minWidth: 160}} className={containerGeoBoundariesClass} ref="containerGeoBoundaries" onMouseOver={this.handleMouseOver.bind(this, 'geoBoundaries')} onMouseOut={this.handleMouseOut.bind(this, 'geoBoundaries')} onClick={this.handleMouseClick.bind(this, 'geoBoundaries')}>
+                                                <div className="ui top left attached small label">{dsCategoryObj.geoBoundaries.length}</div>
+                                                <span style={{color: '#000'}}>Geo Boundaries</span>
+                                            </div>
+                                        </td>
+                                        <td>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    </td>
-                                    <td>
-                                        <div style={{cursor: 'pointer'}} className={containerOthersClass} ref="containerOthers" onMouseOver={this.handleMouseOver.bind(this, 'others')} onMouseOut={this.handleMouseOut.bind(this, 'others')} onClick={this.handleMouseClick.bind(this, 'others')}>
-                                            <div className="ui top left attached small label">{dsCategoryObj.others.length}</div>
+                                        </td>
+                                        <td>
+                                            <div style={{cursor: 'pointer'}} className={containerOthersClass} ref="containerOthers" onMouseOver={this.handleMouseOver.bind(this, 'others')} onMouseOut={this.handleMouseOut.bind(this, 'others')} onClick={this.handleMouseClick.bind(this, 'others')}>
+                                                <div className="ui top left attached small label">{dsCategoryObj.others.length}</div>
                                             Other Entity Types
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colSpan="7">
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <br/>
-                                        <br/>
-                                        <br/>
-                                        <br/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div style={{cursor: 'pointer', minHeight: 200, minWidth: 160}} className={containerPersonsClass} ref="containerPersons" onMouseOver={this.handleMouseOver.bind(this, 'persons')} onMouseOut={this.handleMouseOut.bind(this, 'persons')} onClick={this.handleMouseClick.bind(this, 'persons')}>
-                                            <div className="ui top left attached small label">{dsCategoryObj.persons.length}</div>
-                                            Persons
-                                            <br/>
-                                            <div className="ui inverted disabled black small circular label">Geo</div>
                                             </div>
-                                    </td>
-                                    <td>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan="7">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <br/>
+                                            <br/>
+                                            <br/>
+                                            <br/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div style={{cursor: 'pointer', minHeight: 200, minWidth: 160}} className={containerPersonsClass} ref="containerPersons" onMouseOver={this.handleMouseOver.bind(this, 'persons')} onMouseOut={this.handleMouseOut.bind(this, 'persons')} onClick={this.handleMouseClick.bind(this, 'persons')}>
+                                                <div className="ui top left attached small label">{dsCategoryObj.persons.length}</div>
+                                            Persons
+                                                <br/>
+                                                <div className="ui inverted disabled black small circular label">Geo</div>
+                                            </div>
+                                        </td>
+                                        <td>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    </td>
-                                    <td>
-                                        <div style={{cursor: 'pointer', minHeight: 200, minWidth: 160}} className={containerPublicationsClass} ref="containerPublications" onMouseOver={this.handleMouseOver.bind(this, 'publications')} onMouseOut={this.handleMouseOut.bind(this, 'publications')} onClick={this.handleMouseClick.bind(this, 'publications')}>
-                                            <div className="ui top left attached small label">{dsCategoryObj.publications.length}</div>
+                                        </td>
+                                        <td>
+                                            <div style={{cursor: 'pointer', minHeight: 200, minWidth: 160}} className={containerPublicationsClass} ref="containerPublications" onMouseOver={this.handleMouseOver.bind(this, 'publications')} onMouseOut={this.handleMouseOut.bind(this, 'publications')} onClick={this.handleMouseClick.bind(this, 'publications')}>
+                                                <div className="ui top left attached small label">{dsCategoryObj.publications.length}</div>
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Publications&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        </div>
-                                    </td>
-                                    <td>
+                                            </div>
+                                        </td>
+                                        <td>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    </td>
-                                    <td>
-                                        <div style={{cursor: 'pointer', minHeight: 200, minWidth: 160}} className={containerGeoStatsClass} ref="containerGeoStats" onMouseOver={this.handleMouseOver.bind(this, 'geoStats')} onMouseOut={this.handleMouseOut.bind(this, 'geoStats')} onClick={this.handleMouseClick.bind(this, 'geoStats')}>
-                                            <div className="ui top left attached small label">{dsCategoryObj.geoStats.length}</div>
-                                            <span style={{color: '#000'}}>Geo Statistical Data</span>
-                                        </div>
-                                    </td>
-                                    <td>
+                                        </td>
+                                        <td>
+                                            <div style={{cursor: 'pointer', minHeight: 200, minWidth: 160}} className={containerGeoStatsClass} ref="containerGeoStats" onMouseOver={this.handleMouseOver.bind(this, 'geoStats')} onMouseOut={this.handleMouseOut.bind(this, 'geoStats')} onClick={this.handleMouseClick.bind(this, 'geoStats')}>
+                                                <div className="ui top left attached small label">{dsCategoryObj.geoStats.length}</div>
+                                                <span style={{color: '#000'}}>Geo Statistical Data</span>
+                                            </div>
+                                        </td>
+                                        <td>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    </td>
-                                    <td>
+                                        </td>
+                                        <td>
 
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colSpan="7">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colSpan="7">
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <br/>
-                                        <br/>
-                                        <br/>
-                                        <br/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
+                                            <br/>
+                                            <br/>
+                                            <br/>
+                                            <br/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
 
-                                    </td>
-                                    <td>
+                                        </td>
+                                        <td>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    </td>
-                                    <td>
-                                        <div style={{cursor: 'pointer', minHeight: 200, minWidth: 160}} className={containerPatentsClass} ref="containerPatents" onMouseOver={this.handleMouseOver.bind(this, 'patents')} onMouseOut={this.handleMouseOut.bind(this, 'patents')} onClick={this.handleMouseClick.bind(this, 'patents')}>
-                                            <div className="ui top left attached small label">{dsCategoryObj.patents.length}</div>
+                                        </td>
+                                        <td>
+                                            <div style={{cursor: 'pointer', minHeight: 200, minWidth: 160}} className={containerPatentsClass} ref="containerPatents" onMouseOver={this.handleMouseOver.bind(this, 'patents')} onMouseOut={this.handleMouseOut.bind(this, 'patents')} onClick={this.handleMouseClick.bind(this, 'patents')}>
+                                                <div className="ui top left attached small label">{dsCategoryObj.patents.length}</div>
                                             Patents
-                                        </div>
-                                    </td>
-                                    <td>
+                                            </div>
+                                        </td>
+                                        <td>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    </td>
-                                    <td>
+                                        </td>
+                                        <td>
 
-                                    </td>
-                                    <td>
+                                        </td>
+                                        <td>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    </td>
-                                    <td>
+                                        </td>
+                                        <td>
 
-                                    </td>
-                                </tr>
-                            </tbody>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
 
                             {errorDIV ? '' :
-                            <h2><span className="ui big black circular label">{dss.length}</span> Datasets { self.state.selectedList.length ? <span className="ui tag label">{self.state.selectedList.join(', ')}</span> : ''}</h2>
+                                <h2><span className="ui big black circular label">{dss.length}</span> Datasets { self.state.selectedList.length ? <span className="ui tag label">{self.state.selectedList.join(', ')}</span> : ''}</h2>
                             }
 
                             <div className="ui big divided list" id="datasetsList">
@@ -537,14 +537,14 @@ class Datasets extends React.Component {
                                 {datasetActionsDIV}
                             </div>
                             {dss.length ?
-                            <div className="ui grey message form">
-                                <select ref="datasetURI" className="ui search dropdown">
-                                    {optionsList}
-                                </select>
-                                <input ref="resourceURI" type="text" className="input" placeholder="Enter the URI of the resource e.g. http://dbpedia.org/resource/VU_University_Amsterdam"/>
-                                <button className="fluid ui primary button" onClick={this.displayResource.bind(this)}>Display resource in the selected dataset</button>
-                            </div>
-                             : ''}
+                                <div className="ui grey message form">
+                                    <select ref="datasetURI" className="ui search dropdown">
+                                        {optionsList}
+                                    </select>
+                                    <input ref="resourceURI" type="text" className="input" placeholder="Enter the URI of the resource e.g. http://dbpedia.org/resource/VU_University_Amsterdam"/>
+                                    <button className="fluid ui primary button" onClick={this.displayResource.bind(this)}>Display resource in the selected dataset</button>
+                                </div>
+                                : ''}
                         </div>
                     </div>
                 </div>

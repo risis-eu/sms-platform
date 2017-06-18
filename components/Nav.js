@@ -44,31 +44,24 @@ class Nav extends React.Component {
         return (
             <div className="ui fluid container" ref="defaultNavbar">
                 <nav ref="defaultNavbar" className="ui blue menu inverted navbar stackable grid">
-                        <NavLink routeName="home" className="brand item" href='/'>
-                            {this.props.loading ? <img src="/assets/img/loader.gif" alt="loading..." style={{height: 30, width: 30}} /> : <img style={{height: 22, width: 35}} className="ui mini image" src="/assets/img/sms_logo_t.png" alt="SMS" />}
+                    <NavLink routeName="home" className="brand item" href='/'>
+                        {this.props.loading ? <img src="/assets/img/loader.gif" alt="loading..." style={{height: 30, width: 30}} /> : <img style={{height: 22, width: 35}} className="ui mini image" src="/assets/img/sms_logo_t.png" alt="SMS" />}
+                    </NavLink>
+                    <a className="item" href="/"> SMS Platform</a>
+                    <NavLink routeName="metadataList" className="item" href="/metadataList"> Metadata Editor</NavLink>
+                    <NavLink routeName="datasets" className="item" href="/datasets"> Datasets</NavLink>
+                    <div className="right menu">
+                        <NavLink routeName="contact" className="item" href="/contact" title="contact us">
+                            <i className="medium mail outline icon"></i>
                         </NavLink>
-                        <a className="item" href="/"> SMS Platform</a>
-                        <NavLink routeName="metadataList" className="item" href="/metadataList"> Metadata Editor</NavLink>
-                        <NavLink routeName="datasets" className="item" href="/datasets"> Datasets</NavLink>
-                        <div className="right menu">
-                            <NavLink routeName="contact" className="item" href="/contact" title="contact us">
-                                <i className="medium mail outline icon"></i>
-                            </NavLink>
-                            <div className="item link" onClick={this.showHelpModal} title="help">
-                                    <i className="medium help circle icon"></i>
-                            </div>
-                            {(showSettings && (enableDynamicReactorConfiguration || enableDynamicServerConfiguration || enableDynamicfacetsConfiguration)) ?
-                                configMenu
-                            : ''}
-                            {userMenu}
+                        <div className="item link" onClick={this.showHelpModal} title="help">
+                            <i className="medium help circle icon"></i>
                         </div>
-                        {(enableDynamicReactorConfiguration || enableDynamicServerConfiguration || enableDynamicfacetsConfiguration) ?
+                        {(showSettings && (enableDynamicReactorConfiguration || enableDynamicServerConfiguration || enableDynamicfacetsConfiguration)) ?
                             configMenu
                             : ''}
-                        <a href="http://github.com/ali1k/ld-r" className="ui item link">
-                            <i className="github circle icon"></i> Github
-                        </a>
                         {userMenu}
+                    </div>
                 </nav>
             </div>
         );

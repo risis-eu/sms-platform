@@ -22,7 +22,7 @@ class DataQuery{
     }
     //-----------RISIS------------
     getDatasetsList(graph) {
-      /*jshint multistr: true */
+        /*jshint multistr: true */
         this.query = '\
       SELECT DISTINCT ?dataset ?metadata ?title ?description WHERE { \
         { \
@@ -76,7 +76,7 @@ class DataQuery{
         return this.prefixes + this.query;
     }
     getDatasetEntity(graph, entityURI) {
-      /*jshint multistr: true */
+        /*jshint multistr: true */
         this.query = '\
       SELECT DISTINCT ?property ?object WHERE { \
         { \

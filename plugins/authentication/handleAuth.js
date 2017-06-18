@@ -152,7 +152,7 @@ module.exports = function handleAuthentication(server) {
             }
         }
     });
-//-----------------------end OAuth----------------------------
+    //-----------------------end OAuth----------------------------
     server.post('/login', function(req, res, next) {
         let redirectTo = req.session.redirectTo ? req.session.redirectTo : '/';
         delete req.session.redirectTo;

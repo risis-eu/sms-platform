@@ -237,7 +237,7 @@ class DatasetGeoEnrichment extends React.Component {
                 <Divider hidden />
                 {allowChangingNewDataset && this.state.storeInNewDataset ?
                     <input ref="newDatasetInput" type="text" value={this.state.storingDataset} placeholder="Add URI of the new dataset" onChange={this.handleNewDatasetChange.bind(this)} />
-                : ''}
+                    : ''}
                 <Divider hidden />
                 <div className='ui big blue button' onClick={this.handleAnnotateDataset.bind(this)}>Geo-enrich  Dataset</div>
                 <Divider hidden />
@@ -263,16 +263,16 @@ class DatasetGeoEnrichment extends React.Component {
                             Enriched {this.props.DatasetGeoEnrichmentStore.stats.annotated} out of {this.props.DatasetGeoEnrichmentStore.stats.total} items <a className="ui button mini circular" onClick={this.handleAnnotateDataset.bind(this)}><i className="ui icon blue refresh"></i> refresh</a>
                         </Progress>
                         <div className="ui raised stacked segments">
-                          <div className="ui secondary compact segment">
-                            <a href={'/dataset/' + encodeURIComponent(this.state.datasetURI) + '/resource/'+encodeURIComponent(this.props.DatasetGeoEnrichmentStore.currentID)} target="_blank">{this.props.DatasetGeoEnrichmentStore.currentID}</a>
-                          </div>
-                          <div className="ui compact segment">
+                            <div className="ui secondary compact segment">
+                                <a href={'/dataset/' + encodeURIComponent(this.state.datasetURI) + '/resource/'+encodeURIComponent(this.props.DatasetGeoEnrichmentStore.currentID)} target="_blank">{this.props.DatasetGeoEnrichmentStore.currentID}</a>
+                            </div>
+                            <div className="ui compact segment">
                             address: <b>{this.props.DatasetGeoEnrichmentStore.currentText}</b>
-                            <br/>
+                                <br/>
                             formatted: <b>{this.props.DatasetGeoEnrichmentStore.formattedText}</b>
-                            <br/>
-                            <BasicMapView spec={{value: this.props.DatasetGeoEnrichmentStore.geometry}} config={{mapWidth: 200, mapHeight:200}} />
-                          </div>
+                                <br/>
+                                <BasicMapView spec={{value: this.props.DatasetGeoEnrichmentStore.geometry}} config={{mapWidth: 200, mapHeight:200}} />
+                            </div>
                         </div>
                     </div>
                 }
@@ -283,14 +283,14 @@ class DatasetGeoEnrichment extends React.Component {
         }
         return (
             <div className="ui fluid container ldr-padding-more" ref="datasets">
-            <div className="ui grid">
-                <div className="ui column">
-                    <h2>Geo-enrich dataset</h2>
-                    {errorDIV}
-                    {formDIV}
-                    {progressDIV}
+                <div className="ui grid">
+                    <div className="ui column">
+                        <h2>Geo-enrich dataset</h2>
+                        {errorDIV}
+                        {formDIV}
+                        {progressDIV}
+                    </div>
                 </div>
-            </div>
             </div>
         );
     }

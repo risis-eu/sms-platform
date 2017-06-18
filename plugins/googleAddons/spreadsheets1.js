@@ -755,7 +755,7 @@ function exportPointsGeoJSON() {
     var locationInfo = locSheet.getRange(2, 1, locSheet.getLastRow() - 1, locSheet.getLastColumn() - 1).getValues();
     for (var i = 0; i < locationInfo.length; i++) {
         checkIfValue = locSheet.getRange(i + 2, 1, 1, 4).getValues();
-            //only send requests for the ones which are not processed yet
+        //only send requests for the ones which are not processed yet
         if (checkIfValue[0][2] == '') {
             continue;
         };

@@ -33,7 +33,7 @@ class DatasetQuery{
         `;
         return this.prefixes + this.query;
     }
-//--------------------------------
+    //--------------------------------
     prepareGraphName(graphName){
         let gStart = 'GRAPH <'+ graphName +'> { ';
         let gEnd = ' } ';

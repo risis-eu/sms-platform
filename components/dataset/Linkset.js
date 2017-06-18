@@ -65,15 +65,15 @@ class Linkset extends React.Component {
                         <Accordion panels={spanels} styled />
                     </div>
                     <div className="column">
-                            <Dropdown className="ui button" fluid search text={self.state.relations[index] ? self.state.relations[index] : 'Same As'}>
-                              <Dropdown.Menu>
+                        <Dropdown className="ui button" fluid search text={self.state.relations[index] ? self.state.relations[index] : 'Same As'}>
+                            <Dropdown.Menu>
                                 <Dropdown.Item text='Same As' onClick={self.handleRel.bind(self, index,'Same As')}/>
                                 <Dropdown.Item text='->Broader than' onClick={self.handleRel.bind(self, index,'->Broader than')}/>
                                 <Dropdown.Item text='Broader than<-' onClick={self.handleRel.bind(self, index,'Broader than<-')}/>
                                 <Dropdown.Item text='Narrower than<-' onClick={self.handleRel.bind(self, index,'Narrower than<-')}/>
                                 <Dropdown.Item text='->Narrower than' onClick={self.handleRel.bind(self, index,'->Narrower than')}/>
-                              </Dropdown.Menu>
-                            </Dropdown>
+                            </Dropdown.Menu>
+                        </Dropdown>
                     </div>
                     <div className="column" >
                         <Accordion panels={tpanels} styled />
@@ -83,8 +83,8 @@ class Linkset extends React.Component {
         });
         return (
             <div className="ui fluid container ldr-padding-more" ref="linkset">
-            <div className="ui three column centered grid">
-                <h3><span className="ui big black circular label">{this.addCommas(this.props.LinksetStore.dataset.total)}</span> Links found.</h3>
+                <div className="ui three column centered grid">
+                    <h3><span className="ui big black circular label">{this.addCommas(this.props.LinksetStore.dataset.total)}</span> Links found.</h3>
                     <div className="row">
                         <div className="column right attached" >
                             <a className="ui blue fluid button">{this.props.LinksetStore.dataset.source}</a>
@@ -96,8 +96,8 @@ class Linkset extends React.Component {
                             <a className="ui green fluid button">{this.props.LinksetStore.dataset.target}</a>
                         </div>
                     </div>
-                {list}
-            </div>
+                    {list}
+                </div>
             </div>
         );
     }
