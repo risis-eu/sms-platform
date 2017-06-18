@@ -27,13 +27,13 @@ class Nav extends React.Component {
         if(enableAuthentication){
             if(user){
                 userMenu = <div className="ui right dropdown item">
-                                {user.accountName} <i className="dropdown icon"></i>
-                                <div className="menu">
-                                    <NavLink className="item" routeName="resource" href={'/dataset/' + encodeURIComponent(user.datasetURI) + '/resource/' + encodeURIComponent(user.id)}>Profile</NavLink>
-                                    {parseInt(user.isSuperUser) ? <NavLink className="item" routeName="users" href="/users">Users List</NavLink> : ''}
-                                    <a href="/logout" className="item">Logout</a>
-                                </div>
-                            </div>;
+                    {user.accountName} <i className="dropdown icon"></i>
+                    <div className="menu">
+                        <NavLink className="item" routeName="resource" href={'/dataset/' + encodeURIComponent(user.datasetURI) + '/resource/' + encodeURIComponent(user.id)}>Profile</NavLink>
+                        {parseInt(user.isSuperUser) ? <NavLink className="item" routeName="users" href="/users">Users List</NavLink> : ''}
+                        <a href="/logout" className="item">Logout</a>
+                    </div>
+                </div>;
             }else{
                 configMenu = '';
 
@@ -62,6 +62,13 @@ class Nav extends React.Component {
                             : ''}
                             {userMenu}
                         </div>
+                        {(enableDynamicReactorConfiguration || enableDynamicServerConfiguration || enableDynamicfacetsConfiguration) ?
+                            configMenu
+                            : ''}
+                        <a href="http://github.com/ali1k/ld-r" className="ui item link">
+                            <i className="github circle icon"></i> Github
+                        </a>
+                        {userMenu}
                 </nav>
             </div>
         );
