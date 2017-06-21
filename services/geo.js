@@ -30,6 +30,9 @@ export default {
     // At least one of the CRUD methods is Required
     read: (req, resource, params, config, callback) => {
         if(resource === 'geo.googleGeocode'){
+            if(!params.addr){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Missing parameters!'}}); return 0;
+            }
             let address = encodeURIComponent(decodeURIComponent(params.addr));
             let apiURI = 'https://maps.googleapis.com/maps/api/geocode/json?address='+address+'&key=' + params.apiKey;
             //start to get it from the cache
@@ -66,6 +69,56 @@ export default {
                                 console.log(err);
                                 callback(null, {
                                     address: params.addr,
+                                    resources: {results: []}
+                                });
+                            });
+                        }
+                    });
+                }
+            });
+        } else if(resource === 'geo.googleReverseGeocode'){
+            if(!params.longitude || !params.latitude){
+                callback(null, {resources: [], error: {'type':'access', 'msg': 'Missing parameters!'}}); return 0;
+            }
+            let long = decodeURIComponent(params.longitude);
+            let lat = decodeURIComponent(params.latitude);
+            //http://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452
+            const latlng = lat+','+long;
+            let apiURI = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+latlng+'&key=' + params.apiKey;
+            //start to get it from the cache
+            redisClient.get(['googleReverseGeocode', latlng].join('-'), function(err, reply) {
+                if(reply && !params.nocache){
+                    //console.log('GoogleGeocode response from cache...');
+                    callback(null, {
+                        latlng: latlng,
+                        cached: true,
+                        resources: JSON.parse(reply)
+                    });
+                }else{
+                    //try again in the old cache: I didn't want to remove it!
+                    redisClient.get(['googleReverseGeocode', latlng].join('-'), function(err2, reply2) {
+                        if(reply2 && !params.nocache){
+                            callback(null, {
+                                latlng: latlng,
+                                cached: true,
+                                resources: JSON.parse(reply2)
+                            });
+                        }else{
+                            //send request
+                            rp.get({uri: apiURI}).then(function(res){
+                                //console.log(res);
+                                let gres = JSON.parse(res);
+                                if(!gres.error_message){
+                                    redisClient.set(['googleReverseGeocode', latlng].join('-'), res);
+                                }
+                                callback(null, {
+                                    latlng: latlng,
+                                    resources: gres
+                                });
+                            }).catch(function (err) {
+                                console.log(err);
+                                callback(null, {
+                                    latlng: latlng,
                                     resources: {results: []}
                                 });
                             });
