@@ -378,10 +378,14 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+            let targetDataset = datasetURI;
+            if(params.inANewDataset){
+                targetDataset = params.inANewDataset;
+            }
+            getDynamicEndpointParameters(user, targetDataset, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 //config handler
-                configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
+                configurator.prepareDatasetConfig(user, 1, targetDataset, (rconfig)=> {
                     query = queryObject.countGeoEnrichedResourcesWithProp(endpointParameters, graphName, resourceType ? [resourceType] : rconfig.resourceFocusType, propertyURI, params.inANewDataset, params.boundarySource);
                     //console.log(query);
                     //build http uri
