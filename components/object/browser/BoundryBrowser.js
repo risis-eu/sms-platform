@@ -64,9 +64,7 @@ class BoundryBrowser extends React.Component {
         }
         return (
             <div className="ui" ref="BoundryBrowser">
-                {this.props.instances.length > 777 ? 'Error: Maximum 777 geo items can be shown!' :
-                    <GeoBoundaryView  property={this.props.propertyURI} mapWidth={mapWidth} mapHeight={mapHeight} spec={{instances: instances}} config={cnf} onlyShowMap={1}/>
-                }
+                <GeoBoundaryView  property={this.props.propertyURI} mapWidth={mapWidth} mapHeight={mapHeight} spec={{instances: instances}} config={cnf} onlyShowMap={1}/>
                 <CheckListBrowser selection={this.props.selection} expanded={this.props.expanded} datasetURI={this.props.datasetURI} propertyURI={this.props.propertyURI} shortenURI={this.props.shortenURI}  config={this.props.config} instances={this.props.instances} onCheck={this.props.onCheck.bind(this)}/>
             </div>
         );
