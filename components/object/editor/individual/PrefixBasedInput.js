@@ -18,7 +18,8 @@ class PrefixBasedInput extends React.Component {
         this.state = {
             value: v,
             results: [],
-            isLoading: false
+            isLoading: false,
+            lockEnter: 0
         };
     }
     componentDidMount() {
@@ -35,7 +36,9 @@ class PrefixBasedInput extends React.Component {
             switch (evt.keyCode) {
                 //case 9: // Tab
                 case 13: // Enter
-                    this.props.onEnterPress();
+                    if(!this.state.lockEnter){
+                        this.props.onEnterPress();
+                    }
                     break;
             }
         }
@@ -192,9 +195,9 @@ class PrefixBasedInput extends React.Component {
         });
     }
     //when user clicks on results
-    handleChange(event, result) {
-        this.setState({value: result.title});
-        this.props.onDataEdit(this.applyPrefix(result.title.trim()));
+    handleChange(event, obj) {
+        this.setState({value: obj.result.title, lockEnter: 0});
+        this.props.onDataEdit(this.applyPrefix(obj.result.title.trim()));
     }
     handleSearchChange(alist, event, value) {
         this.props.onDataEdit(this.applyPrefix(event.target.value.trim()));
@@ -202,11 +205,13 @@ class PrefixBasedInput extends React.Component {
         setTimeout(() => {
             if (this.state.value.length < 1) return this.resetComponent()
 
-            const re = new RegExp(lodashString.escapeRegExp(this.state.value), 'i')
-            const isMatch = (result) => re.test(result.title)
+            const re = new RegExp(lodashString.escapeRegExp(this.state.value), 'i');
+            const isMatch = (result) => re.test(result.title);
+            let results = lodashCollection.filter(alist, isMatch);
             this.setState({
                 isLoading: false,
-                results: lodashCollection.filter(alist, isMatch),
+                results: results,
+                lockEnter: results.length ? 1 : 0
             })
         }, 500)
     }
