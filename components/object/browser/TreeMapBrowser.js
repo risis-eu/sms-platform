@@ -2,21 +2,11 @@ import React from 'react';
 import URIUtil from '../../utils/URIUtil';
 import chroma from 'chroma-js';
 //import TagListBrowser from './TagListBrowser';
-import {PieChart, Pie, Sector, Tooltip, Legend, Cell, ResponsiveContainer} from 'recharts';
+import {Treemap, Tooltip, Legend, Cell, ResponsiveContainer} from 'recharts';
 
-class PieChartBrowser extends React.Component {
+class TreeMapBrowser extends React.Component {
     constructor(props) {
         super(props);
-    }
-    //maps values to colors
-    colorMapping(weights){
-        let arr1= weights;
-        let colors = chroma.scale(['#1a75ff', 'grey']).colors(arr1.length);
-        let mapping = {};
-        arr1.forEach((v,i)=>{
-            mapping[v.value] = colors[i];
-        });
-        return mapping;
     }
     doesExist(value){
         let selected=[];
@@ -45,14 +35,25 @@ class PieChartBrowser extends React.Component {
             this.props.onCheck(1, data.ovalue);
         }
     }
-    renderCustomizedLabel({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, title })  {
-        return  `${title}`;
-        //return  `${title}: ${(percent * 100).toFixed(0)}%`;
+    renderCustomizedLabel({ root, depth, x, y, width, height, index, payload, colors, rank, title })  {
+        return  (
+            <g>
+                <rect x={x} y={y} width={width} height={height} />
+                <text x={x + width / 2} y={y + height / 2 + 7} textAnchor="middle" fill="#fff" >
+                    {title}
+                </text>
+            </g>
+        );
+    }
+    renderCustomizedLabel2({ root, depth, x, y, width, height, index, payload, colors, rank, title })  {
+        return  (
+            <g>
+                <rect x={x} y={y} width={width} height={height} />
+            </g>
+        );
     }
     render() {
         let self = this;
-        let colorMap ={};
-        colorMap = self.colorMapping(self.props.instances);
         let data=[];
         let title;
         self.props.instances.forEach((node)=> {
@@ -72,17 +73,9 @@ class PieChartBrowser extends React.Component {
         return (
             <div>
                 <ResponsiveContainer width="97%" height={height}>
-                    <PieChart>
+                    <Treemap data={data} dataKey="total" nameKey="title" ratio={4/3} stroke="#fff"  fill="#1a75ff" content={this.props.expanded ? this.renderCustomizedLabel : this.renderCustomizedLabel2} onClick={this.selectItem.bind(this)}>
                         <Tooltip />
-                        <Pie outerRadius="90%" innerRadius="0" data={data} dataKey="total" nameKey="title" labelLine={this.props.expanded ? true: false} label={this.props.expanded ? this.renderCustomizedLabel: false}
-                            margin={{top: 0, right: 10, left: 0, bottom: 0}} fill="#1a75ff" onClick={this.selectItem.bind(this)}>
-                            {
-                                data.map((entry, index) => (
-                                    <Cell cursor="pointer" fill={entry.isSelected ? '#82ca9d' : colorMap[entry.ovalue] } key={`cell-${index}`}/>
-                                ))
-                            }
-                        </Pie>
-                    </PieChart>
+                    </Treemap>
                 </ResponsiveContainer>
                 {/*<TagListBrowser selection={this.props.selection} expanded={this.props.expanded} datasetURI={this.props.datasetURI} propertyURI={this.props.propertyURI} shortenURI={this.props.shortenURI}  config={this.props.config} instances={this.props.instances} onCheck={this.props.onCheck.bind(this)}/>*/}
             </div>
@@ -90,4 +83,4 @@ class PieChartBrowser extends React.Component {
     }
 }
 
-export default PieChartBrowser;
+export default TreeMapBrowser;
