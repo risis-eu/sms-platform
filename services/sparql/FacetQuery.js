@@ -14,6 +14,22 @@ class FacetQuery{
         `;
         this.query='';
     }
+    getPropertyLabel(uri) {
+        var property = '';
+        var tmp = uri;
+        var tmp2 = tmp.split('#');
+        if (tmp2.length > 1) {
+            property = tmp2[1];
+        } else {
+            tmp2 = tmp.split('/');
+            property = tmp2[tmp2.length - 1];
+            tmp2 = property.split(':');
+            property = tmp2[tmp2.length - 1];
+        }
+        //make first letter capital case
+        property = property.charAt(0).toUpperCase() + property.slice(1);
+        return property;
+    }
     prepareGraphName(graphName){
         let gStart = 'GRAPH <'+ graphName +'> { ';
         let gEnd = ' } ';
@@ -515,6 +531,16 @@ class FacetQuery{
         if(searchTerm && searchTerm.length>2){
             searchPhase = 'FILTER( regex(?title, "'+searchTerm+'", "i") || regex(STR(?s), "'+searchTerm+'", "i"))';
         }
+        //handle analysis props
+        let analysisSelector = '', analysisPhrase = '', aCounter = 0;
+        if(options && options.analysisProps){
+            for(let prop in options.analysisProps){
+                aCounter++;
+                analysisSelector = analysisSelector + ' ?ldr_ap'+aCounter+'_' + self.getPropertyLabel(prop);
+                analysisPhrase = analysisPhrase + '?s ' + self.filterPropertyPath(prop) + ' ?ldr_ap'+aCounter+'_' + self.getPropertyLabel(prop)+' .';
+            }
+        }
+        //---------------------
         //add labels for entities
         if(labelProperty && labelProperty.length){
             selectStr = ' ?title ';
@@ -551,7 +577,7 @@ class FacetQuery{
             limitOffsetPharse ='';
         }
         this.query = `
-        SELECT DISTINCT ?s ${selectStr} WHERE {
+        SELECT DISTINCT ?s ${selectStr} ${analysisSelector} WHERE {
             ${gStart}
                 {
                     SELECT DISTINCT ?s WHERE {
@@ -561,7 +587,7 @@ class FacetQuery{
                     }
                     ${limitOffsetPharse}
                 }
-                ${titleStr} ${imageStr} ${geoStr} ${bindPhase} ${searchPhase}
+                ${titleStr} ${imageStr} ${geoStr} ${analysisPhrase} ${bindPhase} ${searchPhase}
             ${gEnd}
         }
         `;
