@@ -1,6 +1,5 @@
 import React from 'react';
-import ResourceList from './ResourceList';
-import ResourceListPager from './ResourceListPager';
+import BasicResourceList from './BasicResourceList';
 import URIUtil from '../utils/URIUtil';
 class DatasetMetadata extends React.Component {
     constructor(props){
@@ -75,7 +74,7 @@ class DatasetMetadata extends React.Component {
                         </h3>
                         <div className="ui segments">
                             <div className="ui segment">
-                                <ResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={true} config={this.props.config} onCloneResource={this.props.onCloneResource}/>
+                                <BasicResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={true} config={this.props.config} onCloneResource={this.props.onCloneResource}/>
                             </div>
                         </div>
                     </div>
