@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {NavLink} from 'fluxible-router';
 import searchInDataset from '../../actions/searchInDataset';
 
-class ResourceListPager extends React.Component {
+class DatasetPager extends React.Component {
     constructor(props){
         super(props);
         this.state = {searchTerm: '', searchMode: 0, showAll: 0};
@@ -69,7 +69,7 @@ class ResourceListPager extends React.Component {
             //total number of pages
             totalPages = Math.ceil(this.props.total / maxOnPage);
             if(this.state.searchMode){
-                //totalPages = Math.ceil(this.props.visibleResourcesTotal / maxOnPage);
+                //totalPages = Math.ceil(this.props.resourcesLength / maxOnPage);
                 //todo: support paging for search, I disable it for now!
                 totalPages = 1;
             }
@@ -101,13 +101,13 @@ class ResourceListPager extends React.Component {
             }
         }
         return (
-            <div className="ui" ref="resourceListPager">
+            <div className="ui" ref="datasetPager">
                 {this.state.showAll ?
                     ''
                     :
                     <span>{totalPages} Page(s): {pageList} &nbsp;</span>
                 }
-                {this.props.total<= 10000 ?
+                {totalPages > 1 && this.props.total<= 10000 ?
                     <a className={'ui icon mini button ' + (this.state.showAll ? 'blue': 'basic')} onClick={this.onShowAllClick.bind(this)}>
                         {this.state.showAll ? 'go back to pagination' : 'show all'}
                     </a>
@@ -134,7 +134,7 @@ class ResourceListPager extends React.Component {
         );
     }
 }
-ResourceListPager.contextTypes = {
+DatasetPager.contextTypes = {
     executeAction: PropTypes.func.isRequired
 };
-export default ResourceListPager;
+export default DatasetPager;

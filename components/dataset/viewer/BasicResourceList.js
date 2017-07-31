@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {NavLink} from 'fluxible-router';
-import URIUtil from '../utils/URIUtil';
+import URIUtil from '../../utils/URIUtil';
 import { Header, Table } from 'semantic-ui-react';
-import BasicAggregateMapView from '../object/viewer/aggregate/BasicAggregateMapView';
+import BasicAggregateMapView from '../../object/viewer/aggregate/BasicAggregateMapView';
 import classNames from 'classnames/bind';
 
-class ResourceList extends React.Component {
+class BasicResourceList extends React.Component {
     componentDidMount() {}
     buildLink(useA, v, g, title, image, icon, cloneable) {
         let self = this;
@@ -127,6 +127,9 @@ class ResourceList extends React.Component {
         if (self.props.config && typeof self.props.config.allowResourceClone !== 'undefined' && parseInt(self.props.config.allowResourceClone)) {
             cloneable = 1;
         }
+        if(!self.props.cloneable){
+            cloneable = 0;
+        }
         if (!this.props.resources.length) {
             list = <div className="ui warning message">
                 <div className="header">
@@ -228,8 +231,8 @@ class ResourceList extends React.Component {
         );
     }
 }
-ResourceList.contextTypes = {
+BasicResourceList.contextTypes = {
     executeAction: PropTypes.func.isRequired,
     getUser: PropTypes.func
 };
-export default ResourceList;
+export default BasicResourceList;
