@@ -1,5 +1,5 @@
 import React from 'react';
-import BasicResourceList from './BasicResourceList';
+import BasicResourceList from './viewer/BasicResourceList';
 import URIUtil from '../utils/URIUtil';
 class DatasetMetadata extends React.Component {
     constructor(props){
