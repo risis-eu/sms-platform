@@ -448,6 +448,7 @@ export default {
         } else if (resource === 'dataset.datasetsList') {
             let staticReactorDS = {dataset: {}};
             let staticFacetsDS = {facets: {}};
+            /*
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {dynamicReactorDS: {datasets: {}}, dynamicFacetsDS: {facets: {}}, staticReactorDS: staticReactorDS, staticFacetsDS: staticFacetsDS});
@@ -463,6 +464,9 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
+            */
+            //allow also not logged-in users to see datasets
+            user = {accountName: 'open'};
             //filter the config
             let sources = ['dataset', 'dataset_resource', 'dataset_property', 'dataset_resource_property'];
             sources.forEach(function(s){

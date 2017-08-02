@@ -86,25 +86,25 @@ export default {
                 type: 'full'
             };
         }
-        if (parseInt(user.isSuperUser)) {
+        if (user && parseInt(user.isSuperUser)) {
             return {
                 access: true,
                 type: 'full'
             };
         } else {
-            if (dataset && user.viewerOf && includesDataset(user.viewerOf, dataset)) {
+            if (user && dataset && user.viewerOf && includesDataset(user.viewerOf, dataset)) {
                 return {
                     access: true,
                     type: 'full'
                 };
             } else {
-                if (resource && user.viewerOf && includesResource(user.viewerOf, dataset, resource, resourceType)) {
+                if (user && resource && user.viewerOf && includesResource(user.viewerOf, dataset, resource, resourceType)) {
                     return {
                         access: true,
                         type: 'full'
                     };
                 } else {
-                    if (property && user.viewerOf && includesProperty(user.viewerOf, dataset, resource, resourceType, property)) {
+                    if (user && property && user.viewerOf && includesProperty(user.viewerOf, dataset, resource, resourceType, property)) {
                         return {
                             access: true,
                             type: 'partial'
@@ -126,25 +126,25 @@ export default {
                 type: 'full'
             };
         }
-        if (parseInt(user.isSuperUser)) {
+        if (user && parseInt(user.isSuperUser)) {
             return {
                 access: true,
                 type: 'full'
             };
         } else {
-            if (dataset && user.editorOf && includesDataset(user.editorOf, dataset)) {
+            if (user && dataset && user.editorOf && includesDataset(user.editorOf, dataset)) {
                 return {
                     access: true,
                     type: 'full'
                 };
             } else {
-                if (resource && user.editorOf && includesResource(user.editorOf, dataset, resource, resourceType)) {
+                if (user && resource && user.editorOf && includesResource(user.editorOf, dataset, resource, resourceType)) {
                     return {
                         access: true,
                         type: 'full'
                     };
                 } else {
-                    if (property && user.editorOf && includesProperty(user.editorOf, dataset, resource, resourceType, property)) {
+                    if (user && property && user.editorOf && includesProperty(user.editorOf, dataset, resource, resourceType, property)) {
                         return {
                             access: true,
                             type: 'partial'

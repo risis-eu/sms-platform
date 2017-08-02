@@ -50,16 +50,16 @@ class Datasets extends React.Component {
             const containerGeoLocations = this.refs.containerGeoLocations;
             const containerOthers = this.refs.containerOthers;
 
-            instance.draggable(containerOrgs);
-            instance.draggable(containerProjects);
-            instance.draggable(containerPersons);
-            instance.draggable(containerPatents);
-            instance.draggable(containerPublications);
-            instance.draggable(containerFundingProgram);
-            instance.draggable(containerOrgRanking);
-            instance.draggable(containerGeoBoundaries);
-            instance.draggable(containerGeoStats);
-            instance.draggable(containerGeoLocations);
+            //instance.draggable(containerOrgs);
+            //instance.draggable(containerProjects);
+            //instance.draggable(containerPersons);
+            //instance.draggable(containerPatents);
+            //instance.draggable(containerPublications);
+            //instance.draggable(containerFundingProgram);
+            //instance.draggable(containerOrgRanking);
+            //instance.draggable(containerGeoBoundaries);
+            //instance.draggable(containerGeoStats);
+            //instance.draggable(containerGeoLocations);
             //instance.draggable(containerOthers);
             instance.connect({
                 source: containerGeoLocations,
@@ -170,6 +170,15 @@ class Datasets extends React.Component {
             errorDIV =
                 <div className="ui warning message"><h2>{this.props.DatasetsStore.error} <a className="ui fluid primary button" href="/contact">Contact Us</a></h2></div>;
         }
+        let dss2 = [];
+        dss.forEach((item)=>{
+            if(!user && item.features && item.features.datasetLabel && (item.features.datasetLabel[0].indexOf('WoS')!== -1 || item.features.datasetLabel[0].indexOf('ERC ')!== -1)){
+
+            }else{
+                dss2.push(item);
+            }
+        });
+        dss = dss2;
         dss.forEach((item)=>{
             if(item.features.datasetCategory){
                 if (!dsCategoryObj[item.features.datasetCategory[0]]){
@@ -179,119 +188,118 @@ class Datasets extends React.Component {
                 }
             }
         });
+        let outputX;
         if(enableAuthentication && !user){
-            output = <div className="ui warning message"><div className="header"> Please <a href="http://datasets.risis.eu/register">Register</a> or <a href="/login">Login</a> to see the datasets.</div></div>;
-        }else{
-            if(enableAddingNewDatasets){
-                createDatasetDIV = <div className="item">
-                    <div  className={'medium ui basic icon labeled button ' + (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1 ? '': 'disabled')} onClick={this.handleCreateDataset.bind(this)}>
-                        <i className="cubes square large blue icon "></i> <i className="add black icon"></i>Add a New Dataset
-                    </div>
-                </div>;
-            }
-            if(enableDatasetAnnotation){
-                annotateDatasetDIV = <div className="item">
-                    <a  className={'medium ui basic icon labeled button ' + (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1 ? '': 'disabled')} href="/annotateDataset">
-                        <i className="cubes square large blue icon "></i> <i className="hashtag black icon"></i>Annotate a Dataset
-                    </a>
-                </div>;
-            }
-            if(enableDatasetGeoEnrichment){
-                geoEnrichDatasetDIV = <div className="item">
-                    <a  className={'medium ui basic icon labeled button ' + (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1 ? '': 'disabled')} href="/geoEnrichDataset">
-                        <i className="cubes square large blue icon "></i> <i className="marker black icon"></i>Geo-enrich a Dataset
-                    </a>
-                </div>;
-            }
-            datasetActionsDIV = <div className="ui horizontal divided list">
-                {createDatasetDIV} {annotateDatasetDIV} {geoEnrichDatasetDIV}
-                <br/>
+            outputX = <div className="ui warning message"><div className="header"> Please <a href="http://datasets.risis.eu/register">Register</a> or <a href="/login">Login</a> to access the SMS datasets.</div></div>;
+        }
+        if(enableAddingNewDatasets){
+            createDatasetDIV = <div className="item">
+                <div  className={'medium ui basic icon labeled button ' + (user && (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1) ? '': 'disabled')} onClick={this.handleCreateDataset.bind(this)}>
+                    <i className="cubes square large blue icon "></i> <i className="add black icon"></i>Add a New Dataset
+                </div>
             </div>;
-            if(!dss.length){
-                if(defaultDatasetURI[0]){
-                    output = <div className="ui item" key={defaultDatasetURI[0]}> <div className="content"> <i className="ui blue icon cubes"></i> <a href={'/dataset/1/' + encodeURIComponent(defaultDatasetURI[0])} title="go to resource list">{defaultDatasetURI[0]}</a> <i className="ui green flag icon" title="default dataset"></i> </div> </div>;
-                }else{
-                    //no graph name is specified
-                    output = <div className="ui big item" key="empty" > <div className="content">  Your config is empty!<a href={'/dataset/'}> <span className="ui big blue label">See all resources in all local datasets</span></a></div> </div>;
-                }
+        }
+        if(enableDatasetAnnotation){
+            annotateDatasetDIV = <div className="item">
+                <a  className={'medium ui basic icon labeled button ' + (user &&  (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1) ? '': 'disabled')} href="/annotateDataset">
+                    <i className="cubes square large blue icon "></i> <i className="hashtag black icon"></i>Annotate a Dataset
+                </a>
+            </div>;
+        }
+        if(enableDatasetGeoEnrichment){
+            geoEnrichDatasetDIV = <div className="item">
+                <a  className={'medium ui basic icon labeled button ' + (user &&  (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1) ? '': 'disabled')} href="/geoEnrichDataset">
+                    <i className="cubes square large blue icon "></i> <i className="marker black icon"></i>Geo-enrich a Dataset
+                </a>
+            </div>;
+        }
+        datasetActionsDIV = <div className="ui horizontal divided list">
+            {createDatasetDIV} {annotateDatasetDIV} {geoEnrichDatasetDIV}
+            <br/>
+        </div>;
+        if(!dss.length){
+            if(defaultDatasetURI[0]){
+                output = <div className="ui item" key={defaultDatasetURI[0]}> <div className="content"> <i className="ui blue icon cubes"></i> <a href={'/dataset/1/' + encodeURIComponent(defaultDatasetURI[0])} title="go to resource list">{defaultDatasetURI[0]}</a> <i className="ui green flag icon" title="default dataset"></i> </div> </div>;
             }else{
-                let filterdDSS = [];
-                if(self.state.selectedList.length){
-                    dss.forEach((item)=>{
-                        if(item.features.datasetCategory){
-                            if(self.state.selectedList.indexOf(item.features.datasetCategory[0]) !== -1){
-                                filterdDSS.push(item);
-                            }
+                //no graph name is specified
+                output = <div className="ui big item" key="empty" > <div className="content">  Your config is empty!<a href={'/dataset/'}> <span className="ui big blue label">See all resources in all local datasets</span></a></div> </div>;
+            }
+        }else{
+            let filterdDSS = [];
+            if(self.state.selectedList.length){
+                dss.forEach((item)=>{
+                    if(item.features.datasetCategory){
+                        if(self.state.selectedList.indexOf(item.features.datasetCategory[0]) !== -1){
+                            filterdDSS.push(item);
                         }
-                    });
-                    dss = filterdDSS;
-                }
-                let tmpOption = '';
-                optionsList = dss.map(function(option, index) {
-                    tmpOption = <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
-                    //filter out datasets if no access is provided
-                    if(enableAuthentication && option.features.hasLimitedAccess && parseInt(option.features.hasLimitedAccess)){
-                        //need to handle access to the dataset
-                        //if user is the editor by default he already has view access
-                        let editAccess = checkEditAccess(user, option.d, 0, 0, 0);
-                        if(!editAccess.access || editAccess.type === 'partial'){
-                            let viewAccess = checkViewAccess(user, option.d, 0, 0, 0);
-                            if(!viewAccess.access){
-                                tmpOption = '';
-                            }
-                        }
-                    }
-                    //hide metadata dataset
-                    if(option.d=== 'metadata'){
-                        tmpOption = '';
-                    }
-                    if(tmpOption){
-                        return tmpOption;
                     }
                 });
-                let dsLink = '';
-                let brwsLink = '';
-                let dsIcon = '';
-                outputDSS = dss.map(function(ds, index) {
-                    dsLink = <a href={'/dataset/1/' + encodeURIComponent(ds.d)} title="go to resource list">{ds.features && ds.features.datasetLabel ? ds.features.datasetLabel : ds.d}</a>;
-                    brwsLink = <a className="ui basic blue label" href={'/browse/' + encodeURIComponent(ds.d)} title="browse data"><i className="tasks icon"></i>browse data</a>;
-                    dsIcon = ' cubes ';
-                    //remove links if no access is provided
-                    if(enableAuthentication && ds.features.hasLimitedAccess && parseInt(ds.features.hasLimitedAccess)){
-                        dsIcon = ' unlock '
-                        //need to handle access to the dataset
-                        //if user is the editor by default he already has view access
-                        let editAccess = checkEditAccess(user, ds.d, 0, 0, 0);
-                        if(!editAccess.access || editAccess.type === 'partial'){
-                            let viewAccess = checkViewAccess(user, ds.d, 0, 0, 0);
-                            if(!viewAccess.access){
-                                dsLink = <span>{ds.features && ds.features.datasetLabel ? ds.features.datasetLabel : ds.d}</span>;
-                                brwsLink = '';
-                                dsIcon = ' lock '
-                            }
+                dss = filterdDSS;
+            }
+            let tmpOption = '';
+            optionsList = dss.map(function(option, index) {
+                tmpOption = <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
+                //filter out datasets if no access is provided
+                if(enableAuthentication && option.features.hasLimitedAccess && parseInt(option.features.hasLimitedAccess)){
+                    //need to handle access to the dataset
+                    //if user is the editor by default he already has view access
+                    let editAccess = checkEditAccess(user, option.d, 0, 0, 0);
+                    if(!editAccess.access || editAccess.type === 'partial'){
+                        let viewAccess = checkViewAccess(user, option.d, 0, 0, 0);
+                        if(!viewAccess.access){
+                            tmpOption = '';
                         }
                     }
-                    if(ds.features){
-                        if(typeof ds.features.readOnly === 'undefined' ){
+                }
+                //hide metadata dataset
+                if(option.d=== 'metadata'){
+                    tmpOption = '';
+                }
+                if(tmpOption){
+                    return tmpOption;
+                }
+            });
+            let dsLink = '';
+            let brwsLink = '';
+            let dsIcon = '';
+            outputDSS = dss.map(function(ds, index) {
+                dsLink = <a href={'/dataset/1/' + encodeURIComponent(ds.d)} title="go to resource list">{ds.features && ds.features.datasetLabel ? ds.features.datasetLabel : ds.d}</a>;
+                brwsLink = <a className="ui basic blue label" href={'/browse/' + encodeURIComponent(ds.d)} title="browse data"><i className="tasks icon"></i>browse data</a>;
+                dsIcon = ' cubes ';
+                //remove links if no access is provided
+                if(enableAuthentication && ds.features.hasLimitedAccess && parseInt(ds.features.hasLimitedAccess)){
+                    dsIcon = ' unlock '
+                    //need to handle access to the dataset
+                    //if user is the editor by default he already has view access
+                    let editAccess = checkEditAccess(user, ds.d, 0, 0, 0);
+                    if(!editAccess.access || editAccess.type === 'partial'){
+                        let viewAccess = checkViewAccess(user, ds.d, 0, 0, 0);
+                        if(!viewAccess.access){
+                            dsLink = <span>{ds.features && ds.features.datasetLabel ? ds.features.datasetLabel : ds.d}</span>;
+                            brwsLink = '';
+                            dsIcon = ' lock '
+                        }
+                    }
+                }
+                if(ds.features){
+                    if(typeof ds.features.readOnly === 'undefined' ){
+                        color = 'black';
+                    }else{
+                        if(ds.features.readOnly){
                             color = 'black';
                         }else{
-                            if(ds.features.readOnly){
-                                color = 'black';
-                            }else{
-                                color = 'blue';
-                            }
+                            color = 'blue';
                         }
                     }
-                    if(ds.d !== 'metadata'){
-                        return <div className="ui item" key={ds.d}> <div className="content"> <i className={'ui icon ' + dsIcon + color}></i> {dsLink} {ds.features && ds.features.resourceFocusType ? <span className="ui small circular label"> {self.prepareFocusList(ds.features.resourceFocusType)} </span> : ''}
-                            {ds.features && ds.features.isBrowsable ? brwsLink : ''} {ds.features && ds.features.metadata ? <a className="ui basic grey label rounded" href={ds.features.metadata} title="metadata" target="_blank"><i className="info icon"></i>metadata</a> : ''}
-                            {ds.features && ds.features.isStaticDynamic ? <i className="ui brown theme icon" title="loaded from both static and dynamic config"></i> :''}
-                            {ds.features && ds.features.isDynamic && !ds.features.isStaticDynamic ? <i className="ui orange theme icon" title="loaded from dynamic config"></i> :''}
-                            {ds.features && ds.features.isDefaultDataset ? <i className="ui teal flag icon" title="default dataset"></i> :''}</div> </div>;
-                    }
-                });
-            }
-
+                }
+                if(ds.d !== 'metadata'){
+                    return <div className="ui item" key={ds.d}> <div className="content"> <i className={'ui icon ' + dsIcon + color}></i> {dsLink} {ds.features && ds.features.resourceFocusType ? <span className="ui small circular label"> {self.prepareFocusList(ds.features.resourceFocusType)} </span> : ''}
+                        {ds.features && ds.features.isBrowsable ? brwsLink : ''} {ds.features && ds.features.metadata ? <a className="ui basic grey label rounded" href={ds.features.metadata} title="metadata" target="_blank"><i className="info icon"></i>metadata</a> : ''}
+                        {ds.features && ds.features.isStaticDynamic ? <i className="ui brown theme icon" title="loaded from both static and dynamic config"></i> :''}
+                        {ds.features && ds.features.isDynamic && !ds.features.isStaticDynamic ? <i className="ui orange theme icon" title="loaded from dynamic config"></i> :''}
+                        {ds.features && ds.features.isDefaultDataset ? <i className="ui teal flag icon" title="default dataset"></i> :''}</div> </div>;
+                }
+            });
         }
         const containerOrgsClass = classNames({
             'ui inverted orange circular segment': true,
@@ -525,7 +533,7 @@ class Datasets extends React.Component {
                                     </tr>
                                 </tbody>
                             </table>
-
+                            {outputX}
                             {errorDIV ? '' :
                                 <h2><span className="ui big black circular label">{dss.length}</span> Datasets { self.state.selectedList.length ? <span className="ui tag label">{self.state.selectedList.join(', ')}</span> : ''}</h2>
                             }
@@ -536,7 +544,7 @@ class Datasets extends React.Component {
                             <div className= "ui bottom attached">
                                 {datasetActionsDIV}
                             </div>
-                            {dss.length ?
+                            {user && dss.length ?
                                 <div className="ui grey message form">
                                     <select ref="datasetURI" className="ui search dropdown">
                                         {optionsList}
