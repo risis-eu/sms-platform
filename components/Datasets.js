@@ -540,6 +540,12 @@ class Datasets extends React.Component {
 
                             <div className="ui big divided list" id="datasetsList">
                                 {errorDIV ? errorDIV : output}{errorDIV ? '' : outputDSS}
+                                {
+                                    !user ?
+                                        <div className='ui item'><i className={'ui icon lock'}></i>More private datasets such as WoS and ERC starting grants are provided on-site...</div>
+                                        :
+                                        ''
+                                }
                             </div>
                             <div className= "ui bottom attached">
                                 {datasetActionsDIV}
