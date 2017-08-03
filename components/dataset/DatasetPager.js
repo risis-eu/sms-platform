@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {NavLink} from 'fluxible-router';
 import searchInDataset from '../../actions/searchInDataset';
 import {Dropdown, Icon} from 'semantic-ui-react';
-
 class DatasetPager extends React.Component {
     constructor(props){
         super(props);
@@ -71,6 +70,7 @@ class DatasetPager extends React.Component {
         }
     }
     render() {
+        let user = this.context.getUser();
         let self = this;
         let v_icons = {};
         let defaultViewIcon = 'list layout';
@@ -165,7 +165,7 @@ class DatasetPager extends React.Component {
                     </div>
                     <div className="right menu">
                         {this.props.total ?
-                            <a title="Download" className='ui icon mini basic button right floated item' onClick={this.props.handleExport}><i className='icon download'></i></a>
+                            <a title="Download" className={'ui icon mini basic button right floated item ' + (user && (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1) ? '': 'disabled')} onClick={this.props.handleExport}><i className='icon download'></i></a>
                             : ''}
                         <div className="item" title="actions">
                             <Dropdown selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={v_trigger} options={v_options} icon={null} floating />
@@ -193,6 +193,7 @@ class DatasetPager extends React.Component {
     }
 }
 DatasetPager.contextTypes = {
-    executeAction: PropTypes.func.isRequired
+    executeAction: PropTypes.func.isRequired,
+    getUser: PropTypes.func
 };
 export default DatasetPager;
