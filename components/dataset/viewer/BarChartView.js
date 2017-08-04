@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import URIUtil from '../../utils/URIUtil';
-import {Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Tooltip, Legend, ResponsiveContainer} from 'recharts';
-class RadarChartView extends React.Component {
+import {BarChart, Bar, XAxis, YAxis, Tooltip, Legend, Cell, ResponsiveContainer} from 'recharts';
+class BarChartView extends React.Component {
     componentDidMount() {}
     getXYZ(propsForAnalysis){
         let c = 0, x, y, z, xLabel, yLabel, zLabel;
@@ -92,23 +92,23 @@ class RadarChartView extends React.Component {
         //console.log(xType, yType);
         let height = 500;
         return (
-            <div ref="radarChartView" style={{overflow: 'auto'}}>
-                <ResponsiveContainer width="100%" height={height}>
-                    <RadarChart cx={300} cy={250} outerRadius={200} data={instances}>
-                        <Radar name={yLabel} dataKey="y" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6}/>
+            <div ref="barChartView" style={{overflow: 'auto'}}>
+                <ResponsiveContainer width="97%" height={height}>
+                    <BarChart data={instances}
+                        margin={{top: 0, right: 10, left: 0, bottom: 0}}>
+                        <XAxis dataKey="x"/>
+                        <YAxis/>
+                        <Tooltip/>
+                        <Bar dataKey="y" fill="#8884d8">
+                        </Bar>
                         {zLabel ?
-                            <Radar name={zLabel} dataKey="z" stroke="#82ca9d" fill="#82ca9d" fillOpacity={0.6}/>
+                            <Bar dataKey="z" fill="#82ca9d">
+                            </Bar>
                             : null}
-                        <PolarGrid />
-                        <PolarAngleAxis dataKey="x" />
-                        <PolarRadiusAxis/>
-                        <PolarGrid />
-                        <PolarRadiusAxis angle={30}/>
-                        <Tooltip />
-                    </RadarChart>
+                    </BarChart>
                 </ResponsiveContainer>
             </div>
         );
     }
 }
-export default RadarChartView;
+export default BarChartView;
