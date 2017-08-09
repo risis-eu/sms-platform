@@ -79,7 +79,7 @@ export default function loadFacets(context, payload, done) {
         //used for loading progress indicator
         context.dispatch('LOADING_DATA', {});
         //items of facets
-        context.service.read('facet.facetsMaster', payload, {timeout: 20 * 1000}, function (err, res) {
+        context.service.read('facet.facetsMaster', payload, {timeout: 50 * 1000}, function (err, res) {
             //end = new Date().getTime();
             //timeElapsed = end - start;
             if (err) {
