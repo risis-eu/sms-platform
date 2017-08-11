@@ -30,6 +30,21 @@ class Datasets extends React.Component {
             ],
             endpoint:'Dot'
         }
+        /*
+        let commonPropLinkLoop = {
+            connector: ['StateMachine', {
+                curviness: 1
+            }],
+            connectorStyle: {
+                lineWidth: 4
+            },
+            anchor:['AutoDefault'],
+            overlays:[
+                [ 'Label', { label:' ', id:'prop1' } ]
+            ],
+            endpoint:'Dot'
+        }
+        */
         let commonPropLink2 = {
             anchor:['AutoDefault'],
             overlays:[
@@ -73,6 +88,12 @@ class Datasets extends React.Component {
                 source: containerOrgs,
                 target: containerProjects,
             }, commonPropLink);
+            /*
+            instance.connect({
+                source: containerOrgs,
+                target: containerOrgs,
+            }, commonPropLinkLoop);
+            */
             instance.connect({
                 source: containerOrgs,
                 target: containerPersons
@@ -162,7 +183,7 @@ class Datasets extends React.Component {
         let geoEnrichDatasetDIV = '';
         let datasetActionsDIV = '';
         let info = '';
-        let dsCategoryObj = {orgRanking: [], orgs: [], persons: [], fundingPrograms: [], projects: [], publications: [], patents: [], geoLocations: [], geoBoundaries: [], geoStats: [], others: []};
+        let dsCategoryObj = {links: [], orgRanking: [], orgs: [], persons: [], fundingPrograms: [], projects: [], publications: [], patents: [], geoLocations: [], geoBoundaries: [], geoStats: [], others: []};
         let dss = this.props.DatasetsStore.datasetsList;
         //check erros first
         let errorDIV = '';
@@ -307,6 +328,12 @@ class Datasets extends React.Component {
             'raised': self.state.selectedList.indexOf('orgs') !== -1,
             'tertiary': self.state.mouseOverList.indexOf('orgs') === -1 && self.state.selectedList.indexOf('orgs') === -1
         });
+        const containerLinksslass = classNames({
+            'ui inverted black circular segment': true,
+            'secondary': self.state.selectedList.indexOf('links') === -1,
+            'raised': self.state.selectedList.indexOf('links') !== -1,
+            'tertiary': self.state.mouseOverList.indexOf('links') === -1 && self.state.selectedList.indexOf('links') === -1
+        });
         const containerOrgRankingClass = classNames({
             'ui inverted brown circular segment': true,
             'secondary': self.state.selectedList.indexOf('orgRanking') === -1,
@@ -400,9 +427,13 @@ class Datasets extends React.Component {
                                             </div>
                                         </td>
                                         <td>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         </td>
                                         <td>
+                                            <div style={{cursor: 'pointer', minHeight: 200, minWidth: 160}} className={containerLinksslass} ref="containerLinks" onMouseOver={this.handleMouseOver.bind(this, 'links')} onMouseOut={this.handleMouseOut.bind(this, 'links')} onClick={this.handleMouseClick.bind(this, 'links')}>
+                                                <div className="ui top left attached small label">{dsCategoryObj.links.length}</div>
+                                                <span style={{color: '#FFF'}}>Links</span>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
