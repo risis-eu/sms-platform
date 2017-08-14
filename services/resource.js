@@ -173,6 +173,24 @@ export default {
                     }
                     instances.push(tmp);
                 });
+            }else if(source.toLowerCase() === 'flickr'){
+                datasetURI = 'http://geo.risis.eu/flickr';
+                uris.forEach(function(uri) {
+                    tmp = uri;
+                    if(tmp.value.indexOf('http://') === -1){
+                        tmp.value = 'http://geo.risis.eu/flickr/' + uri.value;
+                    }
+                    instances.push(tmp);
+                });
+            }else if(source.toLowerCase() === 'nuts'){
+                datasetURI = 'http://nuts.geovocab.org/';
+                uris.forEach(function(uri) {
+                    tmp = uri;
+                    if(tmp.value.indexOf('http://') === -1){
+                        tmp.value = 'http://nuts.geovocab.org/id/' + uri.value;
+                    }
+                    instances.push(tmp);
+                });
             }else if(source.toLowerCase() === 'osm'){
                 datasetURI = 'http://geo.risis.eu/osm';
                 uris.forEach(function(uri) {
