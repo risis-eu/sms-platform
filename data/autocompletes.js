@@ -88,6 +88,7 @@ module.exports = {
             {title: 'ldr:hasLinkedValue'},
             {title: 'ldr:boundarySource'},
             {title: 'ldr:constraint'},
+            {title: 'ldr:restrictAnalysisToSelected'},
             {title: 'ldr:enabled'}
         ],
         ldrLiterals: [
