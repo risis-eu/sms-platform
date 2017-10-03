@@ -306,7 +306,7 @@ export default {
                             resourceType : resourceType ? [resourceType] : rconfig.resourceFocusType,
                             propertyURI: propertyURI,
                             graphName: graphName,
-                            resources: utilObject.parseResourcePropForAnnotation(res)
+                            resources: utilObject.parseResourcePropForAnnotation(res, params.longPropertyURI)
                         });
                     }).catch(function (err) {
                         console.log(err);

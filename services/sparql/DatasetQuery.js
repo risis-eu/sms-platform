@@ -276,8 +276,8 @@ class DatasetQuery{
         rconfig2.resourceFocusType = type;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = this.makeExtraTypeFilters(endpointParameters, rconfig2);
-        let existingCoordsStQ = '';
-        let existingCoordsStS = '';
+        let existingCoordsStQ = ` ?resource ${self.filterPropertyPath(propertyURI)} ?objectValue . `;
+        let existingCoordsStS = ' ?objectValue ';
         if(longPropertyURI && latPropertyURI){
             let countrySt = '';
             if(countryPropertyURI){
@@ -307,13 +307,13 @@ class DatasetQuery{
         //do not care about already annotated ones if annotations are stored in a new dataset
         if(inNewDataset){
             this.query = `
-            SELECT DISTINCT ?resource ?objectValue WHERE {
+            SELECT DISTINCT ?resource ${existingCoordsStS} WHERE {
                 {
                         {
-                            SELECT DISTINCT ?resource ?objectValue WHERE {
+                            SELECT DISTINCT ?resource ${existingCoordsStS} WHERE {
                                     ${gStart}
                                         ${st}
-                                        ?resource ${self.filterPropertyPath(propertyURI)} ?objectValue .
+                                        ${existingCoordsStQ}
                                     ${gEnd}
                                     GRAPH <${inNewDataset}> {
                                         filter not exists {
@@ -327,10 +327,9 @@ class DatasetQuery{
             `;
         }else{
             this.query = `
-            SELECT DISTINCT ?resource ?objectValue ${existingCoordsStS} WHERE {
+            SELECT DISTINCT ?resource ${existingCoordsStS} WHERE {
                 ${gStart}
                     ${st}
-                    ?resource ${self.filterPropertyPath(propertyURI)} ?objectValue .
                     ${existingCoordsStQ}
                     filter not exists {
                         ${notExistFilterSt}
