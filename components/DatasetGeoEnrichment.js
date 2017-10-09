@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {connectToStores} from 'fluxible-addons-react';
 import DatasetsStore from '../stores/DatasetsStore';
@@ -296,8 +297,8 @@ class DatasetGeoEnrichment extends React.Component {
     }
 }
 DatasetGeoEnrichment.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    getUser: React.PropTypes.func
+    executeAction: PropTypes.func.isRequired,
+    getUser: PropTypes.func
 };
 DatasetGeoEnrichment = connectToStores(DatasetGeoEnrichment, [DatasetsStore, DatasetGeoEnrichmentStore], function (context, props) {
     return {

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connectToStores} from 'fluxible-addons-react';
 import BasicAggregateView from './BasicAggregateView';
 import BasicAggregateMapView from './BasicAggregateMapView';
@@ -40,7 +41,7 @@ class GeoBoundaryView extends React.Component {
     }
 }
 GeoBoundaryView.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired
+    executeAction: PropTypes.func.isRequired
 };
 GeoBoundaryView = connectToStores(GeoBoundaryView, [BoundaryMapStore], function (context, props) {
     return {

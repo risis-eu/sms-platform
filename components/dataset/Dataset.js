@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import DatasetHeader from './DatasetHeader';
 import DatasetViewer from './DatasetViewer';
 import DatasetPager from './DatasetPager';
@@ -128,6 +129,6 @@ class Dataset extends React.Component {
     }
 }
 Dataset.contextTypes = {
-    getUser: React.PropTypes.func
+    getUser: PropTypes.func
 };
 export default Dataset;

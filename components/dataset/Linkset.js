@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import URIUtil from '../utils/URIUtil';
 import {connectToStores} from 'fluxible-addons-react';
 import LinksetStore from '../../stores/LinksetStore';
@@ -103,8 +104,8 @@ class Linkset extends React.Component {
     }
 }
 Linkset.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    getUser: React.PropTypes.func
+    executeAction: PropTypes.func.isRequired,
+    getUser: PropTypes.func
 };
 Linkset = connectToStores(Linkset, [LinksetStore], function (context, props) {
     return {

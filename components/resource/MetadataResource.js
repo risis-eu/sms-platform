@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import PropertyReactor from '../reactors/PropertyReactor';
 import {NavLink} from 'fluxible-router';
 import URIUtil from '../utils/URIUtil';
@@ -164,7 +165,7 @@ class MetadataResource extends React.Component {
     }
 }
 MetadataResource.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    getUser: React.PropTypes.func
+    executeAction: PropTypes.func.isRequired,
+    getUser: PropTypes.func
 };
 export default MetadataResource;
