@@ -53,7 +53,7 @@ class Nav extends React.Component {
                     </NavLink>
                     <a className="item" href="/"> SMS Platform</a>
                     <NavLink routeName="metadataList" className="item" href="/metadataList"> Metadata Editor</NavLink>
-                    <NavLink routeName="datasets" className="item" href="/datasets"> Datasets</NavLink>
+                    <a routeName="datasets" className="item" href="/datasets"> Datasets</a>
                     <div className="right menu">
                         <NavLink routeName="contact" className="item" href="/contact" title="contact us">
                             <i className="medium mail outline icon"></i>
