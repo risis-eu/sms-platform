@@ -259,6 +259,7 @@ class Datasets extends React.Component {
             }
             let tmpOption = '';
             optionsList = dss.filter(function(option, index) {
+                tmpOption = '1';
                 //filter out datasetfilter(function(option, index) {}.s if no access is provided
                 if(enableAuthentication && option.features.hasLimitedAccess && parseInt(option.features.hasLimitedAccess)){
                     //need to handle access to the dataset
