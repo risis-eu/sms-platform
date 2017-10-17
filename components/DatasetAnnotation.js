@@ -153,8 +153,7 @@ class DatasetAnnotation extends React.Component {
                 allowChangingNewDataset = true;
             }
             let tmpOption = '';
-            optionsList = dss.map(function(option, index) {
-                tmpOption = <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
+            optionsList = dss.filter(function(option, index) {
                 //filter out datasets if no access is provided
                 if(enableAuthentication && option.features.hasLimitedAccess && parseInt(option.features.hasLimitedAccess)){
                     //need to handle access to the dataset
@@ -168,8 +167,12 @@ class DatasetAnnotation extends React.Component {
                     }
                 }
                 if(tmpOption){
-                    return tmpOption;
+                    return true;
+                }else{
+                    return false;
                 }
+            }).map(function(option, index) {
+                return <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
             });
         }
 
