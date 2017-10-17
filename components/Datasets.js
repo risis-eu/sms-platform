@@ -258,9 +258,9 @@ class Datasets extends React.Component {
                 dss = filterdDSS;
             }
             let tmpOption = '';
-            optionsList = dss.map(function(option, index) {
-                tmpOption = <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
-                //filter out datasets if no access is provided
+
+            optionsList = dss.filter(function(option, index) {
+                //filter out datasetfilter(function(option, index) {}.s if no access is provided
                 if(enableAuthentication && option.features.hasLimitedAccess && parseInt(option.features.hasLimitedAccess)){
                     //need to handle access to the dataset
                     //if user is the editor by default he already has view access
@@ -277,8 +277,12 @@ class Datasets extends React.Component {
                     tmpOption = '';
                 }
                 if(tmpOption){
-                    return tmpOption;
+                    return true;
+                }else{
+                    return false; // skip
                 }
+            }).map(function(option, index) {
+                return <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
             });
             let dsLink = '';
             let brwsLink = '';
