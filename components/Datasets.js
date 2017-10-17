@@ -282,7 +282,7 @@ class Datasets extends React.Component {
                     return false; // skip
                 }
             }).map(function(option, index) {
-                return <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
+                return <option key={option.d} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
             });
             let dsLink = '';
             let brwsLink = '';
