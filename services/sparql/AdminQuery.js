@@ -23,13 +23,13 @@ class AdminQuery{
         SELECT DISTINCT ?subject ?username ?isActive ?firstName ?lastName (group_concat(distinct ?member ; separator = ",") AS ?membership) ?isSuperUser ?mbox WHERE {
             ${gStart}
                 ?subject a ldr:User ;
-                         foaf:accountName ?username ;
-                         ldr:isActive ?isActive ;
-                         foaf:firstName ?firstName ;
-                         foaf:lastName ?lastName ;
-                         foaf:member ?member ;
-                         ldr:isSuperUser ?isSuperUser ;
-                         foaf:mbox ?mbox .
+                    foaf:accountName ?username ;
+                    ldr:isActive ?isActive ;
+                    foaf:firstName ?firstName ;
+                    foaf:lastName ?lastName ;
+                    foaf:member ?member ;
+                    ldr:isSuperUser ?isSuperUser ;
+                    foaf:mbox ?mbox .
             ${gEnd}
         } ORDER BY ASC(?lastName)
         `;

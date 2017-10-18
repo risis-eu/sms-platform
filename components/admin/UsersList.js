@@ -15,7 +15,7 @@ class UsersList extends React.Component {
             msg: ''
         };
     }
-    activateUser(uri, email){
+    activateUser(uri, email) {
         this.context.executeAction(activateUser, {
             resourceURI: uri,
             email: email
