@@ -30,6 +30,7 @@ module.exports = {
             {title: 'ldr:uri'},
             {title: 'ldr:metadata'},
             {title: 'ldr:position'},
+            {title: 'ldr:pivotDataset'},
             {title: 'ldr:graphName'},
             {title: 'ldr:useReasoning'},
             {title: 'ldr:datasetReactor'},

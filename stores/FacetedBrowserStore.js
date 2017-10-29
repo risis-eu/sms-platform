@@ -14,6 +14,8 @@ class FacetedBrowserStore extends BaseStore {
         this.resourceQuery = '';
         //queries used to display the values of each property facet
         this.facetQuery = {};
+        //all the filters and constraints applied to the facet: used for pivot change
+        this.facetQueryConstraints = {};
         this.page = 1;
         this.graphName = '';
         this.datasetURI = '';
@@ -87,9 +89,11 @@ class FacetedBrowserStore extends BaseStore {
         if(payload.facets.status){
             this.facets[payload.facets.propertyURI] = payload.facets.items;
             this.facetQuery[payload.facets.propertyURI] = payload.facets.facetQuery;
+            this.facetQueryConstraints[payload.facets.propertyURI] = payload.facets.facetQueryConstraints;
         }else{
             delete this.facets[payload.facets.propertyURI];
             delete this.facetQuery[payload.facets.propertyURI];
+            delete this.facetQueryConstraints[payload.facets.propertyURI];
         }
         this.page = payload.page;
         this.graphName = payload.graphName;
@@ -99,6 +103,7 @@ class FacetedBrowserStore extends BaseStore {
     updateMoreMasterFacets(payload){
         this.facets[payload.facets.propertyURI] = this.facets[payload.facets.propertyURI].concat(payload.facets.items);
         this.facetQuery[payload.facets.propertyURI] = payload.facets.facetQuery;
+        this.facetQueryConstraints[payload.facets.propertyURI] = payload.facets.facetQueryConstraints;
         this.emitChange();
     }
     updateMasterFacetsCount(payload) {
@@ -112,6 +117,7 @@ class FacetedBrowserStore extends BaseStore {
     handleFacetSideEffects(payload) {
         this.facets[payload.facets.propertyURI] = payload.facets.items;
         this.facetQuery[payload.facets.propertyURI] = payload.facets.facetQuery;
+        this.facetQueryConstraints[payload.facets.propertyURI] = payload.facets.facetQueryConstraints;
         this.page = payload.page;
         this.graphName = payload.graphName;
         this.datasetURI = payload.datasetURI;
@@ -130,6 +136,7 @@ class FacetedBrowserStore extends BaseStore {
             total: this.total,
             resourceQuery: this.resourceQuery,
             facetQuery: this.facetQuery,
+            facetQueryConstraints: this.facetQueryConstraints,
             page: this.page,
             error: this.error
         };
@@ -149,6 +156,7 @@ class FacetedBrowserStore extends BaseStore {
         this.page = state.page;
         this.resourceQuery = state.resourceQuery;
         this.facetQuery = state.facetQuery;
+        this.facetQueryConstraints = state.facetQueryConstraints;
         this.error = state.error;
     }
 }

@@ -214,11 +214,12 @@ class FacetQuery{
                         //this is the bridge situation where an intermediate resource with source and target property is given
                         //[g]source||target
                         intermediateArr[0] = 1;
+                        //if intermediate is not followed by any graph property, we should make it terminal
                         pgStart[0] = pgStart[0] + `
                         #source property
                         ?osp0 ${self.filterPropertyPath(itemp[0])} ?s .
                         #target property
-                        ?osp0 ${self.filterPropertyPath(itemp[1])} ?si0 .
+                        ?osp0 ${self.filterPropertyPath(itemp[1])} ?${(counter === graphs.length) ? (withPropAnalysis ? withPropAnalysis : 'v'+tindex) : 'si0'} .
                         `;
                     }else{
                         //this is normal rebase
@@ -272,16 +273,16 @@ class FacetQuery{
                     if(withPropAnalysis){
                         pgStart[index] = pgStart[index] + `
                         #source property
-                        ?osp${index} ${self.filterPropertyPath(itempp[0])} ?${(counter === graphs.length ? withPropAnalysis : 'vg' + withPropAnalysis + (counter-1))} .
+                        ?osp${index} ${self.filterPropertyPath(itempp[0])} ?${'vg' + withPropAnalysis + (counter-1)} .
                         #target property
-                        ?osp${index} ${self.filterPropertyPath(itempp[1])} ?si${index} .
+                        ?osp${index} ${self.filterPropertyPath(itempp[1])} ?${(counter === graphs.length) ? withPropAnalysis : 'si'+index} .
                         `;
                     }else{
                         pgStart[index] = pgStart[index] + `
                         #source property
-                        ?osp${index} ${self.filterPropertyPath(itempp[0])} ?v${(counter === graphs.length ? tindex : 'g' + tindex + (counter-1))} .
+                        ?osp${index} ${self.filterPropertyPath(itempp[0])} ?v${'g' + tindex + (counter-1)} .
                         #target property
-                        ?osp${index} ${self.filterPropertyPath(itempp[1])} ?si${index} .
+                        ?osp${index} ${self.filterPropertyPath(itempp[1])} ?${(counter === graphs.length) ?  'v'+tindex : 'si'+index} .
                         `;
                     }
                 }else{
@@ -357,15 +358,27 @@ class FacetQuery{
         }
         queryheart = st_extra + ' ' + queryheart;
         //notice: it limits results to first 500 items
+        let queryConstraint = `
+          ${gStart}
+              ${queryheart}
+          ${gEnd}
+        `;
+        //need to change the ?s and ?v to a random variable to not overlap with the new pivot
+        let rnd = Math.floor(Date.now() / 1000);
+        queryConstraint = queryConstraint.replace(/\?s/g, '?pvs'+rnd);
+        queryConstraint = queryConstraint.replace(/\?v\./, '?s\.');
+        queryConstraint = queryConstraint.replace(/\?v \./, '?s\.');
+        queryConstraint = queryConstraint.replace(/\?v/g, '?pv'+rnd);
+
         this.query = `
         SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
-            ${gStart}
-                ${queryheart}
-            ${gEnd}
+          ${gStart}
+              ${queryheart}
+          ${gEnd}
         } GROUP BY ?v ORDER BY DESC(?total) OFFSET ${page*500} LIMIT 500
         `;
         // console.log(this.prefixes + this.query);
-        return this.prefixes + this.query;
+        return {query: this.prefixes + this.query, queryConstraints: queryConstraint};
     }
     getMultipleFilters(endpointParameters, graphName, prevSelection, rconfig, options) {
         let self = this;
@@ -612,6 +625,9 @@ class FacetQuery{
             }
             st_extra = constraintPhrase + st_extra;
         }
+        if(rconfig.pivotConstraint){
+            st_extra = st_extra + rconfig.pivotConstraint;
+        }
         return st_extra;
     }
     filterPropertyPath(propertyURI){
@@ -639,15 +655,30 @@ class FacetQuery{
             queryheart = st;
         }
         queryheart = st_extra + ' ' + queryheart;
+        let queryConstraint = '';
+        if(options.facetConfigs && options.facetConfigs[propertyURI] && options.facetConfigs[propertyURI].pivotDataset){
+            if(options.facetConfigs[propertyURI]){
+                queryConstraint = `
+                  ${gStart}
+                      ${queryheart}
+                  ${gEnd}
+                `;
+                //need to change the ?s and ?v to a random variable to not overlap with the new pivot
+                let rnd = Math.floor(Date.now() / 1000);
+                queryConstraint = queryConstraint.replace(/\?s/g, '?pvs'+rnd);
+                queryConstraint = queryConstraint.replace(/\?v\./, '?s\.');
+                queryConstraint = queryConstraint.replace(/\?v \./, '?s\.');
+                queryConstraint = queryConstraint.replace(/\?v/g, '?pv'+rnd);
+            }
+        }
         this.query = `
         SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
-            ${gStart}
-                ${queryheart}
-            ${gEnd}
+          ${gStart}
+              ${queryheart}
+          ${gEnd}
         } GROUP BY ?v ORDER BY DESC(?total) LIMIT 500
         `;
-        //console.log(this.query);
-        return this.prefixes + this.query;
+        return {query: this.prefixes + this.query, queryConstraints: queryConstraint};
     }
     getSideEffectsCount(endpointParameters, graphName, rconfig, propertyURI, prevSelection, options) {
         let queryheart = '';
