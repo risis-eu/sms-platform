@@ -40,8 +40,8 @@ class DatasetPager extends React.Component {
         if(data.value === 'downloadResults'){
             this.props.handleExport();
         }else if(data.value === 'saveQuery'){
-            this.props.onSearchMode(0);
-            this.setState({searchMode: 0, saveMode: !this.state.saveMode, querySaved: 0});
+            //allow both search and save
+            this.setState({saveMode: !this.state.saveMode, querySaved: 0});
         }else if(data.value === 'searchInResults'){
             this.onSearchClick();
         }
@@ -89,6 +89,7 @@ class DatasetPager extends React.Component {
                 datasetURI: this.props.datasetURI,
                 selection: this.props.selection,
                 pivotConstraint: this.props.pivotConstraint,
+                searchTerm: this.state.searchMode ? this.state.searchTerm : '',
                 resourceQuery: this.props.resourceQuery,
                 page: this.props.currentPage,
                 description: desc
