@@ -162,7 +162,7 @@ class DatasetPager extends React.Component {
             { key: 1, icon: 'search', text:  'Search in Results', value: 'searchInResults' },
             { key: 2, icon: 'download', text:  'Download Results', value: 'downloadResults' }
         ];
-        if((user && parseInt(user.isSuperUser)) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam')){
+        if((user && parseInt(user.isSuperUser)) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam')!==-1){
             a_options = [
                 { key: 1, icon: 'search', text:  'Search in Results', value: 'searchInResults' },
                 { key: 2, icon: 'download', text:  'Download Results', value: 'downloadResults' }
