@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 //import ReactDOM from 'react-dom';
 import {NavLink} from 'fluxible-router';
 import searchInDataset from '../../actions/searchInDataset';
+import saveFacetsEnvState from '../../actions/saveFacetsEnvState';
 import {Dropdown, Icon} from 'semantic-ui-react';
 class DatasetPager extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchTerm: '', searchMode: 0, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : ''};
+        this.state = {searchTerm: '', searchMode: 0, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : '', saveMode: 0, saveText: '', querySaved: 0};
     }
     componentDidMount() {
     }
@@ -22,7 +23,7 @@ class DatasetPager extends React.Component {
             );
         }
     }
-    handleDropDownClick(e, data){
+    handleViewsDropDownClick(e, data){
         let tmp = this.state.config;
         if(!this.state.config){
             tmp ={};
@@ -35,6 +36,17 @@ class DatasetPager extends React.Component {
         this.setState({config: tmp});
         this.props.handleViewerChange(data.value);
     }
+    handleActionDropDownClick(e, data){
+        if(data.value === 'downloadResults'){
+            this.props.handleExport();
+        }else if(data.value === 'saveQuery'){
+            this.props.onSearchMode(0);
+            this.setState({searchMode: 0, saveMode: !this.state.saveMode, querySaved: 0});
+        }else if(data.value === 'searchInResults'){
+            this.onSearchClick();
+        }
+
+    }
     onShowAllClick(){
         if(this.props.showAllResources){
             this.searchOnDataset('');
@@ -45,8 +57,13 @@ class DatasetPager extends React.Component {
 
     }
     onSearchClick(){
+        //reset the search
+        if(this.state.searchMode && this.state.searchTerm){
+            this.searchOnDataset('');
+            this.setState({searchTerm: ''});
+        }
         this.props.onSearchMode(!this.state.searchMode);
-        this.setState({searchMode: !this.state.searchMode});
+        this.setState({searchMode: !this.state.searchMode, saveMode: 0, querySaved: 0});
     }
     handleSearchChange(evt) {
         this.setState({searchTerm: evt.target.value});
@@ -54,6 +71,9 @@ class DatasetPager extends React.Component {
             //in case of empty, restore results
             this.searchOnDataset('');
         }
+    }
+    handleSaveTextChange(evt) {
+        this.setState({saveText: evt.target.value});
     }
     searchOnDataset(term) {
         this.context.executeAction(searchInDataset, {
@@ -63,11 +83,32 @@ class DatasetPager extends React.Component {
             searchTerm: term
         });
     }
+    saveEnvState(desc) {
+        if(desc.trim()){
+            this.context.executeAction(saveFacetsEnvState, {
+                datasetURI: this.props.datasetURI,
+                selection: this.props.selection,
+                pivotConstraint: this.props.pivotConstraint,
+                resourceQuery: this.props.resourceQuery,
+                page: this.props.currentPage,
+                description: desc
+            });
+            this.setState({saveText: '', saveMode: 0, querySaved: 1});
+        }
+    }
     handleSearchKeyDown(evt) {
         switch (evt.keyCode) {
             //case 9: // Tab
             case 13: // Enter
                 this.searchOnDataset(this.state.searchTerm);
+                break;
+        }
+    }
+    handleSaveKeyDown(evt) {
+        switch (evt.keyCode) {
+            //case 9: // Tab
+            case 13: // Enter
+                this.saveEnvState(this.state.saveText);
                 break;
         }
     }
@@ -80,12 +121,12 @@ class DatasetPager extends React.Component {
         //menu is customized if there are props for analysis
         if(this.props.noOfAnalysisProps && this.props.noOfAnalysisProps > 1){
             v_options = [
-                { key: 1, text:  'Table', value: 'BasicResourceList' },
-                { key: 2, text:  'Tree Map', value: 'TreeMapView' },
-                { key: 3, text:  'Scatter Chart', value: 'ScatterChartView' },
-                { key: 4, text:  'Bar Chart', value: 'BarChartView' },
-                { key: 5, text:  'Radar Chart', value: 'RadarChartView' },
-                { key: 6, text:  'Network Diagram', value: 'NetworkView' }
+                { key: 1, icon: 'table', text:  'Table', value: 'BasicResourceList' },
+                { key: 2, icon: 'grid layout', text:  'Tree Map', value: 'TreeMapView' },
+                { key: 3, icon: 'line chart', text:  'Scatter Chart', value: 'ScatterChartView' },
+                { key: 4, icon: 'bar chart', text:  'Bar Chart', value: 'BarChartView' },
+                { key: 5, icon: 'bullseye', text:  'Radar Chart', value: 'RadarChartView' },
+                { key: 6, icon: 'share alternate', text:  'Network Diagram', value: 'NetworkView' }
             ]
             v_icons = {
                 'BasicResourceList': 'table',
@@ -99,26 +140,49 @@ class DatasetPager extends React.Component {
         }else{
             if(this.props.noOfAnalysisProps && this.props.noOfAnalysisProps === 1){
                 v_options = [
-                    { key: 1, text:  'List', value: 'BasicResourceList' },
-                    { key: 2, text:  'Network Diagram', value: 'NetworkView' }
+                    { key: 1, icon: 'table', text:  'Table', value: 'BasicResourceList' },
+                    { key: 2, icon: 'share alternate', text:  'Network Diagram', value: 'NetworkView' }
                 ];
                 v_icons = {
-                    'BasicResourceList': 'list layout',
+                    'BasicResourceList': 'table',
                     'NetworkView': 'share alternate'
                 };
             }else{
                 v_options = [
-                    { key: 1, text:  'List', value: 'BasicResourceList' }
+                    { key: 1, icon: 'list layout', text:  'List', value: 'BasicResourceList' }
                 ];
                 v_icons = {
                     'BasicResourceList': 'list layout'
                 };
             }
         }
+        //action menu
+        let a_options = [
+            { key: 1, icon: 'search', text:  'Search in Results', value: 'searchInResults' },
+            { key: 2, icon: 'download', text:  'Download Results', value: 'downloadResults' }
+        ];
+        if((user && parseInt(user.isSuperUser)) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam')){
+            a_options = [
+                { key: 1, icon: 'search', text:  'Search in Results', value: 'searchInResults' },
+                { key: 2, icon: 'download', text:  'Download Results', value: 'downloadResults' }
+            ];
+        }else{
+            a_options = [
+                { key: 1, icon: 'search', text:  'Search in Results', value: 'searchInResults' }
+            ];
+        }
+        if(this.props.enableQuerySaveImport){
+            a_options.push({ key: 3, icon: 'save', text:  'Save Query', value: 'saveQuery' });
+        }
         let iconC =  (this.state.config && this.state.config.datasetViewer) ? (v_icons[this.state.config.datasetViewer] ? v_icons[this.state.config.datasetViewer] : defaultViewIcon) : defaultViewIcon;
         const v_trigger = (
             <span>
                 <Icon name={iconC} className="olive" />
+            </span>
+        );
+        const a_trigger = (
+            <span>
+                <Icon name='lab' className="orange"/>
             </span>
         );
         let maxOnPage = this.state.config.maxNumberOfResourcesOnPage;
@@ -184,12 +248,9 @@ class DatasetPager extends React.Component {
                     </div>
                     <div className="right menu stackable">
                         {this.props.total ?
-                            <a title="Download" className={'ui icon mini basic button right floated item ' + (user && (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1) ? '': 'disabled')} onClick={this.props.handleExport}><i className='icon download'></i></a>
+                            <Dropdown className="item" title="actions" selectOnBlur={false} onChange={this.handleActionDropDownClick.bind(this)} trigger={a_trigger} options={a_options} icon={null} floating />
                             : ''}
-                        <Dropdown className="item" title="actions" selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={v_trigger} options={v_options} icon={null} floating />
-                        <a className='ui icon mini basic button right floated item ' onClick={this.onSearchClick.bind(this)} title="search">
-                            <i className='ui icon orange search'></i>
-                        </a>
+                        <Dropdown className="item" title="views" selectOnBlur={false} onChange={this.handleViewsDropDownClick.bind(this)} trigger={v_trigger} options={v_options} icon={null} floating />
                         {this.props.onExpandCollapse ?
                             <a className='ui icon mini basic button right floated item ' onClick={this.props.onExpandCollapse.bind(this)} title="expand/collapse">
                                 <i className='ui icon expand'></i>
@@ -197,10 +258,23 @@ class DatasetPager extends React.Component {
                             : ''}
                     </div>
                 </div>
+                {!this.state.querySaved ? '' :
+                    <div className="ui info message">
+                      Your query was saved. <a className="ui primary mini button" href="/wysiwyq" target="_blank"> See stored queries</a>
+                    </div>
+                }
+                {!this.state.saveMode ? '' :
+                    <div className="ui secondary segment bottom attached animated slideInDown">
+                        <div className="ui icon input fluid">
+                            <input ref="saveInput" type="text" placeholder="Write a description for your query and press enter to save..." value={this.state.saveText} onChange={this.handleSaveTextChange.bind(this)} onKeyDown={this.handleSaveKeyDown.bind(this)}/>
+                            <i className="save icon"></i>
+                        </div>
+                    </div>
+                }
                 {!this.state.searchMode ? '' :
                     <div className="ui secondary segment bottom attached animated slideInDown">
                         <div className="ui icon input fluid">
-                            <input ref="searchInput" type="text" placeholder="Search in resources..." value={this.state.searchTerm} onChange={this.handleSearchChange.bind(this)} onKeyDown={this.handleSearchKeyDown.bind(this)}/>
+                            <input ref="searchInput" type="text" placeholder="Type your search keywords and press enter to search..." value={this.state.searchTerm} onChange={this.handleSearchChange.bind(this)} onKeyDown={this.handleSearchKeyDown.bind(this)}/>
                             <i className="search icon"></i>
                         </div>
                     </div>

@@ -16,6 +16,7 @@ import BoundaryMapStore from './stores/BoundaryMapStore';
 import LinksetStore from './stores/LinksetStore';
 import DatasetAnnotationStore from './stores/DatasetAnnotationStore';
 import DatasetGeoEnrichmentStore from './stores/DatasetGeoEnrichmentStore';
+import QueryImportStore from './stores/QueryImportStore';
 
 let app = new Fluxible({
     component: Application,
@@ -33,7 +34,8 @@ let app = new Fluxible({
         BoundaryMapStore,
         LinksetStore,
         DatasetAnnotationStore,
-        DatasetGeoEnrichmentStore
+        DatasetGeoEnrichmentStore,
+        QueryImportStore
     ]
 });
 

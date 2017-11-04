@@ -102,5 +102,15 @@ export default {
         dynamicConfigurator.createASampleFacetsConfig(user, configURI, datasetURI, options, (res)=> {
             callback(res);
         });
+    },
+    createAnEnvState: function(user, configURI, options, callback) {
+        dynamicConfigurator.createAnEnvState(user, configURI, options, (res)=> {
+            callback(res);
+        });
+    },
+    getSavedQueries: function(user, callback) {
+        dynamicConfigurator.getSavedQueries(user, (res)=> {
+            callback(res);
+        });
     }
 }

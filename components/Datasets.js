@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames/bind';
-import {navigateAction} from 'fluxible-router';
+import {navigateAction, NavLink} from 'fluxible-router';
 import {connectToStores} from 'fluxible-addons-react';
-import {enableAuthentication, defaultDatasetURI, enableAddingNewDatasets, enableDatasetAnnotation, enableDatasetGeoEnrichment} from '../configs/general';
+import {enableAuthentication, defaultDatasetURI, enableAddingNewDatasets, enableDatasetAnnotation, enableDatasetGeoEnrichment, enableQuerySaveImport} from '../configs/general';
 import {checkViewAccess, checkEditAccess} from '../services/utils/accessManagement';
 import DatasetsStore from '../stores/DatasetsStore';
 import URIUtil from './utils/URIUtil';
@@ -183,6 +183,7 @@ class Datasets extends React.Component {
         let geoEnrichDatasetDIV = '';
         let datasetActionsDIV = '';
         let info = '';
+        let queryImportDIV = '';
         let dsCategoryObj = {links: [], orgRanking: [], orgs: [], persons: [], fundingPrograms: [], projects: [], publications: [], patents: [], geoLocations: [], geoBoundaries: [], geoStats: [], others: []};
         let dss = this.props.DatasetsStore.datasetsList;
         //check erros first
@@ -234,8 +235,15 @@ class Datasets extends React.Component {
                 </a>
             </div>;
         }
+        if(enableQuerySaveImport){
+            queryImportDIV = <div className="item">
+                <NavLink  className="medium ui basic icon labeled button" href="/wysiwyq">
+                    <i className="large blue level down icon"></i>Import a Query
+                </NavLink>
+            </div>;
+        }
         datasetActionsDIV = <div className="ui horizontal divided list">
-            {createDatasetDIV} {annotateDatasetDIV} {geoEnrichDatasetDIV}
+            {createDatasetDIV} {annotateDatasetDIV} {geoEnrichDatasetDIV} {queryImportDIV}
             <br/>
         </div>;
         if(!dss.length){
