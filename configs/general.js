@@ -40,6 +40,8 @@ export default {
     enableDatasetAnnotation: 1,
     //allows users to geocode datasets
     enableDatasetGeoEnrichment: 1,
+    //allows users to save and import a SPARQL query from/to the system: WYSIWYQ concept
+    enableQuerySaveImport: 1,
     //graph that stores your configurations
     configDatasetURI: ['http://ld-r.org/configurations'],
     //will enable/disable auto config

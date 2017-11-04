@@ -237,7 +237,7 @@ class Datasets extends React.Component {
         }
         if(enableQuerySaveImport){
             queryImportDIV = <div className="item">
-                <NavLink  className="medium ui basic icon labeled button" href="/wysiwyq">
+                <NavLink  className={'medium ui basic icon labeled button ' + (user &&  (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1) ? '': 'disabled')} href="/wysiwyq">
                     <i className="large blue level down icon"></i>Import a Query
                 </NavLink>
             </div>;
