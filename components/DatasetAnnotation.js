@@ -16,7 +16,7 @@ import countAnnotatedResourcesWithProp from '../actions/countAnnotatedResourcesW
 class DatasetAnnotation extends React.Component {
     constructor(props){
         super(props);
-        this.state = {storingDataset: '', datasetURI: '', resourceType: '', propertyURI: '', annotationMode: 0, storeInNewDataset : false, noDynamicConfig: 0};
+        this.state = {stopWords: '', confidence: 0.5, advancedMode: 0, storingDataset: '', datasetURI: '', resourceType: '', propertyURI: '', annotationMode: 0, storeInNewDataset : false, noDynamicConfig: 0};
     }
     componentDidMount() {
 
@@ -120,7 +120,9 @@ class DatasetAnnotation extends React.Component {
                 propertyURI: self.state.propertyURI,
                 storingDataset: self.state.storingDataset,
                 datasetLabel: self.findDatasetLabel(self.state.datasetURI),
-                noDynamicConfig: self.state.noDynamicConfig
+                noDynamicConfig: self.state.noDynamicConfig,
+                confidence: self.state.confidence,
+                stopWords: self.state.stopWords
             });
         }
     }
@@ -135,10 +137,24 @@ class DatasetAnnotation extends React.Component {
         });
         return label;
     }
-
+    showHideAdvanceOptions(){
+        this.setState({advancedMode: ! this.state.advancedMode});
+    }
     handleNewDatasetChange(event) {
         //in this case, do not create a dynamic config, admin should handle it manually
         this.setState({storingDataset: event.target.value, noDynamicConfig: 1});
+    }
+    handleConfidenceChange(event){
+        let val = event.target.value.trim();
+        //if it is a number
+        if (!isNaN(val)){
+            if(Number(val)<=1 && Number(val) >=0){
+                this.setState({confidence: val});
+            }
+        }
+    }
+    handleStopWordsChange(event){
+        this.setState({stopWords: event.target.value.trim()});
     }
     render() {
         let optionsList, dss = this.props.DatasetsStore.datasetsList;
@@ -215,6 +231,31 @@ class DatasetAnnotation extends React.Component {
                 {allowChangingNewDataset && this.state.storeInNewDataset ?
                     <input ref="newDatasetInput" type="text" value={this.state.storingDataset} placeholder="Add URI of the new dataset" onChange={this.handleNewDatasetChange.bind(this)} />
                     : ''}
+                <a className="ui basic icon button" onClick={this.showHideAdvanceOptions.bind(this)}><i className="blue icon setting"></i> Advanced Options</a>
+                {this.state.advancedMode ?
+                    <div className="ui list">
+                        <div className="item">
+                            <b>Annotator API</b>
+                            <select ref="language" className="ui disabled search dropdown">
+                                <option value="en"> DBpedia Spotlight </option>
+                            </select>
+                        </div>
+                        <div className="item">
+                            <b>Language</b>
+                            <select ref="language" className="ui disabled search dropdown">
+                                <option value="en"> English </option>
+                            </select>
+                        </div>
+                        <div className="item">
+                            <b>Confidence</b>
+                            <input type="text" value={this.state.confidence} onChange={this.handleConfidenceChange.bind(this)} placeholder="Confidence degree: a number between 0 to 1"/>
+                        </div>
+                        <div className="item">
+                            <b>Stop Words</b>
+                            <input type="text" value={this.state.stopWords} onChange={this.handleStopWordsChange.bind(this)} placeholder="Comma seperated list of stop words"/>
+                        </div>
+                    </div>
+                    : null}
                 <Divider hidden />
                 <div className='ui big blue button' onClick={this.handleAnnotateDataset.bind(this)}>Annotate  Dataset</div>
                 <Divider hidden />
