@@ -168,7 +168,9 @@ class DatasetPager extends React.Component {
             { key: 1, icon: 'search', text:  'Search in Results', value: 'searchInResults' },
             { key: 2, icon: 'download', text:  'Download Results', value: 'downloadResults' }
         ];
+        let allowedUser = 0;
         if((user && parseInt(user.isSuperUser)) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam')!==-1){
+            allowedUser = 1;
             a_options = [
                 { key: 1, icon: 'search', text:  'Search in Results', value: 'searchInResults' },
                 { key: 2, icon: 'download', text:  'Download Results', value: 'downloadResults' }
@@ -247,7 +249,7 @@ class DatasetPager extends React.Component {
                                 <span><span onDoubleClick={this.props.handleToggleShowQuery}>{totalPages}</span> Page(s): {pageList} &nbsp;</span>
                             }
                             {totalPages > 1 && this.props.total<= 10000 ?
-                                <a className={'ui icon mini button ' + (this.props.showAllResources ? 'blue': 'basic')} onClick={this.onShowAllClick.bind(this)}>
+                                <a className={'ui icon mini button ' + (this.props.showAllResources ? 'blue': 'basic' + (allowedUser ? '':' disabled'))} onClick={this.onShowAllClick.bind(this)}>
                                     {this.props.showAllResources ? 'go back to pagination' : 'show all'}
                                 </a>
                                 :
