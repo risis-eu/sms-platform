@@ -5,6 +5,7 @@ import classNames from 'classnames/bind';
 import {navigateAction, NavLink} from 'fluxible-router';
 import {connectToStores} from 'fluxible-addons-react';
 import {enableAuthentication, defaultDatasetURI, enableAddingNewDatasets, enableDatasetAnnotation, enableDatasetGeoEnrichment, enableQuerySaveImport} from '../configs/general';
+import SearchInput, {createFilter} from 'react-search-input'
 import {checkViewAccess, checkEditAccess} from '../services/utils/accessManagement';
 import DatasetsStore from '../stores/DatasetsStore';
 import URIUtil from './utils/URIUtil';
@@ -12,7 +13,8 @@ import URIUtil from './utils/URIUtil';
 class Datasets extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {mouseOverList: [], selectedList: []};
+        this.state = {mouseOverList: [], selectedList: [], searchTerm: ''};
+        this.searchUpdated = this.searchUpdated.bind(this)
     }
     componentDidMount() {
         const canvasDIV = this.refs['linker_canvas'];
@@ -127,6 +129,9 @@ class Datasets extends React.Component {
                 target: containerPatents
             }, commonPropLink);
         });
+    }
+    searchUpdated (term) {
+        this.setState({searchTerm: term})
     }
     prepareFocusList(list) {
         let out = [];
@@ -294,6 +299,11 @@ class Datasets extends React.Component {
             });
             let dsLink = '';
             let dsIcon = '';
+
+            //allow search in datasets list
+            const KEYS_TO_FILTERS = ['features.datasetLabel', 'features.resourceFocusType', 'd'];
+            dss = dss.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
+
             outputDSS = dss.map(function(ds, index) {
                 dsLink = <a href={'/dataset/1/' + encodeURIComponent(ds.d)} title="go to resource list">{ds.features && ds.features.datasetLabel ? ds.features.datasetLabel : ds.d}</a>;
                 if(ds.features && ds.features.isBrowsable){
@@ -579,6 +589,16 @@ class Datasets extends React.Component {
                             {outputX}
                             {errorDIV ? '' :
                                 <h2><span className="ui big black circular label">{dss.length}</span> Datasets { self.state.selectedList.length ? <span className="ui tag label">{self.state.selectedList.join(', ')}</span> : ''}</h2>
+                            }
+                            {errorDIV ? '' :
+                                <div className="ui">
+                                    <div className="ui fluid category search">
+                                        <div className="ui large icon input">
+                                            <SearchInput className="prompt circular" onChange={this.searchUpdated} placeholder="Search in datasets..." style={{width: 500}} />
+                                            <i className="search icon"></i>
+                                        </div>
+                                    </div>
+                                </div>
                             }
 
                             <div className="ui big divided list" id="datasetsList">
