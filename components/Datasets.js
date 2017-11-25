@@ -590,7 +590,7 @@ class Datasets extends React.Component {
                             {errorDIV ? '' :
                                 <h2><span className="ui big black circular label">{dss.length}</span> Datasets { self.state.selectedList.length ? <span className="ui tag label">{self.state.selectedList.join(', ')}</span> : ''}</h2>
                             }
-                            {errorDIV ? '' :
+                            {errorDIV ? '' : dss.length < 7 ? '' :
                                 <div className="ui">
                                     <div className="ui fluid category search">
                                         <div className="ui large icon input">
