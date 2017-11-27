@@ -1,5 +1,4 @@
 export default function findGeoBoundaries(context, payload, done) {
-    context.dispatch('LOADING_DATA', {});
     context.service.read('dbpedia.address2boundary', payload, {timeout: 20 * 1000}, function (err, res) {
         if (err) {
             let error_res = {enrichment: {location: 0, boundarySource: payload.boundarySource, boundaries: []}, id: payload.id, query: payload.query, msg: err};
@@ -7,7 +6,6 @@ export default function findGeoBoundaries(context, payload, done) {
         } else {
             context.dispatch('UPDATE_GEO_BOUNDARIES', res);
         }
-        context.dispatch('LOADED_DATA', {});
         done(null, res);
     });
 }
