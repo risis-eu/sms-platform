@@ -14,6 +14,12 @@ import async from 'async';
 const outputFormat = 'application/sparql-results+json';
 const headers = {'Accept': 'application/sparql-results+json'};
 let user;
+/*------------used for caching-----------*/
+const metaHeaders = {
+    headers: {
+        'cache-control': 'public, max-age=3600'
+    }
+};
 /*-----------------------------------*/
 let endpointParameters, datasetURI, dg, graphName, query, queryObject, utilObject, configurator, propertyURI;
 queryObject = new FacetQuery();
@@ -59,7 +65,7 @@ export default {
                             graphName: graphName,
                             propertyURI: decodeURIComponent(params.selection.propertyURI),
                             total: utilObject.parseCountResourcesByType(res)
-                        });
+                        }, metaHeaders);
                     }).catch(function (err) {
                         console.log(err);
                         callback(null, {datasetURI: datasetURI, graphName: graphName, propertyURI: decodeURIComponent(params.selection.propertyURI), total: 0});
@@ -102,7 +108,7 @@ export default {
                             graphName: graphName,
                             page: 1,
                             facets: {propertyURI: decodeURIComponent(params.selection.propertyURI), items: utilObject.parseMasterPropertyValues(res), facetQuery: fullQueries.query, facetQueryConstraints: fullQueries.queryConstraints}
-                        });
+                        }, metaHeaders);
                     }).catch(function (err) {
                         console.log(err);
                         callback(null, {datasetURI: datasetURI, graphName: graphName, facets: {}, total: 0, page: 1});
@@ -132,7 +138,7 @@ export default {
                         graphName: graphName,
                         propertyURI: decodeURIComponent(params.selection.value),
                         total: 0
-                    });
+                    }, metaHeaders);
                     return 0;
                 }
                 configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
@@ -156,7 +162,7 @@ export default {
                             graphName: graphName,
                             propertyURI: decodeURIComponent(params.selection.value),
                             total: utilObject.parseCountResourcesByType(res)
-                        });
+                        }, metaHeaders);
                     }).catch(function (err) {
                         console.log(err);
                         callback(null, {datasetURI: datasetURI, graphName: graphName, propertyURI: decodeURIComponent(params.selection.value), total: 0});
@@ -185,7 +191,7 @@ export default {
                         graphName: graphName,
                         page: 1,
                         facets: {propertyURI: decodeURIComponent(params.selection.value), status: false}
-                    });
+                    }, metaHeaders);
                     return 0;
                 }
                 configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
@@ -211,7 +217,7 @@ export default {
                             graphName: graphName,
                             page: 1,
                             facets: {status: Boolean(params.selection.status), propertyURI: decodeURIComponent(params.selection.value), items: utilObject.parseMasterPropertyValues(res), facetQuery: fullQueries.query, facetQueryConstraints: fullQueries.queryConstraints}
-                        });
+                        }, metaHeaders);
                     }).catch(function (err) {
                         console.log(err);
                         callback(null, {datasetURI: datasetURI, graphName: graphName, facets: {}, total: 0, page: 1});
@@ -287,7 +293,7 @@ export default {
                                 facets: {items: utilObject.parseSecondLevelPropertyValues(user, datasetURI, res2, rconfig)},
                                 total: utilObject.parseCountResourcesByType(res),
                                 resourceQuery: query2
-                            });
+                            }, metaHeaders);
                         }).catch(function (err2) {
                             console.log(err2);
                             callback(null, {datasetURI: datasetURI, graphName: graphName, resourceFocusType: rftconfig.type, facets: {items: []}, total: 0, page: 1, resourceQuery: query2});
@@ -343,7 +349,7 @@ export default {
                     callback(null, {datasetURI: datasetURI, dynamicConfig: results.dynamicFacetsConfig, staticConfig: staticConfig, dynamicDatasetConfig: results.dynamicDatasetConfig, staticDatasetConfig: staticDatasetConfig});
                     return;
                 }
-                callback(null, {datasetURI: datasetURI, dynamicConfig: results[0], staticConfig: staticConfig, dynamicDatasetConfig: results[1], staticDatasetConfig: staticDatasetConfig});
+                callback(null, {datasetURI: datasetURI, dynamicConfig: results[0], staticConfig: staticConfig, dynamicDatasetConfig: results[1], staticDatasetConfig: staticDatasetConfig}, metaHeaders);
             });
 
         }

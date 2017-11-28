@@ -8,6 +8,12 @@ import redis from 'redis';
 /*-------------config-------------*/
 const outputFormat = 'application/sparql-results+json';
 const redisServer = {'host': '127.0.0.1', 'port': '6379'}; //defaukt: 127.0.0.1 and 6379
+/*------------used for caching-----------*/
+const metaHeaders = {
+    headers: {
+        'cache-control': 'public, max-age=3600'
+    }
+};
 /*-----------------------------------*/
 let endpointParameters, graphName, query, queryObject, utilObject;
 queryObject = new GeoQuery();
@@ -43,7 +49,7 @@ export default {
                         address: decodeURIComponent(params.addr),
                         cached: true,
                         resources: JSON.parse(reply)
-                    });
+                    }, metaHeaders);
                 }else{
                     //try again in the old cache: I didn't want to remove it!
                     redisClient.get(['googleGeocode', address].join('-'), function(err2, reply2) {
@@ -52,7 +58,7 @@ export default {
                                 address: decodeURIComponent(params.addr),
                                 cached: true,
                                 resources: JSON.parse(reply2)
-                            });
+                            }, metaHeaders);
                         }else{
                             //send request
                             rp.get({uri: apiURI}).then(function(res){
@@ -64,7 +70,7 @@ export default {
                                 callback(null, {
                                     address: params.addr,
                                     resources: gres
-                                });
+                                }, metaHeaders);
                             }).catch(function (err) {
                                 console.log(err);
                                 callback(null, {
@@ -93,7 +99,7 @@ export default {
                         latlng: latlng,
                         cached: true,
                         resources: JSON.parse(reply)
-                    });
+                    }, metaHeaders);
                 }else{
                     //try again in the old cache: I didn't want to remove it!
                     redisClient.get(['googleReverseGeocode', latlng].join('-'), function(err2, reply2) {
@@ -102,7 +108,7 @@ export default {
                                 latlng: latlng,
                                 cached: true,
                                 resources: JSON.parse(reply2)
-                            });
+                            }, metaHeaders);
                         }else{
                             //send request
                             rp.get({uri: apiURI}).then(function(res){
@@ -114,7 +120,7 @@ export default {
                                 callback(null, {
                                     latlng: latlng,
                                     resources: gres
-                                });
+                                }, metaHeaders);
                             }).catch(function (err) {
                                 console.log(err);
                                 callback(null, {
@@ -142,7 +148,7 @@ export default {
                     latitude: parseFloat(params.lat),
                     longitude: parseFloat(params.long),
                     resources: utilObject.parsePointToNUTS(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -161,7 +167,7 @@ export default {
                 //console.log(res);
                 callback(null, {
                     resources: utilObject.parsePointToNUTS(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -180,7 +186,7 @@ export default {
                 //console.log(res);
                 callback(null, {
                     resources: utilObject.parsePointToNUTS(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -199,7 +205,7 @@ export default {
                 //console.log(res);
                 callback(null, {
                     resources: utilObject.parseNUTStoPolygon(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -219,7 +225,7 @@ export default {
                 callback(null, {
                     country: params.country,
                     resources: utilObject.MunicipalitiesPerCountry(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -238,7 +244,7 @@ export default {
                 callback(null, {
                     code: params.code,
                     resources: utilObject.parseNUTStoMunicipality(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -256,7 +262,7 @@ export default {
                 //console.log(res);
                 callback(null, {
                     resources: utilObject.parseNameToMunicipality(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -274,7 +280,7 @@ export default {
                 //console.log(res);
                 callback(null, {
                     resources: utilObject.parseNameToMunicipality(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -295,7 +301,7 @@ export default {
                     latitude: parseFloat(params.lat),
                     longitude: parseFloat(params.long),
                     resources: utilObject.parsePointToMunicipality(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -316,7 +322,7 @@ export default {
                     name: params.name,
                     country: params.country,
                     resources: utilObject.parseNameToMunicipality(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -336,7 +342,7 @@ export default {
                 callback(null, {
                     code: params.code,
                     resources: utilObject.parseMunicipalityToPolygon(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -360,7 +366,7 @@ export default {
                         longitude: parseFloat(params.long),
                         cached: true,
                         resources: JSON.parse(reply)
-                    });
+                    }, metaHeaders);
                 }else{
                     //send request
                     rp.get({uri: getHTTPGetURL(getHTTPQuery('read', queryGADM, endpointParameters, outputFormat))}).then(function(res){
@@ -373,7 +379,7 @@ export default {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
                             resources: resGADM
-                        });
+                        }, metaHeaders);
                     }).catch(function (err) {
                         console.log(err);
                         callback(null, {resources: []});
@@ -438,7 +444,7 @@ export default {
                         longitude: parseFloat(params.long),
                         cached: true,
                         resources: JSON.parse(reply)
-                    });
+                    }, metaHeaders);
                 }else{
                     if(params.useExternal){
                         if(params.useExternal === 'MapIt'){
@@ -457,7 +463,7 @@ export default {
                                     longitude: parseFloat(params.long),
                                     usedExternalService: 'MapIt',
                                     resources: resOSM
-                                });
+                                }, metaHeaders);
                             }).catch(function (err) {
                                 console.log(err);
                                 callback(null, {resources: []});
@@ -478,7 +484,7 @@ export default {
                                     longitude: parseFloat(params.long),
                                     usedExternalService: 'RISISMapIt',
                                     resources: resOSM
-                                });
+                                }, metaHeaders);
                             }).catch(function (err) {
                                 console.log(err);
                                 callback(null, {resources: []});
@@ -523,7 +529,7 @@ export default {
                 callback(null, {
                     id: params.id,
                     resources: utilObject.parseOSMAdmin(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -543,7 +549,7 @@ export default {
                 callback(null, {
                     country: params.country,
                     resource: utilObject.parseOSMAdminMetadata(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -563,7 +569,7 @@ export default {
                 callback(null, {
                     id: params.id,
                     resources: utilObject.parseOSMAdminToPolygon(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -586,7 +592,7 @@ export default {
                         longitude: parseFloat(params.long),
                         cached: true,
                         resources: JSON.parse(reply)
-                    });
+                    }, metaHeaders);
                 }else{
                     //send request
                     rp.get({uri: getHTTPGetURL(getHTTPQuery('read', queryFlickr, endpointParameters, outputFormat))}).then(function(res){
@@ -599,7 +605,7 @@ export default {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
                             resources: resFlickr
-                        });
+                        }, metaHeaders);
                     }).catch(function (err) {
                         console.log(err);
                         callback(null, {resources: []});
@@ -621,7 +627,7 @@ export default {
                 callback(null, {
                     id: params.id,
                     resources: utilObject.parseFlickrAdmin(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -641,7 +647,7 @@ export default {
                 callback(null, {
                     id: params.id,
                     resources: utilObject.parseFlickrAdminToPolygon(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -661,7 +667,7 @@ export default {
                 callback(null, {
                     id: params.id,
                     resources: utilObject.parseFlickrAdminToPolygon(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -683,7 +689,7 @@ export default {
                     country: params.country,
                     source: params.source,
                     resources: utilObject.parseAdminsByLevel(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -703,7 +709,7 @@ export default {
                 callback(null, {
                     country: params.country,
                     resources: utilObject.parseOECDFUAList(res, params.country)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -730,7 +736,7 @@ export default {
                     country: params.country,
                     depth: params.depth,
                     resources: utilObject.getAdminToContainer(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -757,7 +763,7 @@ export default {
                     country: params.country,
                     depth: params.depth,
                     resources: utilObject.getContainerAdmins(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -777,7 +783,7 @@ export default {
                 callback(null, {
                     country: params.country,
                     resources: utilObject.parseOECDFUA(res)
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
@@ -799,7 +805,7 @@ export default {
                         longitude: parseFloat(params.long),
                         cached: true,
                         resources: JSON.parse(reply)
-                    });
+                    }, metaHeaders);
                 }else{
                     //send request
                     rp.get({uri: getHTTPGetURL(getHTTPQuery('read', queryFUA, endpointParameters, outputFormat))}).then(function(res){
@@ -812,7 +818,7 @@ export default {
                             latitude: parseFloat(params.lat),
                             longitude: parseFloat(params.long),
                             resources: resFUA
-                        });
+                        }, metaHeaders);
                     }).catch(function (err) {
                         console.log(err);
                         callback(null, {resources: []});
@@ -838,7 +844,7 @@ export default {
                     source: params.source,
                     indicatorName: params.indicatorName,
                     resources: resFUA
-                });
+                }, metaHeaders);
             }).catch(function (err) {
                 console.log(err);
                 callback(null, {resources: []});
