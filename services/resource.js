@@ -25,6 +25,12 @@ if(enableLogs){
 /*-------------config-------------*/
 const outputFormat = 'application/sparql-results+json';
 const headers = {'Accept': 'application/sparql-results+json'};
+/*------------used for caching-----------*/
+const metaHeaders = {
+    headers: {
+        'cache-control': 'public, max-age=3600'
+    }
+};
 /*-----------------------------------*/
 let endpointParameters, category, cGraphName, datasetURI, dg, graphName, propertyURI, resourceURI, objectURI, objectValue, query, queryObject, utilObject, configurator, propertyPath, HTTPQueryObject;
 queryObject = new ResourceQuery();
@@ -232,7 +238,7 @@ export default {
                     callback(null, {
                         boundaries: utilObject.parseBoundaries(instances, res),
                         property: params.property
-                    });
+                    }, metaHeaders);
                 }).catch(function (err) {
                     console.log(err);
                     if(enableLogs){
