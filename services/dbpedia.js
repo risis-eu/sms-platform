@@ -9,6 +9,8 @@ const outputFormat = 'application/sparql-results+json';
 let query, lookupClass = '';
 let utilObject = new DBpediaUtil();
 let queryObject = new DBpediaQuery();
+//language detecction
+let franc = require('franc');
 
 export default {
     // Name is the resource. Required.
@@ -60,8 +62,25 @@ export default {
                 });
                 return 0;
             }else{
+                //detect language
+                let spotlightInstance = dbpediaSpotlightService[0];
+                //default lang
+                let lang = 'en';
+                if(params.language){
+                    if(params.language ==='nl'){
+                        //still detect the lang
+                        lang = franc(query);
+                        if(lang === 'nld'){
+                            spotlightInstance = dbpediaSpotlightService[1];
+                            //console.log('send text to Dutch Spotlight...');
+                        }else{
+                            spotlightInstance = dbpediaSpotlightService[0];
+                            //console.log('send text to English Spotlight...');
+                        }
+                    }
+                }
                 //send request
-                rp.post({headers: {'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'}, accept: 'application/json', uri: 'http://' + dbpediaSpotlightService[0].host + ':' + dbpediaSpotlightService[0].port + dbpediaSpotlightService[0].path, form: {'text': query, 'confidence': confidence}}).then(function(res){
+                rp.post({headers: {'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'}, accept: 'application/json', uri: 'http://' + spotlightInstance.host + ':' + spotlightInstance.port + spotlightInstance.path, form: {'text': query, 'confidence': confidence}}).then(function(res){
                     callback(null, {
                         tags: utilObject.parseDBpediaSpotlight(res, stopWords),
                         id: params.id,

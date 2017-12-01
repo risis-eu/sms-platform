@@ -30,6 +30,7 @@ let processData = (page, maxPerPage, totalPages, payload, done)=> {
                         query: resource.ov,
                         id: resource.r,
                         confidence: payload.confidence,
+                        language: payload.language,
                         stopWords: payload.stopWords
                     }, (err3, res3)=>{
                         //console.log('annotateText', resource.ov, res3);

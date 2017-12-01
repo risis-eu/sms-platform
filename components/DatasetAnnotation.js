@@ -16,7 +16,7 @@ import countAnnotatedResourcesWithProp from '../actions/countAnnotatedResourcesW
 class DatasetAnnotation extends React.Component {
     constructor(props){
         super(props);
-        this.state = {stopWords: '', confidence: 0.5, advancedMode: 0, storingDataset: '', datasetURI: '', resourceType: '', propertyURI: '', annotationMode: 0, storeInNewDataset : false, noDynamicConfig: 0};
+        this.state = {language: 'en', stopWords: '', confidence: 0.5, advancedMode: 0, storingDataset: '', datasetURI: '', resourceType: '', propertyURI: '', annotationMode: 0, storeInNewDataset : false, noDynamicConfig: 0};
     }
     componentDidMount() {
 
@@ -71,6 +71,8 @@ class DatasetAnnotation extends React.Component {
             this.setState({resourceType: e.target.value.trim()});
         }else if(element=== 'propertyURI'){
             this.setState({propertyURI: e.target.value.trim()});
+        }else if(element=== 'language'){
+            this.setState({language: e.target.value.trim()});
         }
     }
     handleResourceURIChange(val){
@@ -122,6 +124,7 @@ class DatasetAnnotation extends React.Component {
                 datasetLabel: self.findDatasetLabel(self.state.datasetURI),
                 noDynamicConfig: self.state.noDynamicConfig,
                 confidence: self.state.confidence,
+                language: this.state.language,
                 stopWords: self.state.stopWords
             });
         }
@@ -242,8 +245,9 @@ class DatasetAnnotation extends React.Component {
                         </div>
                         <div className="item">
                             <b>Language</b>
-                            <select ref="language" className="ui disabled search dropdown">
+                            <select ref="language" className="ui search dropdown" onChange={this.handleChange.bind(this, 'language')}>
                                 <option value="en"> English </option>
+                                <option value="nl"> Dutch </option>
                             </select>
                         </div>
                         <div className="item">
