@@ -1,6 +1,6 @@
 {
   "name": "linked-data-reactor",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "Linked Data Reactor helps to create adaptive Semantic Web UIs.",
   "private": false,
   "repository": {
@@ -54,7 +54,7 @@
     "jsplumb": "2.2.6",
     "leaflet": "^1.1.0",
     "log": "^1.4.0",
-    "moment": "^2.19.1",
+    "moment": "^2.19.3",
     "nodemailer": "^4.2.0",
     "nodemailer-smtp-transport": "^2.7.4",
     "passport": "^0.4.0",
