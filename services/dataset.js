@@ -465,8 +465,13 @@ export default {
                 user = {accountName: 'open'};
             }
             */
+            if(enableAuthentication){
+                user = {accountName: 'public'};
+            }else{
+                user = {accountName: 'open'};
+            }
             //allow also not logged-in users to see datasets
-            user = {accountName: 'open'};
+
             //filter the config
             let sources = ['dataset', 'dataset_resource', 'dataset_property', 'dataset_resource_property'];
             sources.forEach(function(s){

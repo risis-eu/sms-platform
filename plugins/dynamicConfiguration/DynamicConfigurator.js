@@ -149,6 +149,21 @@ class DynamicConfigurator {
                     `;
                 }
             }
+            //special case for public users to not see user-specific datasets
+            if(user && user.accountName === 'public'){
+                query = `
+                SELECT DISTINCT ?config1 ?config2 ?dataset ?setting ?settingValue WHERE { ${graph}
+                        {
+                        ?config1 a ldr:ReactorConfig ;
+                                ldr:dataset ?dataset ; ?setting ?settingValue .
+                            filter not exists {
+                                ?config1 ldr:createdBy ?user.
+                            }
+                        }
+                ${graphEnd}
+                }
+                `;
+            }
             //send request
             let self = this;
             rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
