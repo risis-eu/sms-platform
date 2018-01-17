@@ -466,7 +466,11 @@ export default {
             }
             */
             if(enableAuthentication){
-                user = {accountName: 'public'};
+                if(!req.user){
+                    user = {accountName: 'public'};
+                }else{
+                    user = req.user;
+                }
             }else{
                 user = {accountName: 'open'};
             }
