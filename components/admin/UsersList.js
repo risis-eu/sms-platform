@@ -63,7 +63,7 @@ class UsersList extends React.Component {
         }
         let i = 0;
         let membership = [];
-        let DSODIV, PRBDIV, FCBDIV, SMSTEAMDIV, SMSVISITOR;
+        let DSODIV, PRBDIV, FCBDIV, SMSTEAMDIV, SMSVISITOR, CREATED;
         if(this.props.UserStore.users){
             list = this.props.UserStore.users.map(function(node, index) {
                 membership = node.membership.split(',');
@@ -103,6 +103,11 @@ class UsersList extends React.Component {
                     // put the flag
                     emailHint = 1;
                 }
+                if(node.created){
+                    CREATED = <span className="ui mini label">{node.created}</span>;
+                }else{
+                    CREATED = <span className="ui mini label">unknown date</span>;
+                }
                 //do not show current super user to edit himself
                 if(node.v !== user.id && !parseInt(node.isSuperUser)){
                     i++;
@@ -110,7 +115,7 @@ class UsersList extends React.Component {
                         <div className="item fadeIn" key={index}>
                             <div className="ui horizontal list">
                                 <NavLink className="item" routeName="resource" href={'/dataset/'+ encodeURIComponent(currentComponent.props.UserStore.graphName) +'/resource/' + encodeURIComponent(node.v)} >
-                                    <div className="content"> <span className="ui black circular label">{i}</span> <i className={dbClass}></i> {node.firstName} {node.lastName} ({node.username}) {DSODIV} {PRBDIV} {FCBDIV} {SMSTEAMDIV} {SMSVISITOR} </div>
+                                    <div className="content"> <span className="ui black circular label">{i}</span> <i className={dbClass}></i> {node.firstName} {node.lastName} ({node.username}) {CREATED} {DSODIV} {PRBDIV} {FCBDIV} {SMSTEAMDIV} {SMSVISITOR} </div>
                                 </NavLink>
                                 {actBtn}
                             </div>
