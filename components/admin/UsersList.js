@@ -64,7 +64,8 @@ class UsersList extends React.Component {
         let i = 0;
         let membership = [];
         let DSODIV, PRBDIV, FCBDIV, SMSTEAMDIV, SMSVISITOR, CREATED;
-        if(this.props.UserStore.users){
+        let CREATED;
+        if (this.props.UserStore.users) {
             list = this.props.UserStore.users.map(function(node, index) {
                 membership = node.membership.split(',');
                 if(membership.indexOf('http://rdf.risis.eu/user/DatasetCoordinators') !== -1){
@@ -103,6 +104,7 @@ class UsersList extends React.Component {
                     // put the flag
                     emailHint = 1;
                 }
+                //add creation date
                 if(node.created){
                     CREATED = <span className="ui mini label">{node.created}</span>;
                 }else{

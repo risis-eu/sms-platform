@@ -15,6 +15,7 @@ let appShortTitle = generalConfig.appShortTitle;
 let appFullTitle = generalConfig.appFullTitle;
 
 const outputFormat = 'application/sparql-results+json';
+<<<<<<< HEAD
 const headers = {'Accept': 'application/sparql-results+json'};
 
 let getPropertyLabel = (uri) => {
@@ -33,6 +34,10 @@ let getPropertyLabel = (uri) => {
     property = property.charAt(0).toUpperCase() + property.slice(1);
     return property;
 }
+=======
+const headers = {'Accept': outputFormat};
+
+>>>>>>> 44852cb72fa29c4896a93d3c62fb8de8a7be4460
 module.exports = function handleAuthentication(server) {
     server.use(passport.initialize());
     server.use(passport.session());
@@ -300,7 +305,7 @@ let addUserQueries = (req, res, recaptchaSiteKey) => {
     `;
     let rpPath = helpers.getHTTPGetURL(helpers.getHTTPQuery('read', query, endpoint, outputFormat));
     //send request
-    rp.get({uri: rpPath}).then(function(resq){
+    rp.get({uri: rpPath, headers: headers}).then(function(resq){
         let parsed = JSON.parse(resq);
         if(parsed.results.bindings.length){
             if(parsed.results.bindings[0].exists.value ==='0'){
