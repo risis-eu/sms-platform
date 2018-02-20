@@ -15,8 +15,6 @@ let appShortTitle = generalConfig.appShortTitle;
 let appFullTitle = generalConfig.appFullTitle;
 
 const outputFormat = 'application/sparql-results+json';
-<<<<<<< HEAD
-const headers = {'Accept': 'application/sparql-results+json'};
 
 let getPropertyLabel = (uri) => {
     var property = '';
@@ -34,10 +32,7 @@ let getPropertyLabel = (uri) => {
     property = property.charAt(0).toUpperCase() + property.slice(1);
     return property;
 }
-=======
 const headers = {'Accept': outputFormat};
-
->>>>>>> 44852cb72fa29c4896a93d3c62fb8de8a7be4460
 module.exports = function handleAuthentication(server) {
     server.use(passport.initialize());
     server.use(passport.session());
