@@ -56,10 +56,10 @@ class Nav extends React.Component {
                     <NavLink routeName="datasets" className="item" href="/datasets"> Datasets</NavLink>
                     <div className="right menu">
                         <NavLink routeName="contact" className="item" href="/contact" title="contact us">
-                            <i className="medium mail outline icon"></i>
+                            <i className="small mail outline icon"></i>
                         </NavLink>
                         <div className="item link" onClick={this.showHelpModal} title="help">
-                            <i className="medium help circle icon"></i>
+                            <i className="small help circle icon"></i>
                         </div>
                         {(showSettings && (enableDynamicReactorConfiguration || enableDynamicServerConfiguration || enableDynamicfacetsConfiguration)) ?
                             configMenu

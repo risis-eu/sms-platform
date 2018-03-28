@@ -222,21 +222,21 @@ class Datasets extends React.Component {
         if(enableAddingNewDatasets){
             createDatasetDIV = <div className="item">
                 <div  className={'medium ui basic icon labeled button ' + (user && (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1) ? '': 'disabled')} onClick={this.handleCreateDataset.bind(this)}>
-                    <i className="cubes square large blue icon "></i> <i className="add black icon"></i>Add a New Dataset
+                    <i className="cubes large blue icon "></i> <i className="add black icon"></i>Add a New Dataset
                 </div>
             </div>;
         }
         if(enableDatasetAnnotation){
             annotateDatasetDIV = <div className="item">
                 <a  className={'medium ui basic icon labeled button ' + (user &&  (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1) ? '': 'disabled')} href="/annotateDataset">
-                    <i className="cubes square large blue icon "></i> <i className="hashtag black icon"></i>Annotate a Dataset
+                    <i className="cubes  large blue icon "></i> <i className="hashtag black icon"></i>Annotate a Dataset
                 </a>
             </div>;
         }
         if(enableDatasetGeoEnrichment){
             geoEnrichDatasetDIV = <div className="item">
                 <a  className={'medium ui basic icon labeled button ' + (user &&  (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1) ? '': 'disabled')} href="/geoEnrichDataset">
-                    <i className="cubes square large blue icon "></i> <i className="marker black icon"></i>Geo-enrich a Dataset
+                    <i className="cubes large blue icon "></i> <i className="marker black icon"></i>Geo-enrich a Dataset
                 </a>
             </div>;
         }
