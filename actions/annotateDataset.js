@@ -59,11 +59,11 @@ let processData = (page, maxPerPage, totalPages, payload, done)=> {
         }
         if(asyncAnnotationTasks [page].length){
             //run tasks async: todo: increase parallel requests to dbpedia sptlight?
-            //async.series(asyncAnnotationTasks [page], (err5, res5)=>{
-            async.parallel(asyncAnnotationTasks [page], (err5, res5)=>{
+            async.series(asyncAnnotationTasks [page], (err5, res5)=>{
+            //async.parallel(asyncAnnotationTasks [page], (err5, res5)=>{
                 //console.log(asyncEnrichmentTasks);
-                async.series(asyncEnrichmentTasks [page], (err6, res6)=>{
-                //async.parallel(asyncEnrichmentTasks [page], (err6, res6)=>{
+                //async.series(asyncEnrichmentTasks [page], (err6, res6)=>{
+                async.parallel(asyncEnrichmentTasks [page], (err6, res6)=>{
                     //console.log('parallel' + page, progressCounter, totalToBeAnnotated);
                     if(progressCounter === totalToBeAnnotated){
                         //end of annotation for this loop
