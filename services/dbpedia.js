@@ -49,6 +49,7 @@ export default {
             });
             /////////////////////////////////////////////
         } else if (resource === 'dbpedia.spotlight') {
+            //let startTime, elapsedTime;
             query = params.query;
             //handle confidence and stopWords
             let confidence = params.confidence ? params.confidence : '0.5';
@@ -80,7 +81,10 @@ export default {
                     }
                 }
                 //send request
+                //startTime = Date.now();
                 rp.post({headers: {'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'}, accept: 'application/json', uri: 'http://' + spotlightInstance.host + ':' + spotlightInstance.port + spotlightInstance.path, form: {'text': query, 'confidence': confidence}}).then(function(res){
+                    //elapsedTime = Date.now() - startTime;
+                    //console.log('spotlight service time for '+ params.id+' : ' + elapsedTime);
                     callback(null, {
                         tags: utilObject.parseDBpediaSpotlight(res, stopWords),
                         id: params.id,

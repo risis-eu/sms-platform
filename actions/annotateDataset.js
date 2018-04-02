@@ -7,7 +7,7 @@ import annotateText from './annotateText';
 import createResourceAnnotation from './createResourceAnnotation';
 import createNewReactorConfig from './createNewReactorConfig';
 import createASampleFacetsConfig from './createASampleFacetsConfig';
-
+//let startTime, elapsedTime;
 let processData = (page, maxPerPage, totalPages, payload, done)=> {
     //console.log('processing', page, maxPerPage, totalPages, payload);
     context.executeAction(getDatasetResourcePropValues, {
@@ -26,17 +26,22 @@ let processData = (page, maxPerPage, totalPages, payload, done)=> {
                 asyncAnnotationTasks [page].push((acallback)=>{
                     //annotation progress
                     progressCounter++;
+                    //startTime = Date.now();
                     context.executeAction(annotateText, {
                         query: resource.ov,
                         id: resource.r,
                         confidence: payload.confidence,
                         language: payload.language,
-                        stopWords: payload.stopWords
+                        stopWords: payload.stopWords,
+                        hideFeedback: payload.hideFeedback
                     }, (err3, res3)=>{
+                        //elapsedTime = Date.now() - startTime;
+                        //console.log('got annotation for '+ res3.id+' in ' + elapsedTime);
                         //console.log('annotateText', resource.ov, res3);
                         //create a queue for enrichment
                         asyncEnrichmentTasks [page].push((ecallback)=>{
                             if(res3 && res3.id && !res3.error){
+                                //startTime = Date.now();
                                 context.executeAction(createResourceAnnotation, {
                                     //it can store annotations in a different dataset if set
                                     dataset: payload.storingDataset ? payload.storingDataset : res2.datasetURI,
@@ -45,6 +50,8 @@ let processData = (page, maxPerPage, totalPages, payload, done)=> {
                                     annotations: res3.tags,
                                     inNewDataset: payload.storingDataset ? payload.storingDataset : 0
                                 }, (err4, res4)=>{
+                                    //elapsedTime = Date.now() - startTime;
+                                    //console.log('wrote annotation for '+ res3.id+' in ' + elapsedTime);
                                     //console.log('createResourceAnnotation', res4, resource.ov, progressCounter+1);
                                     ecallback(null, null);
                                 });
@@ -96,6 +103,9 @@ let maxPerPage = 10;
 export default function annotateDataset(context, payload, done) {
     if(payload.maxPerPage){
         maxPerPage = payload.maxPerPage;
+    }
+    if(payload.batchSize){
+        maxPerPage = payload.batchSize;
     }
     //get the number of annotated/all resource
     context.executeAction(countTotalResourcesWithProp, payload, (err0, res0)=>{
