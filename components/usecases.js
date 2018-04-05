@@ -65,6 +65,22 @@ class usecases extends React.Component {
                                             <NavLink routeName="usecase5" className="ui" href="/usecase_evaluating_research_portfolios"> Evaluating research portfolios</NavLink>
                                         </div>
                                     </div>
+                                    <div className="blue card pulse animated">
+                                        <a className="img-conceptualModel image" href="/assets/pdf/metrics-link-network.pdf">
+                                            <img src="/assets/img/docs/usecase6.png" style={{height: 150}}/>
+                                        </a>
+                                        <div className="content center aligned">
+                                            <a  className="ui" href="/assets/pdf/metrics-link-network.pdf"> Orgreg Coverage Across Five Open Datasets</a>
+                                        </div>
+                                    </div>
+                                    <div className="blue card pulse animated">
+                                        <a className="img-conceptualModel image" href="/assets/pdf/openaire-datathon-report.pdf">
+                                            <img src="/assets/img/docs/usecase7.png" style={{height: 150}}/>
+                                        </a>
+                                        <div className="content center aligned">
+                                            <a  className="ui" href="/assets/pdf/openaire-datathon-report.pdf"> OpenAIRE-SMS Dataset Enrichment, Linking and Exploration</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
