@@ -725,7 +725,8 @@ export default {
                         {label: 'Project Review Board', value: 'http://rdf.risis.eu/user/PRB'},
                         {label: 'FCB', value: 'http://rdf.risis.eu/user/FCB'},
                         {label: 'SMS Visitor', value: 'http://rdf.risis.eu/user/SMSVisitor'},
-                        {label: 'SMS Team', value: 'http://rdf.risis.eu/user/SMSTeam'}
+                        {label: 'SMS Team', value: 'http://rdf.risis.eu/user/SMSTeam'},
+                        {label: 'Configurator', value: 'http://rdf.risis.eu/user/Configurator'}
                     ],
                     defaultValue: ['http://rdf.risis.eu/user/RISISUsers'],
                     allowNewValue: 1

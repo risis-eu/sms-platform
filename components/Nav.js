@@ -16,7 +16,7 @@ class Nav extends React.Component {
     render() {
         let user = this.context.getUser();
         let showSettings = 0;
-        if(user && (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1 )){
+        if(user && (parseInt(user.isSuperUser) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam') !== -1 || user.member.indexOf('http://rdf.risis.eu/user/Configurator') !== -1 )){
             showSettings = 1;
         }
         // console.log(user);

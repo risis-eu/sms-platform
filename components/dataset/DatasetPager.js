@@ -172,6 +172,12 @@ class DatasetPager extends React.Component {
             { key: 2, icon: 'download', text:  'Download Results', value: 'downloadResults' }
         ];
         let allowedUser = 0;
+        allowedUser = 1;
+        a_options = [
+            { key: 1, icon: 'search', text:  'Search in Results', value: 'searchInResults' },
+            { key: 2, icon: 'download', text:  'Download Results', value: 'downloadResults' }
+        ];
+        /*
         if((user && parseInt(user.isSuperUser)) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam')!==-1){
             allowedUser = 1;
             a_options = [
@@ -183,10 +189,14 @@ class DatasetPager extends React.Component {
                 { key: 1, icon: 'search', text:  'Search in Results', value: 'searchInResults' }
             ];
         }
+        */
         if(this.props.enableQuerySaveImport){
+            a_options.push({ key: 3, icon: 'save', text:  'Save Query', value: 'saveQuery' });
+            /*
             if((user && parseInt(user.isSuperUser)) || user.member.indexOf('http://rdf.risis.eu/user/SMSTeam')!==-1){
                 a_options.push({ key: 3, icon: 'save', text:  'Save Query', value: 'saveQuery' });
             }
+            */
         }
         let iconC =  (this.state.config && this.state.config.datasetViewer) ? (v_icons[this.state.config.datasetViewer] ? v_icons[this.state.config.datasetViewer] : defaultViewIcon) : defaultViewIcon;
         const v_trigger = (
