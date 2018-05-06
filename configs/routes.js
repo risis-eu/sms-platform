@@ -40,6 +40,16 @@ export default {
             done();
         }
     },
+    searchAll: {
+        path: '/searchAll',
+        method: 'get',
+        handler: require('../components/SearchAll'),
+        label: 'Search in All Data',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Search in All Data'});
+            done();
+        }
+    },
     dataIngestion: {
         path: '/dataIngestion',
         method: 'get',

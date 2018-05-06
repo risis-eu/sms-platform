@@ -17,6 +17,7 @@ import LinksetStore from './stores/LinksetStore';
 import DatasetAnnotationStore from './stores/DatasetAnnotationStore';
 import DatasetGeoEnrichmentStore from './stores/DatasetGeoEnrichmentStore';
 import QueryImportStore from './stores/QueryImportStore';
+import SearchInAllStore from './stores/SearchInAllStore';
 
 let app = new Fluxible({
     component: Application,
@@ -35,7 +36,8 @@ let app = new Fluxible({
         LinksetStore,
         DatasetAnnotationStore,
         DatasetGeoEnrichmentStore,
-        QueryImportStore
+        QueryImportStore,
+        SearchInAllStore
     ]
 });
 
