@@ -7,7 +7,7 @@ import {connectToStores} from 'fluxible-addons-react';
 import {defaultGraphName, authGraphName, enableAuthentication} from '../configs/general';
 import {config} from '../configs/reactor';
 import URIUtil from './utils/URIUtil';
-import searchinAll from '../actions/searchinAll';
+import searchInAll from '../actions/searchInAll';
 import { Accordion, Icon } from 'semantic-ui-react'
 
 class SearchAll extends React.Component {
