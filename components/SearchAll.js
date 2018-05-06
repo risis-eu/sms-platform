@@ -76,7 +76,7 @@ class SearchAll extends React.Component {
                     <div className="center aligned column">
                         <div className="ui relaxed">
                             {this.props.SearchInAllStore.isComplete ? '' : <span className="ui active"><img src="/assets/img/loader.gif" alt="loading..."/> </span>}
-                            {this.props.SearchInAllStore.count ? <div><b>{this.props.SearchInAllStore.count}</b> resource(s) found:
+                            {this.props.SearchInAllStore.count ? <div><b>{this.props.SearchInAllStore.count}</b> resource(s) found (Max: 2000):
                                 <br/>
                                 <div style={{textAlign: 'left'}}>
                                     <Accordion panels={cpanels} styled exclusive={false} fluid />

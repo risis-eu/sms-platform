@@ -1,6 +1,6 @@
 export default function searchInAll(context, payload, done) {
     context.dispatch('START_TASK_SEARCHALL', {});
-    context.service.read('admin.searchAllData', payload, {timeout: 5 * 1000}, function (err, res) {
+    context.service.read('admin.searchAllData', payload, {timeout: 10 * 1000}, function (err, res) {
         if (err) {
             context.dispatch('SEARCHALL_FAILURE', err);
         } else {

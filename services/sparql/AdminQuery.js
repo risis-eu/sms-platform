@@ -64,7 +64,7 @@ class AdminQuery{
                 #opitimized for Virtuoso
                 ?label bif:contains "'${keyword}*'".
             }
-        } ORDER BY DESC(?g)
+        } ORDER BY DESC(?g) LIMIT 2000
         `;
         return this.prefixes + this.query;
     }

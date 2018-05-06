@@ -6,6 +6,7 @@ class SearchInAllStore extends BaseStore {
         this.cleanAll();
     }
     lookupAll(payload) {
+        this.count = payload.count;
         let tmp = {};
         payload.results.forEach((item)=>{
             if(tmp[item.graphName]){
@@ -13,10 +14,8 @@ class SearchInAllStore extends BaseStore {
             }else{
                 tmp[item.graphName]=[{resource: item.resource, property: item.property, text: item.text}]
             }
-
         });
         this.suggestions = tmp;
-        this.count = payload.count;
         this.isComplete = 1;
         this.emitChange();
     }
