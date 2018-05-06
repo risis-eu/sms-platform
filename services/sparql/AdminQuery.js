@@ -56,5 +56,17 @@ class AdminQuery{
         `;
         return this.prefixes + this.query;
     }
+    searchAllData(endpointParameters, keyword) {
+        this.query = `
+        SELECT DISTINCT ?g ?s ?p ?label WHERE {
+            GRAPH ?g {
+                ?s ?p ?label.
+                #opitimized for Virtuoso
+                ?label bif:contains "'${keyword}*'".
+            }
+        } ORDER BY DESC(?g)
+        `;
+        return this.prefixes + this.query;
+    }
 }
 export default AdminQuery;

@@ -90,6 +90,34 @@ export default {
                 });
             });
 
+        }else if(resource === 'admin.searchAllData'){
+            let keyword = params.keyword;
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {results: []});
+                }else{
+                    user = req.user;
+                    //only super users have access to admin services
+                    if(!parseInt(user.isSuperUser)){
+                        callback(null, {results: []});
+                    }
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            //build http uri
+            getDynamicEndpointParameters(user, 'generic', (endpointParameters)=>{
+                query = queryObject.searchAllData(endpointParameters, keyword);
+                //send request
+                rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                    let results = utilObject.parseSearchAllData(res);
+                    callback(null, {count: results.length, results: results});
+                }).catch(function (err) {
+                    console.log(err);
+                    callback(null, {results: []});
+                });
+            });
+
         }else if(resource === 'admin.others'){
             console.log('other services');
         }

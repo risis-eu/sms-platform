@@ -11,6 +11,16 @@ class AdminUtil{
             return output;
         }
     }
+    parseSearchAllData(body) {
+        let parsed = JSON.parse(body);
+        let output=[];
+        if(parsed.results.bindings.length){
+            parsed.results.bindings.forEach(function(el) {
+                output.push({graphName: el.g.value, resource: el.s.value, property: el.p.value, text: el.label.value});
+            });
+            return output;
+        }
+    }
 
 }
 export default AdminUtil;
