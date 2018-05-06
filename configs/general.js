@@ -8,7 +8,7 @@ export default {
     defaultDatasetURI: [''],
 
     //will prevent access if not logged in
-    enableAuthentication: 0,
+    enableAuthentication: 1,
     //graph that stores users data, must be loaded beforehand
     authDatasetURI: ['http://rdf.risis.eu/sms/users.ttl#'],
     //will allow super users to confirm and activate regiastered users
