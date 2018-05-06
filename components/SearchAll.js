@@ -51,7 +51,7 @@ class SearchAll extends React.Component {
                         content: <table className="ui striped compact table"><tbody>{row}</tbody></table>,
                         key: 'pp'+ prop
                     },
-                    title: prop
+                    title: prop + ' ('+ items[prop].length+')'
                 });
             }
 
@@ -64,7 +64,7 @@ class SearchAll extends React.Component {
                         <div className="ui">
                             <div className="ui fluid category search">
                                 <div className="ui large icon input">
-                                    <input ref="keyword" className="prompt" type="text" placeholder="Search on Linked Open Data..." style={{width: 500}} onKeyDown={this.handleKeyDown.bind(this)}/>
+                                    <input ref="keyword" className="prompt" type="text" placeholder="Search in all data..." style={{width: 500}} onKeyDown={this.handleKeyDown.bind(this)}/>
                                     <i className="search icon"></i>
                                 </div>
                           &nbsp;<button className="ui grey circular button" onClick={this.handleSearch.bind(this)}>Search in all datasets</button>
