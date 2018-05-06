@@ -29,7 +29,7 @@ class SearchAll extends React.Component {
     handleSearch() {
         let keyword = jQuery.trim(this.refs.keyword.value);
         if(keyword.length > 3){
-            this.context.executeAction(searchinAll, {
+            this.context.executeAction(searchInAll, {
                 keyword: keyword
             });
         }else{
