@@ -2,12 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import SearchInAllStore from '../stores/SearchInAllStore';
+import DatasetsStore from '../stores/DatasetsStore';
 import {navigateAction} from 'fluxible-router';
 import {connectToStores} from 'fluxible-addons-react';
 import {defaultGraphName, authGraphName, enableAuthentication} from '../configs/general';
 import {config} from '../configs/reactor';
 import URIUtil from './utils/URIUtil';
 import searchInAll from '../actions/searchInAll';
+import loadDatasets from '../actions/loadDatasets';
 import { Accordion, Icon } from 'semantic-ui-react'
 
 class SearchAll extends React.Component {
@@ -16,7 +18,20 @@ class SearchAll extends React.Component {
         this.state = {query: ''};
     }
     componentDidMount() {
+        this.context.executeAction(loadDatasets, {
 
+        });
+    }
+    findDatasetTitle(graphName){
+        let dss = this.props.DatasetsStore.datasetsList;
+        let out = graphName;
+        dss.forEach((ds)=>{
+            if(ds.d === graphName){
+                out = (ds.features && ds.features.datasetLabel) ? ds.features.datasetLabel[0] : graphName;
+                return out;
+            }
+        });
+        return out;
     }
     handleKeyDown(evt) {
         switch (evt.keyCode) {
@@ -51,7 +66,7 @@ class SearchAll extends React.Component {
                         content: <table className="ui striped compact table"><tbody>{row}</tbody></table>,
                         key: 'pp'+ prop
                     },
-                    title: prop + ' ('+ items[prop].length+')'
+                    title: this.findDatasetTitle(prop) + ' ('+ items[prop].length+')'
                 });
             }
 
@@ -93,9 +108,10 @@ SearchAll.contextTypes = {
     executeAction: PropTypes.func.isRequired,
     getUser: PropTypes.func
 };
-SearchAll = connectToStores(SearchAll, [SearchInAllStore], function (context, props) {
+SearchAll = connectToStores(SearchAll, [SearchInAllStore, DatasetsStore], function (context, props) {
     return {
-        SearchInAllStore: context.getStore(SearchInAllStore).getState()
+        SearchInAllStore: context.getStore(SearchInAllStore).getState(),
+        DatasetsStore: context.getStore(DatasetsStore).getState()
     };
 });
 export default SearchAll;
