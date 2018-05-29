@@ -98,6 +98,7 @@ module.exports = {
             {title: 'OrgResource'},
             {title: 'PersonResource'},
             {title: 'AggregateObject'},
+            {title: 'BasicAggregateView'},
             {title: 'BasicDBpediaView'},
             {title: 'BasicDateTimeView'},
             {title: 'BasicImageView'},
