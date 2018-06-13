@@ -122,7 +122,10 @@ export default {
         httpOptions = {
             host: sparqlEndpoint[d].host,
             port: sparqlEndpoint[d].port,
-            path: sparqlEndpoint[d].path
+            path: sparqlEndpoint[d].path,
+            protocol: sparqlEndpoint[d].protocol,
+            username: sparqlEndpoint[d].username,
+            password: sparqlEndpoint[d].password,
         };
         let useReasoning = 0;
         if(sparqlEndpoint[d].useReasoning){
@@ -138,16 +141,26 @@ export default {
         if(endpointParameters.useReasoning){
             outputObject.params['reasoning'] = 'true';
         }
-
+        let protocol = 'http';
+        if(endpointParameters.httpOptions.protocol){
+            protocol = endpointParameters.httpOptions.protocol;
+        }
+        let host = endpointParameters.httpOptions.host;
+        let port = endpointParameters.httpOptions.port;
+        let path = endpointParameters.httpOptions.path;
+        let userPass = '';
+        if(endpointParameters.httpOptions.username && endpointParameters.httpOptions.password){
+            userPass = endpointParameters.httpOptions.username + ':' + endpointParameters.httpOptions.password + '@';
+        }
         switch (endpointParameters.type.toLowerCase()) {
             case 'virtuoso':
-                outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                outputObject.uri = protocol + '://' + userPass + host + ':' + port + path;
                 outputObject.params['query'] = query;
                 outputObject.params['format'] = outputFormat;
 
                 break;
             case 'blazegraph':
-                outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                outputObject.uri = protocol + '://' + userPass + host + ':' + port + path;
                 outputObject.params['query'] = query;
                 //application/sparql-results+json is not supported!
                 outputObject.params['format'] = 'json';
@@ -156,29 +169,29 @@ export default {
             case 'stardog':
                 //to make it compatible with old Stardog API
                 if(endpointParameters.httpOptions.path.indexOf('annex') !== -1){
-                    outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                    outputObject.uri = protocol + '://' + userPass + host + (port === '80' ? '' : ':' + port) + path;
                     outputObject.params['query'] = query;
                     outputObject.params['Accept'] = outputFormat;
                 }else{
                     //new Stardog API /query and /update
                     if(mode === 'update'){
-                        outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '/update';
+                        outputObject.uri = protocol + '://' + userPass + host + (port === '80' ? '' : ':' + port) + path + '/update';
                         outputObject.params['update'] = query;
                         outputObject.params['query'] = query;
                     }else{
                         outputObject.params['query'] = query;
-                        outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '/query';
+                        outputObject.uri = protocol + '://' + userPass + host + (port === '80' ? '' : ':' + port) + path + '/query';
                         outputObject.params['Accept'] = outputFormat;
                     }
                 }
                 break;
             case 'cliopatria':
                 if(mode === 'update'){
-                    outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + 'update';
+                    outputObject.uri = protocol + '://' + userPass + host + (port === '80' ? '' : ':' + port) + path + 'update';
                     outputObject.params['update'] = query;
                 }else{
                     outputObject.params['query'] = query;
-                    outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                    outputObject.uri = protocol + '://' + userPass + host + path;
                     outputObject.params['format'] = outputFormat;
                 }
 
@@ -186,17 +199,17 @@ export default {
                 //todo: check the differences for other triple stores
             case 'sesame':
                 if(mode === 'update'){
-                    outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '/statements';
+                    outputObject.uri = protocol + '://' + userPass + host + (port === '80' ? '' : ':' + port) + path + '/statements';
                     outputObject.params['update'] = query;
                 }else{
                     outputObject.params['query'] = query;
-                    outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                    outputObject.uri = protocol + '://' + userPass + host + (port === '80' ? '' : ':' + port) + path;
                     outputObject.params['Accept'] = outputFormat;
                 }
 
                 break;
             default:
-                outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                outputObject.uri = protocol + '://' + userPass + host+ (port === '80' ? '' : ':' + port) + path;
                 outputObject.params['query'] = query;
                 outputObject.params['format'] = outputFormat;
         }

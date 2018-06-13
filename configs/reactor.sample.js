@@ -36,6 +36,7 @@ export default {
                 readOnly: 1,
                 allowInlineConfig: 0,
                 resourceFocusType: ['http://dbpedia.org/ontology/University'],
+                resourceLabelProperty: ['http://xmlns.com/foaf/0.1/name'],
                 datasetLabel: ['DBpedia Universities']
             }
         },
@@ -279,6 +280,9 @@ export default {
                     allowNewValue: 0
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#path': {
+                    allowNewValue: 0
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#protocol': {
                     allowNewValue: 0
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#graphName': {
