@@ -51,7 +51,7 @@ class About extends React.Component {
                                                                 </div>
                                                                 <div className="item">
                                                                     <div className="ui label">
-                                                                        <a href="mailto:p.a.a.vanden.besselaar @vu.nl"><i className="mail icon"></i> Prof. &nbsp; Peter van den Besselaar</a>
+                                                                        <a href="mailto:p.a.a.vanden.besselaar@vu.nl"><i className="mail icon"></i> Prof. &nbsp; Peter van den Besselaar</a>
                                                                     </div>
                                                                 </div>
                                                                 <div className="item">
